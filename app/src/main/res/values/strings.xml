@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BusTracking</string>
+    <string name="buttonStart">Comenzar</string>
+</resources>
