@@ -9,25 +9,41 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/editTextID"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="Encuestador" />
+        android:hint="Id" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/editTextRuta"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:hint="Ruta" />
 
     <EditText
-        android:id="@+id/editText3"
+    android:id="@+id/editTextVia"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:hint="Via" />
+
+    <EditText
+        android:id="@+id/editTextNumEcon"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="Via" />
+        android:hint="NumeroEconomico" />
+
+    <EditText
+        android:id="@+id/editTextEnc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Encuestador" />
+
+
 
     <Button
         android:id="@+id/button1"
@@ -36,5 +52,19 @@
         android:layout_height="wrap_content"
         android:text="@string/buttonStart"
         android:onClick="setStartButton"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <Button
+            android:id="@+id/btnConsultaRecorrido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Consultar Recorrido"
+            android:onClick="onClick"/>
+
+    </LinearLayout>
 
 </LinearLayout>

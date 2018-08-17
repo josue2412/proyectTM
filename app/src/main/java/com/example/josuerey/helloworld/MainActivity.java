@@ -1,13 +1,18 @@
 package com.example.josuerey.helloworld;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.josuerey.helloworld.utilidades.Utilidades;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,10 +24,70 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    EditText campoId,campoNom_Ruta, campoVia, campoNum_Econ, campoEncuestador;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        campoId=(EditText) findViewById(R.id.editTextID);
+        campoNom_Ruta=(EditText) findViewById(R.id.editTextRuta);
+        campoVia=(EditText) findViewById(R.id.editTextVia);
+        campoNum_Econ=(EditText) findViewById(R.id.editTextNumEcon);
+        campoEncuestador=(EditText) findViewById(R.id.editTextEnc);
+    }
+
+    public void onClick(View view){
+        //registrarRecorridos();
+
+        Intent miIntent=null;
+        switch (view.getId()){
+
+            case R.id.btnConsultaRecorrido:
+                miIntent=new Intent(MainActivity.this,ConsultarRecorridos.class);
+                break;
+
+        }
+        if (miIntent!=null){
+            startActivity(miIntent);
+        }
+
+    }
+
+    private void registrarRecorridosSQL(){
+        ConexionSQLiteH conn= new ConexionSQLiteH(this,"bd_recorridos", null, 1);
+
+        SQLiteDatabase db=conn.getWritableDatabase();
+
+        String insert="INSERT INTO "+ Utilidades.TABLA_RECORRIDO
+                +" ( "+ Utilidades.CAMPO_ID +","+ Utilidades.CAMPO_NOM_RUTA
+                +","+ Utilidades.CAMPO_VIA +","+ Utilidades.CAMPO_NUM_ECON +","+ Utilidades.CAMPO_ENCUESTADOR +")" +
+                "VALUES ("+ campoId.getText().toString() +", '"+campoNom_Ruta.getText().toString()+"','"
+                 + campoVia.getText().toString() +"', '" + campoNum_Econ.getText().toString() + "','"
+                + campoEncuestador.getText().toString() + "')";
+
+        db.execSQL(insert);
+
+        db.close();
+    }
+
+    public void registrarRecorridos(){
+        ConexionSQLiteH conn= new ConexionSQLiteH(this,"bd_recorridos", null, 1);
+
+        SQLiteDatabase db=conn.getWritableDatabase();
+
+        ContentValues values=new ContentValues();
+        values.put(Utilidades.CAMPO_ID,campoId.getText().toString());
+        values.put(Utilidades.CAMPO_NOM_RUTA,campoNom_Ruta.getText().toString());
+        values.put(Utilidades.CAMPO_VIA,campoVia.getText().toString());
+        values.put(Utilidades.CAMPO_NUM_ECON,campoNum_Econ.getText().toString());
+        values.put(Utilidades.CAMPO_ENCUESTADOR,campoEncuestador.getText().toString());
+
+        Long idResultante=db.insert(Utilidades.TABLA_RECORRIDO,Utilidades.CAMPO_ID, values);
+
+        Toast.makeText(getApplicationContext(), "Id Registro: "+idResultante,Toast.LENGTH_SHORT).show();
+        db.close();
     }
 
     public void setStartButton(View target) {
@@ -76,6 +141,10 @@ public class MainActivity extends AppCompatActivity {
             String isActive = data.getString("active");
 
             if (isActive.equals("1")){
+
+                //registrarRecorridos();
+                registrarRecorridosSQL();
+
                 msg = "Welcome";
                 Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
                 MainActivity.this.startActivity(myIntent);

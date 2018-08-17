@@ -42,13 +42,13 @@ public class TrackerActivity extends AppCompatActivity {
         mensaje2 = findViewById(R.id.mensaje_id2);
         botonGuardar = this.findViewById(R.id.btnGuardar);
 
-        botonGuardar.setOnClickListener(new View.OnClickListener() {
+       /* botonGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TrackerActivity.this, "Not available yet.",
                         Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         // Check for GPS usage permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -61,7 +61,11 @@ public class TrackerActivity extends AppCompatActivity {
         } else {
             locationStart();
         }
+
+        ConexionSQLiteH conn= new ConexionSQLiteH(this,"bd_recorridos", null, 1);
+
     }
+
 
     private void locationStart() {
         LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
