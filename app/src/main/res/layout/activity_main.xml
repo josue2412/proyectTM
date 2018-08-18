@@ -12,59 +12,51 @@
         android:id="@+id/editTextID"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:hint="Id" />
 
     <EditText
         android:id="@+id/editTextRuta"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:hint="Ruta" />
 
     <EditText
-    android:id="@+id/editTextVia"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:inputType="textPersonName"
-    android:hint="Via" />
+        android:id="@+id/editTextVia"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Via" />
 
     <EditText
         android:id="@+id/editTextNumEcon"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:hint="NumeroEconomico" />
 
     <EditText
         android:id="@+id/editTextEnc"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:hint="Encuestador" />
-
-
 
     <Button
         android:id="@+id/button1"
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="@string/buttonStart"
         android:onClick="setStartButton"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-
-        <Button
-            android:id="@+id/btnConsultaRecorrido"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Consultar Recorrido"
-            android:onClick="onClick"/>
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnConsultaRecorrido"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Consultar Recorrido"
+        android:onClick="onClick"/>
 
 </LinearLayout>

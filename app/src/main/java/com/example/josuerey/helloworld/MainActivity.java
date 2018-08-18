@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 msg = "Welcome";
                 Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
                 MainActivity.this.startActivity(myIntent);
+                finish();
             }
 
             else
