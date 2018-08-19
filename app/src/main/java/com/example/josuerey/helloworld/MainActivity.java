@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
                 miIntent=new Intent(MainActivity.this,ConsultarRecorridos.class);
                 break;
 
+            case R.id.btnConsultaLista:
+                miIntent=new Intent(MainActivity.this,ConsultarRecorridosLista.class);
+                break;
+
         }
         if (miIntent!=null){
             startActivity(miIntent);

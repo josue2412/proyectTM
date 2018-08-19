@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_detalle_consulta_rec_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+
+    tools:context=".DetalleConsultaRecList">
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="id"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+
+    <TextView
+        android:id="@+id/campoId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1094"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ruta"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/campoNom_Ruta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="via"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+
+
+    <TextView
+        android:id="@+id/campoVia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="75845682"
+        android:layout_marginBottom="10dp"/>
+
+
+</LinearLayout>

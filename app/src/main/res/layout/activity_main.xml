@@ -59,4 +59,12 @@
         android:text="Consultar Recorrido"
         android:onClick="onClick"/>
 
+    <Button
+        android:id="@+id/btnConsultaLista"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Consultar Lista de Recorridos"
+        android:onClick="onClick" />
+
 </LinearLayout>

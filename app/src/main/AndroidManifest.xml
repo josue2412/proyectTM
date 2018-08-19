@@ -24,7 +24,8 @@
             android:name=".TrackerActivity"
             android:label="@string/app_name" />
         <activity android:name=".ConsultarRecorridos" />
-
+        <activity android:name=".ConsultarRecorridosLista" />
+        <activity android:name=".DetalleConsultaRecList"></activity>
     </application>
 
 </manifest>

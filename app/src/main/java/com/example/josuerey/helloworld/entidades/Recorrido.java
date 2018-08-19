@@ -1,6 +1,8 @@
 package com.example.josuerey.helloworld.entidades;
 
-public class Recorrido {
+import java.io.Serializable;
+
+public class Recorrido implements Serializable {
 
     private Integer id;
     private String nom_ruta;
@@ -9,7 +11,7 @@ public class Recorrido {
     private String encuestador;
 
 
-    public Recorrido(Integer id, String nom_ruta, String via, String num_econ, String encuestador) {
+    public Recorrido() {
         this.id = id;
         this.nom_ruta = nom_ruta;
         this.via = via;

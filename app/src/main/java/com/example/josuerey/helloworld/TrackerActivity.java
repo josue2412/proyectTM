@@ -3,6 +3,7 @@ package com.example.josuerey.helloworld;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -16,13 +17,21 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.josuerey.helloworld.utilidades.Utilidades;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 public class TrackerActivity extends AppCompatActivity {
+
+    //PARADAS
+    TextView campoId_dRec,campoId_Rec, campoHora_Ref, campoT_Parada, campoT_Parada2, campoSuben, campoBajan, campoP_Abordo, campoCoord;
+    //DRECORRIDO
+    TextView campodHora_Ref, campodCoord;
 
     private TextView latLongTextView;
     private TextView directionsTextView;
@@ -58,6 +67,7 @@ public class TrackerActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
         } else {
             locationStart();
+
         }
 
         ConexionSQLiteH conn= new ConexionSQLiteH(this,"bd_recorridos", null, 1);
@@ -73,7 +83,9 @@ public class TrackerActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
         locationStart();
+
         super.onResume();
     }
 
@@ -137,8 +149,15 @@ public class TrackerActivity extends AppCompatActivity {
             loc.getLatitude();
             loc.getLongitude();
             String Text = "Lat = "+ loc.getLatitude() + "\n Long = " + loc.getLongitude();
+            /*double TextLa = loc.getLatitude();
+            double TextLo = loc.getLongitude();
+            latLongTextView.setText(Text);
+            latitude.setText((int) TextLa);
+            longitude.setText((int) TextLo);*/
             latLongTextView.setText(Text);
             this.mainActivity.setLocation(loc);
+
+            registrarcoordenadas();
         }
         @Override
         public void onProviderDisabled(String provider) {
@@ -164,6 +183,38 @@ public class TrackerActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    private void registrarcoordenadas(){
+
+        ConexionSQLiteH conn= new ConexionSQLiteH(this,"bd_recorridos", null, 1);
+
+        SQLiteDatabase db=conn.getWritableDatabase();
+
+        String insert="INSERT INTO "+ Utilidades.TABLA_DRECORRIDOS
+                +" ( "+ Utilidades.CAMPO_ID_REC
+                +","+ Utilidades.CAMPO_DHORA_REF +","+ Utilidades.CAMPO_DCOORD +")" +
+                "VALUES (1,2,'"+ latLongTextView.getText().toString() +"')";
+
+        db.execSQL(insert);
+
+        db.close();
+    }
+
+    private void registrarparadas(){
+        ConexionSQLiteH conn= new ConexionSQLiteH(this,"bd_recorridos", null, 1);
+        SQLiteDatabase db=conn.getWritableDatabase();
+
+        String insert="INSERT INTO "+ Utilidades.TABLA_PARADAS
+                +" ( "+ Utilidades.CAMPO_ID_PARADAS +","+ Utilidades.CAMPO_ID_REC
+                +","+ Utilidades.CAMPO_HORA_REF +","+ Utilidades.CAMPO_T_PARADA +","+ Utilidades.CAMPO_T_PARADA2
+                +","+ Utilidades.CAMPO_SUBEN +","+ Utilidades.CAMPO_BAJAN +","+ Utilidades.CAMPO_P_ABORDO
+                +","+ Utilidades.CAMPO_COORD +")" +
+                "VALUES (1,1,2,1,1,2,2,3,'"+ latLongTextView.getText().toString() +"')";
+
+        db.execSQL(insert);
+
+        db.close();
     }
 
 }
