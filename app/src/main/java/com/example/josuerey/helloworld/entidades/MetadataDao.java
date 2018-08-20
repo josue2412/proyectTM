@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.entidades;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;

@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.entidades;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -16,8 +16,11 @@ import java.time.LocalDateTime;
 @Entity(tableName = "Metadata")
 public class Metadata {
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @ColumnInfo(name = "id")
     private int id;
 
@@ -31,10 +34,34 @@ public class Metadata {
     private String via;
 
     @ColumnInfo(name = "startTime")
-    private LocalDateTime startTime;
+    private String startTime;
 
     @ColumnInfo(name = "finishTime")
-    private LocalDateTime finishTime;
+    private String finishTime;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public String getRoute() {
+        return route;
+    }
+
+    public String getVia() {
+        return via;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getFinishTime() {
+        return finishTime;
+    }
 
     /**
      * Public metadata constructor.
@@ -45,9 +72,14 @@ public class Metadata {
      */
     public Metadata(@NonNull String driver,
                     @NonNull String route,
-                    @NonNull String via){
+                    @NonNull String via,
+                    @NonNull String startTime,
+                    @NonNull String finishTime){
         this.driver = driver;
         this.route = route;
         this.via = via;
+        this.startTime = startTime;
+        this.finishTime = finishTime;
+
     }
 }
