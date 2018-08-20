@@ -9,7 +9,7 @@ import java.util.List;
 public class GPSLocationRepository {
 
     private GPSLocationDao gpsLocationDao;
-    private LiveData<List<GPSLocation>> allGPSLocations;
+    private LiveData<List<GPSLocation>> gPSLocationsById;
 
     /**
      * Constructor
@@ -18,15 +18,15 @@ public class GPSLocationRepository {
     public GPSLocationRepository(Application application) {
         uRoomDatabase db = uRoomDatabase.getDatabase(application);
         gpsLocationDao = db.gpsLocationDao();
-        allGPSLocations = gpsLocationDao.getAllLocations();
     }
 
     public void insert (GPSLocation gpsLocation) {
         new insertAsyncTask(gpsLocationDao).execute(gpsLocation);
     }
 
-    public LiveData<List<GPSLocation>> getAllGPSLocations() {
-        return allGPSLocations;
+    public LiveData<List<GPSLocation>> findGPSLocationsByMetadataId(int metadataId) {
+
+        return gpsLocationDao.findGPSLocationsById(metadataId);
     }
 
     private static class insertAsyncTask extends AsyncTask<GPSLocation, Void, Void> {

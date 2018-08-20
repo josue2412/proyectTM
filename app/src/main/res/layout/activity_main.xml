@@ -9,13 +9,6 @@
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/editTextID"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="Id" />
-
-    <EditText
         android:id="@+id/editTextRuta"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -24,27 +24,21 @@ public class Metadata {
     @ColumnInfo(name = "id")
     private int id;
 
-    @ColumnInfo(name = "driver")
-    private String driver;
-
     @ColumnInfo(name = "route")
     private String route;
 
     @ColumnInfo(name = "via")
     private String via;
 
-    @ColumnInfo(name = "startTime")
-    private String startTime;
+    @ColumnInfo(name = "economicNumber")
+    private String economicNumber;
 
-    @ColumnInfo(name = "finishTime")
-    private String finishTime;
+    @ColumnInfo(name = "capturist")
+    private String capturist;
+
 
     public int getId() {
         return id;
-    }
-
-    public String getDriver() {
-        return driver;
     }
 
     public String getRoute() {
@@ -55,31 +49,31 @@ public class Metadata {
         return via;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getEconomicNumber() {
+        return economicNumber;
     }
 
-    public String getFinishTime() {
-        return finishTime;
+    public String getCapturist() {
+        return capturist;
     }
+
 
     /**
-     * Public metadata constructor.
      *
-     * @param driver name of the person who fills the form.
-     * @param route the bus follow.
-     * @param via of the route.
+     * @param route
+     * @param via
+     * @param economicNumber
+     * @param capturist
      */
-    public Metadata(@NonNull String driver,
-                    @NonNull String route,
+    public Metadata(@NonNull String route,
                     @NonNull String via,
-                    @NonNull String startTime,
-                    @NonNull String finishTime){
-        this.driver = driver;
+                    @NonNull String economicNumber,
+                    @NonNull String capturist){
+        // this.driver = driver;
         this.route = route;
         this.via = via;
-        this.startTime = startTime;
-        this.finishTime = finishTime;
+        this.economicNumber = economicNumber;
+        this.capturist = capturist;
 
     }
 }

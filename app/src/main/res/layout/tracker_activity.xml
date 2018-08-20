@@ -70,6 +70,25 @@
         android:gravity="center"
         android:text="remove" />
 
+    <TextView
+        android:id="@+id/totalPassengers"
+        android:layout_above="@+id/directions"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textSize="32dp"
+        android:text=" 0 " />
+
+    <TextView
+        android:id="@+id/totalPassangersLbl"
+        android:layout_above="@+id/totalPassengers"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Total pasajeros" />
+
     <RadioGroup
         android:id="@+id/rgStopType"
         android:layout_width="wrap_content"

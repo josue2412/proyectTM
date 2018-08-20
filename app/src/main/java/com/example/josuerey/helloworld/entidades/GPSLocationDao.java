@@ -15,6 +15,6 @@ public interface GPSLocationDao {
     @Insert(onConflict = REPLACE)
     void insert(GPSLocation metadata);
 
-    @Query("SELECT * from GPSLocation ORDER BY id ASC")
-    LiveData<List<GPSLocation>> getAllLocations();
+    @Query("SELECT * from GPSLocation where id = :id")
+    LiveData<List<GPSLocation>> findGPSLocationsById(int id);
 }

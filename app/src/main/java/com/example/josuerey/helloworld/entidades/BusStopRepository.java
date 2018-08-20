@@ -14,11 +14,13 @@ public class BusStopRepository {
     public BusStopRepository(Application application) {
         uRoomDatabase db = uRoomDatabase.getDatabase(application);
         busStopDao = db.busStopDao();
-        allBusStops = busStopDao.getAllBusStops();
+        allBusStops = busStopDao.findAllBusStops();
     }
 
-    LiveData<List<BusStop>> getAllBusStops() {
-        return allBusStops;
+    public LiveData<List<BusStop>> getAllBusStops() { return allBusStops; }
+
+    public LiveData<List<BusStop>> findBusStopsByMetadata(int metadata) {
+        return busStopDao.findBusStopsByMetadataId(metadata);
     }
 
     public void insert (BusStop busStop) {

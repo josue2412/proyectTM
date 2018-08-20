@@ -1,8 +1,11 @@
 package com.example.josuerey.helloworld.entidades;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+
+import java.util.List;
 
 /**
  * This interface abstracts the database operations regarding the Metadata table.
@@ -19,7 +22,7 @@ public interface MetadataDao {
      * @param metadata to persist.
      */
     @Insert
-    void insert(Metadata metadata);
+    long insert(Metadata metadata);
 
     /**
      * Retrieves metadata associated to given Id.
@@ -27,5 +30,5 @@ public interface MetadataDao {
      * @return Metadata associated to given Id.
      */
     @Query("Select * from Metadata where id = :id")
-    Metadata findMetadataById(int id);
+    LiveData<Metadata> findMetadataById(int id);
 }
