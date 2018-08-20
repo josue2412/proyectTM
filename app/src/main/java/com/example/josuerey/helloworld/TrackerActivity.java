@@ -44,6 +44,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -295,7 +296,7 @@ public class TrackerActivity extends AppCompatActivity {
 
             writer.flush();
             writer.close();
-            Toast.makeText(this, "Archivos guardados", Toast.LENGTH_SHORT).show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -306,10 +307,18 @@ public class TrackerActivity extends AppCompatActivity {
             String sFileName = "testFile1.txt";
 
             StringBuilder payload = new StringBuilder();
-            busStopsList.forEach(o-> payload.append(o.toString() + "\n"));
+            Iterator i = busStopsList.iterator();
+
+            while (i.hasNext()){
+                payload.append(i.next().toString() + "\n");
+            }
 
             StringBuilder payloadGPSLocations = new StringBuilder();
-            gpsLocationList.forEach(o -> payloadGPSLocations.append(o.toString() + "\n") );
+            Iterator i2 = gpsLocationList.iterator();
+
+            while (i2.hasNext()){
+                payloadGPSLocations.append(i2.next().toString() + "\n");
+            }
 
             // Create stopBus fiel
             createFile("Paradas-" + String.valueOf(currentMetadataId) + ".txt",
@@ -322,6 +331,8 @@ public class TrackerActivity extends AppCompatActivity {
             // Create GPSLocations file
             createFile("PuntosGPS-" + String.valueOf(currentMetadataId) + ".txt",
                     payloadGPSLocations.toString());
+
+            Toast.makeText(this, "Archivos guardados", Toast.LENGTH_SHORT).show();
 
         }
     }

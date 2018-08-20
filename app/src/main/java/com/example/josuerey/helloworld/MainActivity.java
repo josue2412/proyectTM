@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     msg = "Bienvenido " + campoEncuestador.getText().toString();
                     Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
                     myIntent.putExtra(METADATA_ID_PROPERTY, String.valueOf(metadataId));
-                    myIntent.putExtra(METADATA_PROPERTY, metadata);
+                    myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
                     MainActivity.this.startActivity(myIntent);
                     finish();
                 } else

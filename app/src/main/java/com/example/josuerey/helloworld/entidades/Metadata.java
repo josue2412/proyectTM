@@ -24,6 +24,16 @@ public class Metadata {
     @ColumnInfo(name = "id")
     private int id;
 
+    @Override
+    public String toString() {
+        return "Metadata{" +
+                "route='" + route + '\'' +
+                ", via='" + via + '\'' +
+                ", economicNumber='" + economicNumber + '\'' +
+                ", capturist='" + capturist + '\'' +
+                '}';
+    }
+
     @ColumnInfo(name = "route")
     private String route;
 
