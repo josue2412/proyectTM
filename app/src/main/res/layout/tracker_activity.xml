@@ -7,12 +7,26 @@
 
 
     <com.travijuu.numberpicker.library.NumberPicker
-        android:id="@+id/number_picker"
+        android:id="@+id/number_pickerUP"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_above="@+id/number_pickerDown"
+        android:gravity="center"
+        numberpicker:min="0"
+        numberpicker:max="100"
+        numberpicker:value="0"
+        numberpicker:unit="1"
+        numberpicker:focusable="false"
+        numberpicker:custom_layout="@layout/number_picker_custom_layout" />
+
+    <com.travijuu.numberpicker.library.NumberPicker
+        android:id="@+id/number_pickerDown"
         android:layout_width="130dp"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
         android:gravity="center"
-        numberpicker:min="-100"
+        numberpicker:min="0"
         numberpicker:max="100"
         numberpicker:value="0"
         numberpicker:unit="1"
@@ -20,8 +34,27 @@
         numberpicker:custom_layout="@layout/number_picker_custom_layout" />
 
     <TextView
+        android:id="@+id/UpLabel"
+        android:layout_above="@+id/DownLabel"
+        android:layout_toLeftOf="@+id/number_pickerUP"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Suben" />
+
+    <TextView
+        android:id="@+id/DownLabel"
+        android:layout_toLeftOf="@+id/number_pickerDown"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Bajan" />
+
+    <TextView
         android:id="@+id/latLong"
-        android:layout_above="@+id/number_picker"
+        android:layout_above="@+id/number_pickerUP"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
@@ -37,46 +70,53 @@
         android:gravity="center"
         android:text="remove" />
 
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="15dp"
-        android:layout_below="@id/number_picker"
-        android:layout_marginTop="15dp"
-        android:text="Guardar" />
-
-    <Button
-        android:id="@+id/btnStopSemaphore"
-        android:layout_marginTop="15dp"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_marginRight="15dp"
-        android:layout_below="@id/number_picker"
-        android:layout_alignParentRight="true"
-        android:text="Semaforo" />
-
-    <Button
-        android:id="@+id/btnStopEvent"
-        android:layout_marginRight="15dp"
-        android:layout_below="@id/btnStopSemaphore"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:text="Evento" />
+    <RadioGroup
+        android:id="@+id/rgStopType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number_pickerDown"
+        android:layout_centerInParent="true"
+        >
+        <RadioButton
+            android:id="@+id/radiobtnstop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Parada">
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/radiobtnsemaphore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Semaforo">
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/radiobtnevent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evento">
+        </RadioButton>
+    </RadioGroup>
 
     <Button
         android:id="@+id/btnFinish"
         android:layout_width="150dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
         android:layout_height="60dp"
-        android:layout_below="@id/btnSave"
-
         android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@id/rgStopType"
+        android:layout_marginTop="15dp"
         android:text="Finalizar" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/rgStopType"
+        android:layout_alignParentRight="true"
+        android:text="Guardar" />
+
 
 </RelativeLayout>

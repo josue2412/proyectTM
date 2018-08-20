@@ -39,6 +39,22 @@ public class BusStop {
     @ColumnInfo(name = "lon")
     private double lon;
 
+    @Override
+    public String toString() {
+        return "BusStop{" +
+                "id=" + id +
+                ", idMetadata=" + idMetadata +
+                ", timeStamp='" + timeStamp + '\'' +
+                ", stopType='" + stopType + '\'' +
+                ", passengersUp=" + passengersUp +
+                ", passengersDown=" + passengersDown +
+                ", totalPassengers=" + totalPassengers +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", isOfficial=" + isOfficial +
+                '}';
+    }
+
     @ColumnInfo(name = "isOfficial")
     private boolean isOfficial;
 
@@ -80,19 +96,6 @@ public class BusStop {
 
     public boolean isOfficial() {
         return isOfficial;
-    }
-
-    @Override
-    public String toString() {
-        return "BusStop{" +
-                "timeStamp='" + timeStamp + '\'' +
-                ", stopType='" + stopType + '\'' +
-                ", passengersUp=" + passengersUp +
-                ", passengersDown=" + passengersDown +
-                ", totalPassengers=" + totalPassengers +
-                ", lat=" + lat +
-                ", lon=" + lon +
-                '}';
     }
 
     /**

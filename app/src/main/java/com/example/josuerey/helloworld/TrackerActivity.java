@@ -11,18 +11,24 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.josuerey.helloworld.entidades.BusStop;
 import com.example.josuerey.helloworld.entidades.BusStopRepository;
 import com.example.josuerey.helloworld.entidades.GPSLocation;
 import com.example.josuerey.helloworld.entidades.GPSLocationRepository;
+import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -35,9 +41,14 @@ public class TrackerActivity extends AppCompatActivity {
     private TextView latLongTextView;
     private TextView directionsTextView;
     private Button saveButton;
+    private RadioGroup rgStopType;
+    private RadioButton rbStopType;
+    private NumberPicker numberPickerUp;
+    private NumberPicker numberPickerDown;
     private LocationManager mlocManager;
     private MyLocationListener mlocListener;
 
+    private int totalNumberOfPassengers;
     private GPSLocation currentLocation;
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -48,7 +59,10 @@ public class TrackerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.tracker_activity);
+
+        // Initialize repositories
         gpsLocationRepository = new GPSLocationRepository(getApplication());
         busStopRepository = new BusStopRepository(getApplication());
 
@@ -56,6 +70,18 @@ public class TrackerActivity extends AppCompatActivity {
         latLongTextView = findViewById(R.id.latLong);
         directionsTextView = findViewById(R.id.directions);
         saveButton = this.findViewById(R.id.btnSave);
+        rgStopType = (RadioGroup) findViewById(R.id.rgStopType);
+        rbStopType = (RadioButton) findViewById(rgStopType.getCheckedRadioButtonId());
+        rgStopType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                rbStopType = (RadioButton) findViewById(rgStopType.getCheckedRadioButtonId());
+            }
+        });
+
+        numberPickerUp = (NumberPicker) findViewById(R.id.number_pickerUP);
+        numberPickerDown = (NumberPicker) findViewById(R.id.number_pickerDown);
+        totalNumberOfPassengers = 0;
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +115,6 @@ public class TrackerActivity extends AppCompatActivity {
     protected void onResume() {
 
         locationStart();
-
         super.onResume();
     }
 
@@ -198,21 +223,33 @@ public class TrackerActivity extends AppCompatActivity {
 
     }
 
+    private void clearAfterSave() {
+        numberPickerUp.setValue(0);
+        numberPickerDown.setValue(0);
+        rgStopType.check(R.id.radiobtnstop);
+    }
+
     private void registrarparadas(){
 
         int metadata = 1;
+        totalNumberOfPassengers += numberPickerUp.getValue();
+        totalNumberOfPassengers -= numberPickerDown.getValue();
+        String stopType = rbStopType.getText().toString();
+        boolean isOfficial = stopType.equals("Parada");
 
         BusStop newBusStop = new BusStop(
                 metadata,
                 currentLocation.getTimeStamp(),
-                "semaphore", 5,
-                6, 12,
+                stopType, numberPickerUp.getValue(),
+                numberPickerDown.getValue(), totalNumberOfPassengers,
                 currentLocation.getLat(), currentLocation.getLon(),
-                true
+                isOfficial
         );
 
         busStopRepository.insert(newBusStop);
-        Log.i("New stop bus stored:",  currentLocation.toString() );
+        Toast.makeText(getApplicationContext(), "Guardado",Toast.LENGTH_SHORT).show();
+        clearAfterSave();
+        Log.i("New stop bus stored:",  newBusStop.toString() );
     }
 
 }

@@ -136,35 +136,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void evalResponse(JSONObject response) throws JSONException {
+        if (response != null) {
 
-        String auth = response.getString("success");
-        String msg;
+            String auth = response.getString("success");
+            String msg;
 
-        if (auth.equals("1")){
-            JSONObject data = response.getJSONObject("data");
-            String isActive = data.getString("active");
+            if (auth.equals("1")) {
+                JSONObject data = response.getJSONObject("data");
+                String isActive = data.getString("active");
 
-            if (isActive.equals("1")){
+                if (isActive.equals("1")) {
 
-                //registrarRecorridos();
-                registrarRecorridosSQL();
+                    //registrarRecorridos();
+                    registrarRecorridosSQL();
 
-                msg = "Welcome";
-                Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
-                MainActivity.this.startActivity(myIntent);
-                finish();
+                    msg = "Welcome";
+                    Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
+                    MainActivity.this.startActivity(myIntent);
+                    finish();
+                } else
+                    msg = "You are not allowed to use this app anymore, until you pay.";
+            } else {
+                msg = "Unable to connect to remote server.";
             }
 
-            else
-                msg = "You are not allowed to use this app anymore, until you pay.";
-        } else {
-            msg = "Unable to connect to remote server.";
+            Log.i("EvalResponse", "Auth:" + msg);
+            Toast.makeText(MainActivity.this, msg,
+                    Toast.LENGTH_SHORT).show();
         }
-
-        Log.i("EvalResponse", "Auth:" + msg);
-        Toast.makeText(MainActivity.this, msg,
-                Toast.LENGTH_SHORT).show();
-
     }
 
     /**
