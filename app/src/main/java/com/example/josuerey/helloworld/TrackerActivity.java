@@ -50,6 +50,7 @@ public class TrackerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tracker_activity);
         gpsLocationRepository = new GPSLocationRepository(getApplication());
+        busStopRepository = new BusStopRepository(getApplication());
 
         //Bind layout components
         latLongTextView = findViewById(R.id.latLong);
