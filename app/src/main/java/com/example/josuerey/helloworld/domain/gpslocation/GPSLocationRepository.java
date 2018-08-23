@@ -1,8 +1,10 @@
-package com.example.josuerey.helloworld.entidades;
+package com.example.josuerey.helloworld.domain.gpslocation;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+
+import com.example.josuerey.helloworld.domain.uRoomDatabase;
 
 import java.util.List;
 

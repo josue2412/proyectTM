@@ -89,12 +89,23 @@
         android:gravity="center"
         android:text="Total pasajeros" />
 
+    <CheckBox
+        android:id="@+id/validStop"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/number_pickerDown"
+        android:layout_alignParentRight="true"
+        android:checked="true"
+        android:text="Parada oficial"
+        />
+
     <RadioGroup
+        android:gravity="right"
         android:id="@+id/rgStopType"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/number_pickerDown"
-        android:layout_centerInParent="true"
+        android:layout_alignParentLeft="true"
         >
         <RadioButton
             android:id="@+id/radiobtnstop"

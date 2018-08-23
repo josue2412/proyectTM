@@ -12,9 +12,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.entidades.Metadata;
-import com.example.josuerey.helloworld.entidades.MetadataDao;
-import com.example.josuerey.helloworld.entidades.MetadataRepository;
+import com.example.josuerey.helloworld.domain.metadata.Metadata;
+import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.example.josuerey.helloworld.utilidades.Utilidades;
 
 import org.json.JSONException;
@@ -76,18 +75,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private Metadata saveMetadata(){
 
-        Metadata metadata = new Metadata(campoNom_Ruta.getText().toString(),
-                campoVia.getText().toString(),
-                campoNum_Econ.getText().toString(),
-                campoEncuestador.getText().toString());
+        Metadata metadata = Metadata.builder()
+                .capturist(campoEncuestador.getText().toString())
+                .economicNumber(campoNum_Econ.getText().toString())
+                .via(campoVia.getText().toString())
+                .route(campoNom_Ruta.getText().toString()).build();
+
         metadataId = (int) metadataRepository.insert(metadata);
         return metadata;
     }
 
     public void registrarRecorridos(){
-        ConexionSQLiteH conn= new ConexionSQLiteH(this,"bd_recorridos", null, 1);
-
-        SQLiteDatabase db=conn.getWritableDatabase();
 
         ContentValues values=new ContentValues();
         values.put(Utilidades.CAMPO_NOM_RUTA,campoNom_Ruta.getText().toString());
@@ -95,10 +93,6 @@ public class MainActivity extends AppCompatActivity {
         values.put(Utilidades.CAMPO_NUM_ECON,campoNum_Econ.getText().toString());
         values.put(Utilidades.CAMPO_ENCUESTADOR,campoEncuestador.getText().toString());
 
-        Long idResultante=db.insert(Utilidades.TABLA_RECORRIDO,Utilidades.CAMPO_ID, values);
-
-        Toast.makeText(getApplicationContext(), "Id Registro: "+idResultante,Toast.LENGTH_SHORT).show();
-        db.close();
     }
 
     public void setStartButton(View target) {
@@ -170,7 +164,11 @@ public class MainActivity extends AppCompatActivity {
             Log.i("EvalResponse", "Auth:" + msg);
             Toast.makeText(MainActivity.this, msg,
                     Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "Error de conexion con servidor remoto.",
+                    Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /**

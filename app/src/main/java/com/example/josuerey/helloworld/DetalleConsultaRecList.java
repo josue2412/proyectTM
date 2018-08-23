@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.josuerey.helloworld.entidades.Recorrido;
+import com.example.josuerey.helloworld.domain.Recorrido;
 
 public class DetalleConsultaRecList extends AppCompatActivity {
 

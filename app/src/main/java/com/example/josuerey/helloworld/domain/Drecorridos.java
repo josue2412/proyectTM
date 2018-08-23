@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.entidades;
+package com.example.josuerey.helloworld.domain;
 
 import java.io.Serializable;
 import java.util.Date;

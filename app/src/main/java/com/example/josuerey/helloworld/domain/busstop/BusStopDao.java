@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.entidades;
+package com.example.josuerey.helloworld.domain.busstop;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

@@ -14,14 +14,12 @@ public class ConsultarRecorridos extends AppCompatActivity {
 
     EditText campoId, campoNom_Ruta, campoVia, campoNum_Econ, campoEncuestador;
 
-    ConexionSQLiteH conn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultar_recorridos);
 
-        conn= new ConexionSQLiteH(getApplicationContext(),"bd_recorridos",null,1);
 
         campoId=(EditText) findViewById(R.id.documentoId);
         campoNom_Ruta=(EditText) findViewById(R.id.campoNom_Ruta);
@@ -48,19 +46,14 @@ public class ConsultarRecorridos extends AppCompatActivity {
 
     private void consultarSQL() {
 
-        SQLiteDatabase db=conn.getReadableDatabase();
         String[] parametros={campoId.getText().toString()};
 
         try {
 
-            Cursor cursor=db.rawQuery("SELECT "+Utilidades.CAMPO_NOM_RUTA+","+Utilidades.CAMPO_VIA+","+Utilidades.CAMPO_NUM_ECON+","+Utilidades.CAMPO_ENCUESTADOR+
-                    " FROM "+Utilidades.TABLA_RECORRIDO+" WHERE "+Utilidades.CAMPO_ID+"=? ",parametros);
-
-            cursor.moveToFirst();
-            campoNom_Ruta.setText(cursor.getString(0));
+            /*campoNom_Ruta.setText(cursor.getString(0));
             campoVia.setText(cursor.getString(1));
             campoNum_Econ.setText(cursor.getString(2));
-            campoEncuestador.setText(cursor.getString(3));
+            campoEncuestador.setText(cursor.getString(3));*/
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),"El documento no existe",Toast.LENGTH_LONG).show();
@@ -69,18 +62,17 @@ public class ConsultarRecorridos extends AppCompatActivity {
     }
 
     private void consultar() {
-        SQLiteDatabase db=conn.getReadableDatabase();
+
         String[] parametros={campoId.getText().toString()};
         String[] campos={Utilidades.CAMPO_NOM_RUTA,Utilidades.CAMPO_VIA,Utilidades.CAMPO_NUM_ECON,Utilidades.CAMPO_ENCUESTADOR};
 
         try {
-            Cursor cursor =db.query(Utilidades.TABLA_RECORRIDO,campos,Utilidades.CAMPO_ID+"=?",parametros,null,null,null);
-            cursor.moveToFirst();
-            campoNom_Ruta.setText(cursor.getString(0));
+
+            /*campoNom_Ruta.setText(cursor.getString(0));
             campoVia.setText(cursor.getString(1));
             campoNum_Econ.setText(cursor.getString(2));
             campoEncuestador.setText(cursor.getString(3));
-            cursor.close();
+            cursor.close();*/
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),"El documento no existe",Toast.LENGTH_LONG).show();
             limpiar();

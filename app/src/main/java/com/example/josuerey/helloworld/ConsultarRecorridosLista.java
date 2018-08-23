@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.entidades.Recorrido;
+import com.example.josuerey.helloworld.domain.Recorrido;
 import com.example.josuerey.helloworld.utilidades.Utilidades;
 
 import java.util.ArrayList;
@@ -22,14 +22,11 @@ public class ConsultarRecorridosLista extends AppCompatActivity {
     ArrayList<String> listaInformacion;
     ArrayList<Recorrido> listaRecorridos;
 
-    ConexionSQLiteH conn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultar_recorridos_lista);
-
-        conn=new ConexionSQLiteH(getApplicationContext(),"bd_recorridos", null,1);
 
         listViewRecorridos = (ListView) findViewById(R.id.listViewRecorridos);
 
@@ -64,21 +61,19 @@ public class ConsultarRecorridosLista extends AppCompatActivity {
     }
 
     private void consultarListaRecorridos() {
-        SQLiteDatabase db=conn.getReadableDatabase();
 
         Recorrido recorrido=null;
         listaRecorridos=new ArrayList<Recorrido>();
 
-        Cursor cursor=db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_RECORRIDO,null);
 
-        while (cursor.moveToNext()){
+        /*while (cursor.moveToNext()){
             recorrido=new Recorrido();
             recorrido.setId(cursor.getInt(0));
             recorrido.setNom_ruta(cursor.getString(1));
             recorrido.setVia(cursor.getString(2));
 
             listaRecorridos.add(recorrido);
-        }
+        }*/
         obtenerLista();
     }
 

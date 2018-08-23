@@ -2,7 +2,6 @@ package com.example.josuerey.helloworld;
 
 import android.Manifest;
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -28,19 +27,18 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.entidades.BusStop;
-import com.example.josuerey.helloworld.entidades.BusStopRepository;
-import com.example.josuerey.helloworld.entidades.BusStopViewModel;
-import com.example.josuerey.helloworld.entidades.GPSLocation;
-import com.example.josuerey.helloworld.entidades.GPSLocationRepository;
-import com.example.josuerey.helloworld.entidades.GPSLocationViewModel;
-import com.example.josuerey.helloworld.entidades.Metadata;
-import com.example.josuerey.helloworld.entidades.MetadataRepository;
-import com.example.josuerey.helloworld.entidades.MetadataModel;
+import com.example.josuerey.helloworld.domain.busstop.BusStop;
+import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
+import com.example.josuerey.helloworld.domain.busstop.BusStopViewModel;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
+import com.example.josuerey.helloworld.domain.metadata.Metadata;
+import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
+import com.example.josuerey.helloworld.domain.metadata.MetadataModel;
+import com.example.josuerey.helloworld.utilidades.ExportData;
 import com.travijuu.numberpicker.library.NumberPicker;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -147,7 +145,7 @@ public class TrackerActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registrarparadas();
+                persistBusStop();
             }
         });
 
@@ -245,17 +243,19 @@ public class TrackerActivity extends AppCompatActivity {
             // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
             // debido a la deteccion de un cambio de ubicacion
 
-            currentLocation = new GPSLocation(currentMetadataId,
-                    DATE_FORMAT.format(new Date(loc.getTime())),
-                    loc.getLatitude(),
-                    loc.getLongitude());
+            currentLocation = GPSLocation.builder()
+                    .idMetadata(currentMetadataId)
+                    .lat(loc.getLatitude())
+                    .lon(loc.getLongitude())
+                    .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
+                    .build();
 
             String Text = "Lat = "+ currentLocation.getLat() + "\n Long = " + currentLocation.getLon();
 
             latLongTextView.setText(Text);
             this.mainActivity.setLocation(loc);
 
-            registrarcoordenadas();
+            persistGPSFix();
         }
         @Override
         public void onProviderDisabled(String provider) {
@@ -283,25 +283,11 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
-    private void createFile(String sFileName, String payload) {
-        try {
-            File root = new File(Environment.getExternalStorageDirectory(), "Backup");
-            if (!root.exists()) {
-                root.mkdirs();
-            }
-            File gpxfile = new File(root, sFileName);
-            FileWriter writer = new FileWriter(gpxfile);
 
-            writer.append(payload.toString());
-
-            writer.flush();
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * This method takes the data generated during the route and export it
+     * in plain text files.
+     */
     private void exportData() {
         if (Environment.getExternalStorageState().equals("mounted")) {
             String sFileName = "testFile1.txt";
@@ -320,16 +306,16 @@ public class TrackerActivity extends AppCompatActivity {
                 payloadGPSLocations.append(i2.next().toString() + "\n");
             }
 
-            // Create stopBus fiel
-            createFile("Paradas-" + String.valueOf(currentMetadataId) + ".txt",
-                    payload.toString());
-
             // Create Metadata file
-            createFile("Recorrido-" + String.valueOf(currentMetadataId) + ".txt",
+            ExportData.createFile("Recorrido-" + String.valueOf(currentMetadataId) + ".txt",
                     metadata);
 
+            // Create stopBus fiel
+            ExportData.createFile("Paradas-" + String.valueOf(currentMetadataId) + ".txt",
+                    payload.toString());
+
             // Create GPSLocations file
-            createFile("PuntosGPS-" + String.valueOf(currentMetadataId) + ".txt",
+            ExportData.createFile("PuntosGPS-" + String.valueOf(currentMetadataId) + ".txt",
                     payloadGPSLocations.toString());
 
             Toast.makeText(this, "Archivos guardados", Toast.LENGTH_SHORT).show();
@@ -337,40 +323,44 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
-    private void registrarcoordenadas(){
+    private void persistGPSFix(){
 
         Log.i("New location stored:",  currentLocation.toString() );
         gpsLocationRepository.insert(currentLocation);
 
     }
 
-    private void clearAfterSave() {
-        numberPickerUp.setValue(0);
-        numberPickerDown.setValue(0);
-        rgStopType.check(R.id.radiobtnstop);
-        totalPassengersTextView.setText(" " + totalNumberOfPassengers + " ");
-    }
-
-    private void registrarparadas(){
+    private void persistBusStop(){
 
         totalNumberOfPassengers += numberPickerUp.getValue();
         totalNumberOfPassengers -= numberPickerDown.getValue();
         String stopType = rbStopType.getText().toString();
         boolean isOfficial = stopType.equals("Parada");
 
-        BusStop newBusStop = new BusStop(
-                currentMetadataId,
-                currentLocation.getTimeStamp(),
-                stopType, numberPickerUp.getValue(),
-                numberPickerDown.getValue(), totalNumberOfPassengers,
-                currentLocation.getLat(), currentLocation.getLon(),
-                isOfficial
-        );
+        BusStop newBusStop = BusStop.builder()
+                .stopType(stopType)
+                .idMetadata(currentMetadataId)
+                .isOfficial(isOfficial)
+                .lat(currentLocation.getLat())
+                .lon(currentLocation.getLon())
+                .timeStamp(currentLocation.getTimeStamp())
+                .passengersDown(numberPickerDown.getValue())
+                .passengersUp(numberPickerUp.getValue())
+                .totalPassengers(totalNumberOfPassengers)
+                .build();
 
         busStopRepository.insert(newBusStop);
         Toast.makeText(getApplicationContext(), "Guardado",Toast.LENGTH_SHORT).show();
         clearAfterSave();
         Log.i("New stop bus stored:",  newBusStop.toString() );
+    }
+
+    private void clearAfterSave() {
+
+        numberPickerUp.setValue(0);
+        numberPickerDown.setValue(0);
+        rgStopType.check(R.id.radiobtnstop);
+        totalPassengersTextView.setText(" " + totalNumberOfPassengers + " ");
     }
 
     @Override

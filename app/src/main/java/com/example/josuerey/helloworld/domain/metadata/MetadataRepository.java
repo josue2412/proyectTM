@@ -1,10 +1,9 @@
-package com.example.josuerey.helloworld.entidades;
+package com.example.josuerey.helloworld.domain.metadata;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.os.AsyncTask;
 
-import java.util.List;
+import com.example.josuerey.helloworld.domain.uRoomDatabase;
 
 public class MetadataRepository {
     private MetadataDao metadataDao;
