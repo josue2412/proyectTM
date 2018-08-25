@@ -3,8 +3,6 @@ package com.example.josuerey.helloworld;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,17 +10,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
+import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilidades.Utilidades;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText campoEncuestador;
     private MetadataRepository metadataRepository;
     private int metadataId;
+    private final static String TAG = "MainActivity";
+    private APIClient apiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
         campoEncuestador=(EditText) findViewById(R.id.editTextEnc);
 
         metadataRepository = new MetadataRepository(getApplication());
+        apiClient = new APIClient(getApplication());
     }
 
     public void onClick(View view){
-        //registrarRecorridos();
 
         Intent miIntent=null;
         switch (view.getId()){
@@ -61,12 +64,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnConsultaLista:
                 miIntent=new Intent(MainActivity.this,ConsultarRecorridosLista.class);
                 break;
-
+            case R.id.btnStart:
+                try{
+                    getAuthorization();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
         if (miIntent!=null){
             startActivity(miIntent);
         }
-
     }
 
     /**
@@ -82,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 .route(campoNom_Ruta.getText().toString()).build();
 
         metadataId = (int) metadataRepository.insert(metadata);
+        metadata.setId(metadataId);
         return metadata;
     }
 
@@ -95,59 +104,53 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void setStartButton(View target) {
-        new AsyncCaller().execute();
-    }
 
-    private class AsyncCaller extends AsyncTask<Void, Void, JSONObject> {
-        ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
+    private void getAuthorization() throws JSONException {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String userToken= "1234";
+        String url ="http://u856955919.hostingerapp.com/api/user?api_token="+userToken;
+        final ProgressDialog pdLoading = new ProgressDialog(this);
+        pdLoading.setMessage("\tLoading...");
+        pdLoading.show();
 
-            //this method will be running on UI thread
-            pdLoading.setMessage("\tLoading...");
-            pdLoading.show();
-        }
+        // Request a string response from the provided URL.
+        JsonRequest<JSONObject> stringRequest = new JsonObjectRequest(Request.Method.GET, url,
+                null,new Response.Listener<JSONObject >() {
+            @Override
+            public void onResponse(JSONObject  response) {
+                // Display the first 500 characters of the response string.
+                Log.i(TAG, response.toString());
+                try {
 
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-            try {
-                JSONObject response = getAuthorization();
-                return response;
-            } catch (JSONException e){
-                e.printStackTrace();
+                    evalResponse(response);
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+                }
+                pdLoading.dismiss();
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-            try {
-                evalResponse(result);
-            } catch (JSONException e) {
-                e.printStackTrace();
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "Did not worked");
+                pdLoading.dismiss();
             }
+        });
 
-            //this method will be running on UI thread
-            pdLoading.dismiss();
-        }
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     private void evalResponse(JSONObject response) throws JSONException {
+        String msg;
         if (response != null) {
-
-            String auth = response.getString("success");
-            String msg;
-
-            if (auth.equals("1")) {
-                JSONObject data = response.getJSONObject("data");
-                String isActive = data.getString("active");
+            String isActive = response.getString("activo");
 
                 if (isActive.equals("1")) {
-                    String metadata = saveMetadata().toString();
+                    Metadata metadata = saveMetadata();
+                    Log.i(TAG, metadata.toString());
+                    apiClient.postMetadata(metadata);
 
                     msg = "Bienvenido " + campoEncuestador.getText().toString();
                     Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
@@ -155,60 +158,16 @@ public class MainActivity extends AppCompatActivity {
                     myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
                     MainActivity.this.startActivity(myIntent);
                     finish();
+
                 } else
                     msg = "You are not allowed to use this app anymore, until you pay.";
+
             } else {
                 msg = "Unable to connect to remote server.";
             }
 
-            Log.i("EvalResponse", "Auth:" + msg);
-            Toast.makeText(MainActivity.this, msg,
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(MainActivity.this, "Error de conexion con servidor remoto.",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    /**
-     * This method makes a GET request to a remote server in order to obtain the authorization
-     * data from the user.
-     *
-     * @return auth data for the current user.
-     * @throws JSONException
-     */
-    private JSONObject getAuthorization() throws JSONException {
-        URL url;
-        HttpURLConnection urlConnection = null;
-        String user = "User1";
-        String pass = "abc123";
-        StringBuffer response = new StringBuffer();
-        try {
-            url = new URL("http://u856955919.hostingerapp.com/userAuthentication.php" +
-                    "?user=" + user + "&pass=" + pass);
-            Log.i("AuthUser", "HttpRequest to verify user: " + url.toString());
-
-            urlConnection = (HttpURLConnection) url
-                    .openConnection();
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream()));
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            Log.i("AuthUSer", "Response:" + response.toString());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }
-        return new JSONObject(response.toString());
+        Log.i(TAG, "Auth:" + msg);
+        Toast.makeText(MainActivity.this, msg,
+                Toast.LENGTH_SHORT).show();
     }
 }

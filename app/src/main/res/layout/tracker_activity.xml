@@ -89,42 +89,31 @@
         android:gravity="center"
         android:text="Total pasajeros" />
 
-    <CheckBox
-        android:id="@+id/validStop"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_below="@id/number_pickerDown"
-        android:layout_alignParentRight="true"
-        android:checked="true"
-        android:text="Parada oficial"
-        />
-
     <RadioGroup
-        android:gravity="right"
         android:id="@+id/rgStopType"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/number_pickerDown"
-        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
         >
         <RadioButton
-            android:id="@+id/radiobtnstop"
+            android:id="@+id/radiobtnOficialStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Parada">
         </RadioButton>
         <RadioButton
+            android:id="@+id/radiobtnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parada no oficial">
+        </RadioButton>
+        <RadioButton
             android:id="@+id/radiobtnsemaphore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Semaforo">
-        </RadioButton>
-        <RadioButton
-            android:id="@+id/radiobtnevent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Evento">
         </RadioButton>
     </RadioGroup>
 

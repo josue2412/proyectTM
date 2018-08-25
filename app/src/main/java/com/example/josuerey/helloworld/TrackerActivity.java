@@ -359,7 +359,7 @@ public class TrackerActivity extends AppCompatActivity {
 
         numberPickerUp.setValue(0);
         numberPickerDown.setValue(0);
-        rgStopType.check(R.id.radiobtnstop);
+        rgStopType.check(R.id.radiobtnOficialStop);
         totalPassengersTextView.setText(" " + totalNumberOfPassengers + " ");
     }
 

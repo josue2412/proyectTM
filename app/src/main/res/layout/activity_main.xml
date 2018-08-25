@@ -26,7 +26,7 @@
         android:id="@+id/editTextNumEcon"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="text"
         android:hint="NumeroEconomico" />
 
     <EditText
@@ -37,12 +37,12 @@
         android:hint="Encuestador" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnStart"
         android:layout_gravity="center_horizontal"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="@string/buttonStart"
-        android:onClick="setStartButton"/>
+        android:onClick="onClick"/>
 
     <Button
         android:id="@+id/btnConsultaRecorrido"
