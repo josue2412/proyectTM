@@ -25,22 +25,7 @@ public class BusStopRepository {
         return busStopDao.findBusStopsByMetadataId(metadata);
     }
 
-    public void insert (BusStop busStop) {
-        new BusStopRepository.insertAsyncTask(busStopDao).execute(busStop);
-    }
-
-    private static class insertAsyncTask extends AsyncTask<BusStop, Void, Void> {
-
-        private BusStopDao mAsyncTaskDao;
-
-        insertAsyncTask(BusStopDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final BusStop... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
+    public long insert (BusStop busStop) {
+        return busStopDao.insert(busStop);
     }
 }

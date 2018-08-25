@@ -11,7 +11,7 @@ import java.util.List;
 public interface BusStopDao {
 
     @Insert
-    void insert(BusStop busStop);
+    long insert(BusStop busStop);
 
     @Query("SELECT * from BusStop")
     LiveData<List<BusStop>> findAllBusStops();

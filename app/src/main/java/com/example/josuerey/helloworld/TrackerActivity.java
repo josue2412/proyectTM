@@ -36,6 +36,7 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.example.josuerey.helloworld.domain.metadata.MetadataModel;
+import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilidades.ExportData;
 import com.travijuu.numberpicker.library.NumberPicker;
 
@@ -77,12 +78,15 @@ public class TrackerActivity extends AppCompatActivity {
     private BusStopRepository busStopRepository;
     private MetadataRepository metadataRepository;
 
+    private APIClient apiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.tracker_activity);
 
+        apiClient = new APIClient(getApplication());
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -146,6 +150,7 @@ public class TrackerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 persistBusStop();
+
             }
         });
 
@@ -349,7 +354,9 @@ public class TrackerActivity extends AppCompatActivity {
                 .totalPassengers(totalNumberOfPassengers)
                 .build();
 
-        busStopRepository.insert(newBusStop);
+        int id = (int)busStopRepository.insert(newBusStop);
+        newBusStop.setId(id);
+        apiClient.postBusStop(newBusStop);
         Toast.makeText(getApplicationContext(), "Guardado",Toast.LENGTH_SHORT).show();
         clearAfterSave();
         Log.i("New stop bus stored:",  newBusStop.toString() );
