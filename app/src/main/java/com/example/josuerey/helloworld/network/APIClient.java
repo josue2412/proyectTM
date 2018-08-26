@@ -56,6 +56,8 @@ public class APIClient {
                         postMap.put("lat", String.valueOf(bs.getLat()));
                         postMap.put("lon", String.valueOf(bs.getLon()));
                         postMap.put("isOfficial", String.valueOf(bs.isOfficial() ? 1 : 0));
+                        postMap.put("stop_begin", bs.getTimeStamp());
+                        postMap.put("stop_end", bs.getTimeStamp());
 
                         return postMap;
                     }
