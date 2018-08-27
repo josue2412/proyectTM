@@ -43,4 +43,7 @@ public class Metadata {
     @ColumnInfo(name = "capturist")
     private String capturist;
 
+    @ColumnInfo(name = "deviceId")
+    private String deviceId;
+
 }

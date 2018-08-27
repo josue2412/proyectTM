@@ -56,8 +56,9 @@ public class APIClient {
                         postMap.put("lat", String.valueOf(bs.getLat()));
                         postMap.put("lon", String.valueOf(bs.getLon()));
                         postMap.put("isOfficial", String.valueOf(bs.isOfficial() ? 1 : 0));
-                        postMap.put("stop_begin", bs.getTimeStamp());
-                        postMap.put("stop_end", bs.getTimeStamp());
+                        postMap.put("stop_begin", bs.getStopBegin());
+                        postMap.put("stop_end", bs.getStopEnd());
+                        postMap.put("deviceId", bs.getDeviceId());
 
                         return postMap;
                     }
@@ -93,6 +94,7 @@ public class APIClient {
                         postMap.put("via", m.getVia());
                         postMap.put("economicNumber", m.getEconomicNumber());
                         postMap.put("capturist", m.getCapturist());
+                        postMap.put("deviceId", m.getDeviceId());
 
                         return postMap;
                     }

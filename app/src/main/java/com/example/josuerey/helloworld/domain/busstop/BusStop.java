@@ -28,6 +28,9 @@ public class BusStop {
     @ColumnInfo(name = "idMetadata")
     private int idMetadata;
 
+    @ColumnInfo(name = "deviceId")
+    private String deviceId;
+
     @ColumnInfo(name = "timeStamp")
     private String timeStamp;
 
@@ -51,5 +54,11 @@ public class BusStop {
 
     @ColumnInfo(name = "isOfficial")
     private boolean isOfficial;
+
+    @ColumnInfo(name = "stopBegin")
+    private String stopBegin;
+
+    @ColumnInfo(name = "stopEnd")
+    private String stopEnd;
 
 }

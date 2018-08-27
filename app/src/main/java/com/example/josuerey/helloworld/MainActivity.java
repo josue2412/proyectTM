@@ -3,6 +3,7 @@ package com.example.josuerey.helloworld;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,11 +38,17 @@ public class MainActivity extends AppCompatActivity {
     private int metadataId;
     private final static String TAG = "MainActivity";
     private APIClient apiClient;
+    private String android_device_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        android_device_id = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+        Log.i(TAG, "Unique id: " + android_device_id);
 
         campoNom_Ruta=(EditText) findViewById(R.id.editTextRuta);
         campoVia=(EditText) findViewById(R.id.editTextVia);
@@ -87,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 .capturist(campoEncuestador.getText().toString())
                 .economicNumber(campoNum_Econ.getText().toString())
                 .via(campoVia.getText().toString())
+                .deviceId(android_device_id)
                 .route(campoNom_Ruta.getText().toString()).build();
 
         metadataId = (int) metadataRepository.insert(metadata);
@@ -156,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                     Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
                     myIntent.putExtra(METADATA_ID_PROPERTY, String.valueOf(metadataId));
                     myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
+                    myIntent.putExtra("Route", metadata.getRoute());
+                    myIntent.putExtra("econNumber", metadata.getEconomicNumber());
                     MainActivity.this.startActivity(myIntent);
                     finish();
 

@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Calendar;
 
 public class TrackerActivity extends AppCompatActivity {
 
@@ -54,6 +55,7 @@ public class TrackerActivity extends AppCompatActivity {
     private TextView directionsTextView;
     private TextView totalPassengersTextView;
     private Button saveButton;
+    private Button beginStopButton;
     private Button finishButton;
     private RadioGroup rgStopType;
     private RadioButton rbStopType;
@@ -68,6 +70,7 @@ public class TrackerActivity extends AppCompatActivity {
     private List<GPSLocation> gpsLocationList;
     private int currentMetadataId;
     private String metadata;
+    private Date beginStopInstant;
 
     private int totalNumberOfPassengers;
     private GPSLocation currentLocation;
@@ -79,6 +82,10 @@ public class TrackerActivity extends AppCompatActivity {
     private MetadataRepository metadataRepository;
 
     private APIClient apiClient;
+
+    private String route;
+    private String econNumber;
+    private String android_device_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +100,12 @@ public class TrackerActivity extends AppCompatActivity {
             currentMetadataId = Integer.valueOf(extras
                     .getString(MainActivity.METADATA_ID_PROPERTY));
             metadata = extras.getString(MainActivity.METADATA_PROPERTY);
+            route = extras.getString("Route");
+            econNumber = extras.getString("econNumber");
         }
+
+        android_device_id = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         // Initialize repositories
         gpsLocationRepository = new GPSLocationRepository(getApplication());
@@ -105,6 +117,7 @@ public class TrackerActivity extends AppCompatActivity {
         directionsTextView = findViewById(R.id.directions);
         totalPassengersTextView = findViewById(R.id.totalPassengers);
         saveButton = findViewById(R.id.btnSave);
+        beginStopButton = findViewById(R.id.btnStopBegin);
         finishButton = findViewById(R.id.btnFinish);
         rgStopType = (RadioGroup) findViewById(R.id.rgStopType);
         rbStopType = (RadioButton) findViewById(rgStopType.getCheckedRadioButtonId());
@@ -149,8 +162,20 @@ public class TrackerActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                persistBusStop();
 
+                persistBusStop();
+                disableControls();
+                beginStopButton.setEnabled(true);
+            }
+        });
+
+        beginStopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                beginStopInstant = Calendar.getInstance().getTime();
+                enableControls();
+                beginStopButton.setEnabled(false);
             }
         });
 
@@ -167,7 +192,30 @@ public class TrackerActivity extends AppCompatActivity {
             }
         });
 
+        disableControls();
         requestPermissions();
+    }
+
+    private void disableControls(){
+        numberPickerDown.setEnabled(false);
+        numberPickerUp.setEnabled(false);
+        rgStopType.setEnabled(false);
+        saveButton.setEnabled(false);
+
+        for(int i = 0; i < rgStopType.getChildCount(); i++){
+            ((RadioButton)rgStopType.getChildAt(i)).setEnabled(false);
+        }
+    }
+
+    private void enableControls(){
+        numberPickerDown.setEnabled(true);
+        numberPickerUp.setEnabled(true);
+        rgStopType.setEnabled(true);
+        saveButton.setEnabled(true);
+
+        for(int i = 0; i < rgStopType.getChildCount(); i++){
+            ((RadioButton)rgStopType.getChildAt(i)).setEnabled(true);
+        }
     }
 
     private void requestPermissions() {
@@ -295,7 +343,6 @@ public class TrackerActivity extends AppCompatActivity {
      */
     private void exportData() {
         if (Environment.getExternalStorageState().equals("mounted")) {
-            String sFileName = "testFile1.txt";
 
             StringBuilder payload = new StringBuilder();
             Iterator i = busStopsList.iterator();
@@ -312,15 +359,16 @@ public class TrackerActivity extends AppCompatActivity {
             }
 
             // Create Metadata file
-            ExportData.createFile("Recorrido-" + String.valueOf(currentMetadataId) + ".txt",
-                    metadata);
+            ExportData.createFile(route + "-" + econNumber + "Recorrido-"
+                            + String.valueOf(currentMetadataId) + ".txt", metadata);
 
             // Create stopBus fiel
-            ExportData.createFile("Paradas-" + String.valueOf(currentMetadataId) + ".txt",
-                    payload.toString());
+            ExportData.createFile(route + "-" + econNumber + "Paradas-"
+                            + String.valueOf(currentMetadataId) + ".txt", payload.toString());
 
             // Create GPSLocations file
-            ExportData.createFile("PuntosGPS-" + String.valueOf(currentMetadataId) + ".txt",
+            ExportData.createFile(route + "-" + econNumber + "PuntosGPS-"
+                            + String.valueOf(currentMetadataId) + ".txt",
                     payloadGPSLocations.toString());
 
             Toast.makeText(this, "Archivos guardados", Toast.LENGTH_SHORT).show();
@@ -345,6 +393,7 @@ public class TrackerActivity extends AppCompatActivity {
         BusStop newBusStop = BusStop.builder()
                 .stopType(stopType)
                 .idMetadata(currentMetadataId)
+                .deviceId(android_device_id)
                 .isOfficial(isOfficial)
                 .lat(currentLocation.getLat())
                 .lon(currentLocation.getLon())
@@ -352,6 +401,8 @@ public class TrackerActivity extends AppCompatActivity {
                 .passengersDown(numberPickerDown.getValue())
                 .passengersUp(numberPickerUp.getValue())
                 .totalPassengers(totalNumberOfPassengers)
+                .stopBegin(DATE_FORMAT.format(beginStopInstant))
+                .stopEnd(DATE_FORMAT.format(new Date()))
                 .build();
 
         int id = (int)busStopRepository.insert(newBusStop);
