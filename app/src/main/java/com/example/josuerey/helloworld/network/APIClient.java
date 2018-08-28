@@ -10,9 +10,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class APIClient {
@@ -95,6 +98,39 @@ public class APIClient {
                         postMap.put("economicNumber", m.getEconomicNumber());
                         postMap.put("capturist", m.getCapturist());
                         postMap.put("deviceId", m.getDeviceId());
+
+                        return postMap;
+                    }
+                };
+        //make the request to your server as indicated in your request url
+        Volley.newRequestQueue(app).add(stringRequest);
+    }
+
+    public void PostArray(final List<GPSLocation> route) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/route";
+        StringRequest stringRequest =
+                new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //the response contains the result from the server, a
+                        // json string or any other object returned by your server
+                        Log.e("Volley Result", ""+response);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+
+                    }
+                }){
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> postMap = new HashMap<>();
+                        String list2JsonArray = new Gson().toJson(route);
+                        postMap.put("RouteArray", list2JsonArray);
+                        Log.i(TAG, "JsonArray: " + list2JsonArray);
 
                         return postMap;
                     }

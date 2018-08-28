@@ -49,4 +49,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.2'
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

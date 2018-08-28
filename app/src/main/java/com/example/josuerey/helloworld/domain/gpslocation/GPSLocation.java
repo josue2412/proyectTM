@@ -40,4 +40,7 @@ public class GPSLocation {
     @ColumnInfo(name = "lon")
     private double lon;
 
+    @ColumnInfo(name = "deviceId")
+    private String deviceId;
+
 }

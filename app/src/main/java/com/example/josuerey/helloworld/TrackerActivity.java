@@ -183,7 +183,7 @@ public class TrackerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 exportData();
-
+                apiClient.PostArray(gpsLocationList);
                 Intent myIntent = new Intent(TrackerActivity.this, MainActivity.class);
                 TrackerActivity.this.startActivity(myIntent);
 
@@ -301,6 +301,7 @@ public class TrackerActivity extends AppCompatActivity {
                     .lat(loc.getLatitude())
                     .lon(loc.getLongitude())
                     .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
+                    .deviceId(android_device_id)
                     .build();
 
             String Text = "Lat = "+ currentLocation.getLat() + "\n Long = " + currentLocation.getLon();
@@ -359,15 +360,15 @@ public class TrackerActivity extends AppCompatActivity {
             }
 
             // Create Metadata file
-            ExportData.createFile(route + "-" + econNumber + "Recorrido-"
+            ExportData.createFile(route + "-" + econNumber + "-Recorrido-"
                             + String.valueOf(currentMetadataId) + ".txt", metadata);
 
             // Create stopBus fiel
-            ExportData.createFile(route + "-" + econNumber + "Paradas-"
+            ExportData.createFile(route + "-" + econNumber + "-Paradas-"
                             + String.valueOf(currentMetadataId) + ".txt", payload.toString());
 
             // Create GPSLocations file
-            ExportData.createFile(route + "-" + econNumber + "PuntosGPS-"
+            ExportData.createFile(route + "-" + econNumber + "-PuntosGPS-"
                             + String.valueOf(currentMetadataId) + ".txt",
                     payloadGPSLocations.toString());
 
