@@ -13,7 +13,6 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -33,9 +32,6 @@ import com.example.josuerey.helloworld.domain.busstop.BusStopViewModel;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
-import com.example.josuerey.helloworld.domain.metadata.Metadata;
-import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
-import com.example.josuerey.helloworld.domain.metadata.MetadataModel;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilidades.ExportData;
 import com.travijuu.numberpicker.library.NumberPicker;
@@ -43,7 +39,6 @@ import com.travijuu.numberpicker.library.NumberPicker;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -64,12 +59,10 @@ public class TrackerActivity extends AppCompatActivity {
     private LocationManager mlocManager;
     private MyLocationListener mlocListener;
     private BusStopViewModel busStopViewModel;
-    private MetadataModel metadataModel;
     private GPSLocationViewModel gpsLocationViewModel;
     private List<BusStop> busStopsList;
     private List<GPSLocation> gpsLocationList;
     private int currentMetadataId;
-    private String metadata;
     private Date beginStopInstant;
 
     private int totalNumberOfPassengers;
@@ -79,7 +72,6 @@ public class TrackerActivity extends AppCompatActivity {
 
     private GPSLocationRepository gpsLocationRepository;
     private BusStopRepository busStopRepository;
-    private MetadataRepository metadataRepository;
 
     private APIClient apiClient;
 
@@ -93,13 +85,12 @@ public class TrackerActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.tracker_activity);
 
-        apiClient = new APIClient(getApplication());
+        apiClient = APIClient.builder().app(getApplication()).build();
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
             currentMetadataId = Integer.valueOf(extras
                     .getString(MainActivity.METADATA_ID_PROPERTY));
-            metadata = extras.getString(MainActivity.METADATA_PROPERTY);
             route = extras.getString("Route");
             econNumber = extras.getString("econNumber");
         }
@@ -110,7 +101,6 @@ public class TrackerActivity extends AppCompatActivity {
         // Initialize repositories
         gpsLocationRepository = new GPSLocationRepository(getApplication());
         busStopRepository = new BusStopRepository(getApplication());
-        metadataRepository = new MetadataRepository(getApplication());
 
         //Bind layout components
         latLongTextView = findViewById(R.id.latLong);
@@ -133,7 +123,6 @@ public class TrackerActivity extends AppCompatActivity {
         totalNumberOfPassengers = 0;
 
         busStopViewModel = ViewModelProviders.of(this).get(BusStopViewModel.class);
-        metadataModel = ViewModelProviders.of(this).get(MetadataModel.class);
         gpsLocationViewModel = ViewModelProviders.of(this).get(GPSLocationViewModel.class);
 
         busStopsList = new LinkedList<BusStop>();
@@ -144,15 +133,8 @@ public class TrackerActivity extends AppCompatActivity {
             }
         });
 
-        metadataModel.findMetadataById(currentMetadataId).observe(this, new Observer<Metadata>() {
-            @Override
-            public void onChanged(@Nullable Metadata metadata) {
-                metadata = metadata;
-            }
-        });
-
         gpsLocationList = new LinkedList<GPSLocation>();
-        gpsLocationViewModel.findBusStopsByMetadata(currentMetadataId).observe(this, new Observer<List<GPSLocation>>() {
+        gpsLocationViewModel.findGPSLocationsByMetadataId(currentMetadataId).observe(this, new Observer<List<GPSLocation>>() {
             @Override
             public void onChanged(@Nullable List<GPSLocation> gpsLocations) {
                 gpsLocationList =gpsLocations;
@@ -182,7 +164,7 @@ public class TrackerActivity extends AppCompatActivity {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exportData();
+
                 apiClient.PostArray(gpsLocationList);
                 Intent myIntent = new Intent(TrackerActivity.this, MainActivity.class);
                 TrackerActivity.this.startActivity(myIntent);
@@ -265,7 +247,7 @@ public class TrackerActivity extends AppCompatActivity {
         directionsTextView.setText("");
     }
 
-    public void setLocation(Location loc) {
+    public void updateLocationOnView(Location loc) {
         //Obtener la direccion de la calle a partir de la latitud y la longitud
         if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
             try {
@@ -307,7 +289,7 @@ public class TrackerActivity extends AppCompatActivity {
             String Text = "Lat = "+ currentLocation.getLat() + "\n Long = " + currentLocation.getLon();
 
             latLongTextView.setText(Text);
-            this.mainActivity.setLocation(loc);
+            this.mainActivity.updateLocationOnView(loc);
 
             persistGPSFix();
         }
@@ -337,50 +319,13 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
-
-    /**
-     * This method takes the data generated during the route and export it
-     * in plain text files.
-     */
-    private void exportData() {
-        if (Environment.getExternalStorageState().equals("mounted")) {
-
-            StringBuilder payload = new StringBuilder();
-            Iterator i = busStopsList.iterator();
-
-            while (i.hasNext()){
-                payload.append(i.next().toString() + "\n");
-            }
-
-            StringBuilder payloadGPSLocations = new StringBuilder();
-            Iterator i2 = gpsLocationList.iterator();
-
-            while (i2.hasNext()){
-                payloadGPSLocations.append(i2.next().toString() + "\n");
-            }
-
-            // Create Metadata file
-            ExportData.createFile(route + "-" + econNumber + "-Recorrido-"
-                            + String.valueOf(currentMetadataId) + ".txt", metadata);
-
-            // Create stopBus fiel
-            ExportData.createFile(route + "-" + econNumber + "-Paradas-"
-                            + String.valueOf(currentMetadataId) + ".txt", payload.toString());
-
-            // Create GPSLocations file
-            ExportData.createFile(route + "-" + econNumber + "-PuntosGPS-"
-                            + String.valueOf(currentMetadataId) + ".txt",
-                    payloadGPSLocations.toString());
-
-            Toast.makeText(this, "Archivos guardados", Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
     private void persistGPSFix(){
 
         Log.i("New location stored:",  currentLocation.toString() );
         gpsLocationRepository.insert(currentLocation);
+
+        ExportData.createFile(route + "-" + econNumber + "-PuntosGPS-"
+                        + String.valueOf(currentMetadataId) + ".txt", currentLocation.toString());
 
     }
 
@@ -409,6 +354,11 @@ public class TrackerActivity extends AppCompatActivity {
         int id = (int)busStopRepository.insert(newBusStop);
         newBusStop.setId(id);
         apiClient.postBusStop(newBusStop);
+
+        // Create BusStop file
+        ExportData.createFile(route + "-" + econNumber + "-Paradas-"
+                + String.valueOf(currentMetadataId) + ".txt", newBusStop.toString());
+
         Toast.makeText(getApplicationContext(), "Guardado",Toast.LENGTH_SHORT).show();
         clearAfterSave();
         Log.i("New stop bus stored:",  newBusStop.toString() );
@@ -419,7 +369,7 @@ public class TrackerActivity extends AppCompatActivity {
         numberPickerUp.setValue(0);
         numberPickerDown.setValue(0);
         rgStopType.check(R.id.radiobtnOficialStop);
-        totalPassengersTextView.setText(" " + totalNumberOfPassengers + " ");
+        totalPassengersTextView.setText(" Total pasajeros: " + totalNumberOfPassengers + " ");
     }
 
     @Override

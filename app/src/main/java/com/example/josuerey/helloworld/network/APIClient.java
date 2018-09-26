@@ -18,14 +18,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Builder
 public class APIClient {
 
-    private Application app;
+    private final Application app;
     private final static String TAG = "APIClient";
-
-    public APIClient(Application app) {
-        this.app = app;
-    }
 
     public void postBusStop(final BusStop bs) {
         String requestUrl = "http://u856955919.hostingerapp.com/api/busstop";

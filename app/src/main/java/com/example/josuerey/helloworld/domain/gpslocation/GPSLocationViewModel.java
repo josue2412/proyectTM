@@ -16,7 +16,7 @@ public class GPSLocationViewModel extends AndroidViewModel {
         gpsLocationRepository = new GPSLocationRepository(application);
     }
 
-    public LiveData<List<GPSLocation>> findBusStopsByMetadata(int idMetadata) {
+    public LiveData<List<GPSLocation>> findGPSLocationsByMetadataId(int idMetadata) {
 
         return  gpsLocationRepository.findGPSLocationsByMetadataId(idMetadata);
     }

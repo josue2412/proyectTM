@@ -2,6 +2,7 @@ package com.example.josuerey.helloworld.utilidades;
 
 import android.os.Environment;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,9 +16,9 @@ public class ExportData {
                 root.mkdirs();
             }
             File gpxfile = new File(root, sFileName);
-            FileWriter writer = new FileWriter(gpxfile);
+            FileWriter writer = new FileWriter(gpxfile, true);
 
-            writer.append(payload.toString());
+            writer.append(payload.toString() + "\n");
 
             writer.flush();
             writer.close();

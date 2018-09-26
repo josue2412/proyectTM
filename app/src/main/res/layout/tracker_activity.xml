@@ -3,139 +3,192 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_color"
     xmlns:numberpicker="http://schemas.android.com/apk/res-auto">
 
-
-    <com.travijuu.numberpicker.library.NumberPicker
-        android:id="@+id/number_pickerUP"
-        android:layout_width="130dp"
+    <LinearLayout
+        android:id="@+id/upLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/latLong"
         android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:layout_above="@+id/number_pickerDown"
-        android:gravity="center"
-        numberpicker:min="0"
-        numberpicker:max="100"
-        numberpicker:value="0"
-        numberpicker:unit="1"
-        numberpicker:focusable="false"
-        numberpicker:custom_layout="@layout/number_picker_custom_layout" />
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:weightSum="1">
 
-    <com.travijuu.numberpicker.library.NumberPicker
-        android:id="@+id/number_pickerDown"
-        android:layout_width="130dp"
+        <TextView
+            android:id="@+id/UpLabel"
+            android:layout_below="@+id/latLong"
+            android:layout_toLeftOf="@+id/number_pickerUP"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="false"
+            android:gravity="center_vertical"
+            android:text="Suben:" />
+
+        <com.travijuu.numberpicker.library.NumberPicker
+            android:id="@+id/number_pickerUP"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            numberpicker:min="0"
+            numberpicker:max="100"
+            numberpicker:value="0"
+            numberpicker:unit="1"
+            numberpicker:focusable="false"
+            numberpicker:custom_layout="@layout/number_picker_custom_layout" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/downLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/upLinearLayout"
         android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        numberpicker:min="0"
-        numberpicker:max="100"
-        numberpicker:value="0"
-        numberpicker:unit="1"
-        numberpicker:focusable="false"
-        numberpicker:custom_layout="@layout/number_picker_custom_layout" />
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:weightSum="1">
 
-    <TextView
-        android:id="@+id/UpLabel"
-        android:layout_above="@+id/DownLabel"
-        android:layout_toLeftOf="@+id/number_pickerUP"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="Suben" />
+        <TextView
+            android:id="@+id/DownLabel"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="false"
+            android:gravity="center_vertical"
+            android:text="Bajan:" />
 
-    <TextView
-        android:id="@+id/DownLabel"
-        android:layout_toLeftOf="@+id/number_pickerDown"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="Bajan" />
+        <com.travijuu.numberpicker.library.NumberPicker
+            android:id="@+id/number_pickerDown"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            numberpicker:min="0"
+            numberpicker:max="100"
+            numberpicker:value="0"
+            numberpicker:unit="1"
+            numberpicker:focusable="false"
+            numberpicker:custom_layout="@layout/number_picker_custom_layout" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/latLong"
-        android:layout_above="@+id/number_pickerUP"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="remove" />
+        android:layout_below="@+id/directions"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_centerInParent="false"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="left"
+        android:text="Coordenadas" />
 
     <TextView
         android:id="@+id/directions"
-        android:layout_above="@+id/latLong"
-        android:layout_width="200dp"
+        android:layout_below="@+id/totalPassengers"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="remove" />
+        android:layout_centerInParent="false"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="left"
+        android:text="Direccion" />
 
     <TextView
         android:id="@+id/totalPassengers"
-        android:layout_above="@+id/directions"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:textSize="32dp"
-        android:text=" 0 " />
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_centerInParent="false"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:gravity="left"
+        android:text="Total pasajeros: " />
 
-    <TextView
-        android:id="@+id/totalPassangersLbl"
-        android:layout_above="@+id/totalPassengers"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="Total pasajeros" />
-
-    <RadioGroup
-        android:id="@+id/rgStopType"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/stopTypeLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/downLinearLayout"
         android:layout_height="wrap_content"
-        android:layout_below="@id/number_pickerDown"
-        android:layout_centerInParent="true"
-        >
-        <RadioButton
-            android:id="@+id/radiobtnOficialStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Parada">
-        </RadioButton>
-        <RadioButton
-            android:id="@+id/radiobtnStop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Parada no oficial">
-        </RadioButton>
-        <RadioButton
-            android:id="@+id/radiobtnsemaphore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Semaforo">
-        </RadioButton>
-    </RadioGroup>
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:weightSum="1">
 
-    <Button
+        <TextView
+            android:id="@+id/stopType"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:text="Tipo de parada:" />
+
+        <RadioGroup
+            android:id="@+id/rgStopType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/downLinearLayout"
+            android:layout_marginLeft="10dp"
+            android:layout_centerInParent="false"
+            >
+            <RadioButton
+                android:id="@+id/radiobtnOficialStop"
+                android:layout_width="fill_parent"
+                android:drawableRight="@android:drawable/btn_radio"
+                android:layout_alignParentLeft="true"
+                android:button="@null"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:checked="true"
+                android:text="Oficial">
+            </RadioButton>
+            <RadioButton
+                android:id="@+id/radiobtnStop"
+                android:layout_width="fill_parent"
+                android:drawableRight="@android:drawable/btn_radio"
+                android:layout_alignParentLeft="true"
+                android:button="@null"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:text="No oficial">
+            </RadioButton>
+            <RadioButton
+                android:id="@+id/radiobtnsemaphore"
+                android:layout_width="fill_parent"
+                android:drawableRight="@android:drawable/btn_radio"
+                android:layout_alignParentLeft="true"
+                android:button="@null"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:text="Semaforo">
+            </RadioButton>
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+
+    <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/btnStopBegin"
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
-        android:layout_below="@id/rgStopType"
+        android:layout_below="@id/stopTypeLinearLayout"
         android:text="Inicio parada" />
 
-    <Button
+    <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/btnSave"
         android:layout_width="150dp"
         android:layout_marginRight="15dp"
         android:layout_height="60dp"
-        android:layout_below="@id/rgStopType"
+        android:layout_below="@id/stopTypeLinearLayout"
         android:layout_alignParentRight="true"
         android:text="Fin parada" />
 
-    <Button
+    <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/btnFinish"
         android:layout_width="150dp"
         android:layout_height="60dp"
