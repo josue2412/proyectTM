@@ -18,6 +18,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.josuerey.helloworld.domain.busstop.BusStop;
+import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.example.josuerey.helloworld.network.APIClient;
@@ -35,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText campoNumEcon;
     private EditText campoEncuestador;
     private MetadataRepository metadataRepository;
+    private GPSLocationRepository gpsLocationRepository;
+    private BusStopRepository busStopRepository;
     private int metadataId;
-    private final static String TAG = "MainActivity";
+    private final String TAG = this.getClass().getSimpleName();
     private APIClient apiClient;
     private String androidDeviceId;
 
@@ -48,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         androidDeviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
-        Log.i(TAG, "Unique id: " + androidDeviceId);
+        Log.d(TAG, "Unique id: " + androidDeviceId);
 
         campoNoRuta = (EditText) findViewById(R.id.editTextRuta);
         campoVia = (EditText) findViewById(R.id.editTextVia);
@@ -56,7 +62,33 @@ public class MainActivity extends AppCompatActivity {
         campoEncuestador = (EditText) findViewById(R.id.editTextEnc);
 
         metadataRepository = new MetadataRepository(getApplication());
+        gpsLocationRepository = new GPSLocationRepository(getApplication());
+        busStopRepository = new BusStopRepository(getApplication());
+
         apiClient = APIClient.builder().app(getApplication()).build();
+
+        checkForDataPendingToBackUp();
+    }
+
+    private void checkForDataPendingToBackUp() {
+
+        Metadata[] metadataRecords = metadataRepository.findMetadataByBackedUpRemotely(0);
+        Log.d(TAG, "Metadata records pending to backup: " + metadataRecords.length);
+        for (Metadata record : metadataRecords) {
+            Log.d(TAG, record.toString());
+        }
+
+        BusStop[] busStopsRecords = busStopRepository.findBusStopByBackedUpRemotely(0);
+        Log.d(TAG, "BusStop records pending to backup: " + busStopsRecords.length);
+        for (BusStop record : busStopsRecords) {
+            Log.d(TAG, record.toString());
+        }
+
+        GPSLocation[] gpsLocationsRecords = gpsLocationRepository.findGPSLocationByBackedUpRemotely(0);
+        Log.d(TAG, "GPSLocation records pending to backup: " + gpsLocationsRecords.length);
+        for (GPSLocation record : gpsLocationsRecords) {
+            Log.d(TAG, record.toString());
+        }
     }
 
     public void onClick(View view){
@@ -103,16 +135,17 @@ public class MainActivity extends AppCompatActivity {
                 .economicNumber(campoNumEcon.getText().toString())
                 .via(campoVia.getText().toString())
                 .deviceId(androidDeviceId)
+                .backedUpRemotely(0)
                 .route(campoNoRuta.getText().toString()).build();
 
         metadataId = (int) metadataRepository.insert(metadata);
+        metadata.setId(metadataId);
 
         // Create Metadata file
         ExportData.createFile(campoNoRuta.getText().toString()
                 + "-" + campoNumEcon.getText().toString() + "-Recorrido-"
                 + String.valueOf(metadataId) + ".txt", metadata.toString());
 
-        metadata.setId(metadataId);
         return metadata;
     }
 
@@ -131,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject  response) {
                 // Display the first 500 characters of the response string.
-                Log.i(TAG, response.toString());
+                Log.d(TAG, response.toString());
                 try {
 
                     evalResponse(response);
@@ -144,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "Did not worked");
+                Log.d(TAG, "Did not worked");
                 pdLoading.dismiss();
             }
         });
@@ -160,8 +193,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (isActive.equals("1")) {
                     Metadata metadata = saveMetadata();
-                    Log.i(TAG, metadata.toString());
-                    apiClient.postMetadata(metadata);
+                    Log.d(TAG, metadata.toString());
+                    apiClient.postMetadata(metadata, metadataRepository);
 
                     msg = "Bienvenido " + campoEncuestador.getText().toString();
                     Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
@@ -179,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 msg = "Unable to connect to remote server.";
             }
 
-        Log.i(TAG, "Auth:" + msg);
+        Log.d(TAG, "Auth:" + msg);
         Toast.makeText(MainActivity.this, msg,
                 Toast.LENGTH_SHORT).show();
     }

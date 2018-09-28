@@ -10,10 +10,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
+import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
+import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,18 +31,18 @@ import lombok.Setter;
 public class APIClient {
 
     private final Application app;
-    private final static String TAG = "APIClient";
+    private final String TAG = this.getClass().getSimpleName();
 
-    public void postBusStop(final BusStop bs) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/busstop";
+    public void postBusStop(final BusStop bs, final BusStopRepository busStopRepository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeBusStop";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //the response contains the result from the server, a
                         // json string or any other object returned by your server
-                        Log.e("Volley Result", ""+response);
-
+                        Log.d("BusStopResult", ""+response);
+                        busStopRepository.updateBusStopBackedUpSuccessById(bs.getId());
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -53,7 +57,6 @@ public class APIClient {
                         Map<String, String> postMap = new HashMap<>();
                         postMap.put("id", String.valueOf(bs.getId()));
                         postMap.put("idMetadata", String.valueOf(bs.getIdMetadata()));
-                        postMap.put("timeStamp", bs.getTimeStamp());
                         postMap.put("stopType", bs.getStopType());
                         postMap.put("passengersUp", String.valueOf(bs.getPassengersUp()));
                         postMap.put("passengersDown", String.valueOf(bs.getPassengersDown()));
@@ -72,16 +75,16 @@ public class APIClient {
         Volley.newRequestQueue(app).add(stringRequest);
     }
 
-    public void postMetadata(final Metadata m) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/metadata";
+    public void postMetadata(final Metadata m, final MetadataRepository repository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeMetadata";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //the response contains the result from the server, a
                         // json string or any other object returned by your server
-                        Log.e("Volley Result", ""+response);
-
+                        Log.d("MetadataResult", ""+response);
+                        repository.updateMetadataBackedUpSuccessById(m.getId());
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -108,16 +111,23 @@ public class APIClient {
         Volley.newRequestQueue(app).add(stringRequest);
     }
 
-    public void PostArray(final List<GPSLocation> route) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/route";
+    public void PostArray(final List<GPSLocation> route, final GPSLocationRepository gpsLocationRepository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/route";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //the response contains the result from the server, a
                         // json string or any other object returned by your server
-                        Log.e("Volley Result", ""+response);
+                        Log.d(TAG, "RouteArrayResult" + response);
 
+                        for (GPSLocation point : route) {
+                            point.remotelyBackedUpSuccessfully();
+                        }
+
+                        gpsLocationRepository.updateGPSLocationBackupRemotelyById(
+                                route.toArray(new GPSLocation[route.size()]));
+                        Log.d(TAG, "Location points updated successfully");
                     }
                 }, new Response.ErrorListener() {
                     @Override

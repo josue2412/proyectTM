@@ -24,9 +24,21 @@ public interface MetadataDao {
 
     /**
      * Retrieves metadata associated to given Id.
-     * @param id of the requested metadata.
-     * @return Metadata associated to given Id.
+     * @return al Metadata records.
      */
-    @Query("Select * from Metadata where id = :id")
-    LiveData<Metadata> findMetadataById(int id);
+    @Query("Select * from Metadata")
+    public Metadata[] loadAllMetadata();
+
+
+    @Query("Select * from Metadata where backedUpRemotely = :value")
+    public Metadata[] findMetadataByBackedUpRemotely(int value);
+
+    /**
+     * This method is called once the record is successfully backed up in the
+     * remote server.
+     *
+     * @param id that identifies the record to update.
+     */
+    @Query("UPDATE Metadata SET backedUpRemotely = 1 where id = :id")
+    void updateMetadataBackupRemotelyById(int id);
 }

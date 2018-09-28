@@ -17,7 +17,17 @@ public class MetadataRepository {
         return metadataDao.insert(metadata);
     }
 
-    public LiveData<Metadata> findMetadataById(int metadataId) {
-        return metadataDao.findMetadataById(metadataId);
+    public Metadata[] findAllMetadata() {
+        return metadataDao.loadAllMetadata();
+    }
+
+    public void updateMetadataBackedUpSuccessById(int metadataId) {
+
+        metadataDao.updateMetadataBackupRemotelyById(metadataId);
+    }
+
+    public Metadata[] findMetadataByBackedUpRemotely(int value) {
+
+        return metadataDao.findMetadataByBackedUpRemotely(value);
     }
 }

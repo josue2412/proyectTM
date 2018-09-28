@@ -31,9 +31,6 @@ public class BusStop {
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 
-    @ColumnInfo(name = "timeStamp")
-    private String timeStamp;
-
     @ColumnInfo(name = "stopType")
     private String stopType;
 
@@ -61,4 +58,6 @@ public class BusStop {
     @ColumnInfo(name = "stopEnd")
     private String stopEnd;
 
+    @ColumnInfo(name = "backedUpRemotely")
+    private int backedUpRemotely;
 }

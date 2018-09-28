@@ -28,4 +28,14 @@ public class BusStopRepository {
     public long insert (BusStop busStop) {
         return busStopDao.insert(busStop);
     }
+
+    public void updateBusStopBackedUpSuccessById(int busStopId) {
+
+        busStopDao.updateBusStopBackupRemotelyById(busStopId);
+    }
+
+    public BusStop[] findBusStopByBackedUpRemotely(int value) {
+
+        return busStopDao.findBusStopsByBackedUpRemotely(value);
+    }
 }

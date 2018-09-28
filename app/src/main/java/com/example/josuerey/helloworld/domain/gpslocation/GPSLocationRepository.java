@@ -22,8 +22,13 @@ public class GPSLocationRepository {
         gpsLocationDao = db.gpsLocationDao();
     }
 
-    public void insert (GPSLocation gpsLocation) {
-        new insertAsyncTask(gpsLocationDao).execute(gpsLocation);
+    public long insert (GPSLocation gpsLocation) {
+        return gpsLocationDao.insert(gpsLocation);
+    }
+
+    public void updateGPSLocationBackupRemotelyById(GPSLocation[] gpsLocations) {
+
+        gpsLocationDao.updateGPSLocation(gpsLocations);
     }
 
     public LiveData<List<GPSLocation>> findGPSLocationsByMetadataId(int metadataId) {
@@ -31,19 +36,10 @@ public class GPSLocationRepository {
         return gpsLocationDao.findGPSLocationsById(metadataId);
     }
 
-    private static class insertAsyncTask extends AsyncTask<GPSLocation, Void, Void> {
+    public GPSLocation[] findGPSLocationByBackedUpRemotely(int value) {
 
-        private GPSLocationDao mAsyncTaskDao;
-
-        insertAsyncTask(GPSLocationDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final GPSLocation... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
+        return gpsLocationDao.findGPSLocationByBackedUpRemotely(value);
     }
+
 }
 

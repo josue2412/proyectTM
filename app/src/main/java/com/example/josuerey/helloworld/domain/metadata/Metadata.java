@@ -46,4 +46,7 @@ public class Metadata {
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 
+    @ColumnInfo(name = "backedUpRemotely")
+    private int backedUpRemotely;
+
 }

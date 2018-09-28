@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.time.LocalDateTime;
 
@@ -43,4 +44,12 @@ public class GPSLocation {
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 
+    @ColumnInfo(name = "backedUpRemotely")
+    private int backedUpRemotely;
+
+    public void remotelyBackedUpSuccessfully() {
+
+        this.backedUpRemotely = 1;
+        Log.d("GPSLocation", "Successfully backed up in remote server.");
+    }
 }

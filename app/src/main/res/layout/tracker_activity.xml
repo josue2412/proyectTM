@@ -174,6 +174,7 @@
         android:id="@+id/btnStopBegin"
         android:layout_width="150dp"
         android:layout_height="60dp"
+        android:layout_marginTop="10dp"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dp"
         android:layout_below="@id/stopTypeLinearLayout"
@@ -182,20 +183,11 @@
     <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/btnSave"
         android:layout_width="150dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:layout_height="60dp"
         android:layout_below="@id/stopTypeLinearLayout"
         android:layout_alignParentRight="true"
         android:text="Fin parada" />
-
-    <Button style="@style/Widget.AppCompat.Button.Colored"
-        android:id="@+id/btnFinish"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:layout_below="@+id/btnStopBegin"
-        android:text="Finalizar" />
-
 
 </RelativeLayout>
