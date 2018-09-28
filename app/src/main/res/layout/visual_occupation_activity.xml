@@ -9,32 +9,41 @@
     tools:context=".TrackerFormActivity">
 
     <EditText
-        android:id="@+id/editTextRuta"
+        android:id="@+id/editTextStudyVia"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:inputType="textVisiblePassword"
-        android:hint="Ruta" />
+        android:hint="Via de estudio" />
 
     <EditText
-        android:id="@+id/editTextVia"
+        android:id="@+id/editTextWayDirection"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:inputType="textVisiblePassword"
-        android:hint="Via" />
+        android:hint="Sentido / Carril" />
 
     <EditText
-        android:id="@+id/editTextNumEcon"
+        android:id="@+id/editTextWaterConditions"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:inputType="textVisiblePassword"
-        android:hint="NumeroEconomico" />
+        android:hint="Estado del tiempo" />
+
+    <EditText
+        android:id="@+id/editTextCross"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="text"
+        android:hint="Cruce" />
 
     <EditText
         android:id="@+id/editTextEnc"
@@ -45,8 +54,17 @@
         android:inputType="text"
         android:hint="Encuestador" />
 
+    <EditText
+        android:id="@+id/editTextObservations"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="text"
+        android:hint="Observaciones" />
+
     <Button style="@style/Widget.AppCompat.Button.Colored"
-        android:id="@+id/btnStart"
+        android:id="@+id/btnStartStudy"
         android:layout_gravity="center_horizontal"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

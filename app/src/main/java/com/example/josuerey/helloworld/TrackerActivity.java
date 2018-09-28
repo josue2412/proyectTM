@@ -100,7 +100,7 @@ public class TrackerActivity extends AppCompatActivity {
             case R.id.finishRoute:
                 mlocManager.removeUpdates(mlocListener);
                 apiClient.PostArray(gpsLocationList, gpsLocationRepository);
-                Intent myIntent = new Intent(TrackerActivity.this, MainActivity.class);
+                Intent myIntent = new Intent(TrackerActivity.this, HomeActivity.class);
                 TrackerActivity.this.startActivity(myIntent);
                 finish();
                 return true;
@@ -120,7 +120,7 @@ public class TrackerActivity extends AppCompatActivity {
 
         if (extras != null) {
             currentMetadataId = Integer.valueOf(extras
-                    .getString(MainActivity.METADATA_ID_PROPERTY));
+                    .getString(TrackerFormActivity.METADATA_ID_PROPERTY));
             route = extras.getString("Route");
             econNumber = extras.getString("econNumber");
         }

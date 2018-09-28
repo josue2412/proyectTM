@@ -30,7 +30,7 @@ import com.example.josuerey.helloworld.utilidades.ExportData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class TrackerFormActivity extends AppCompatActivity {
 
     public final static String METADATA_ID_PROPERTY = "metadataId";
     public final static String METADATA_PROPERTY = "metadata";
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view){
 
-        Intent miIntent=null;
+        Intent miIntent = null;
         switch (view.getId()){
 
             case R.id.btnStart:
@@ -115,10 +115,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(campoNoRuta.getText().toString())) {
             campoNoRuta.setError("Favor de ingresar una ruta");
+            campoNoRuta.requestFocus();
             return false;
         }
         if (TextUtils.isEmpty(campoEncuestador.getText().toString())) {
             campoEncuestador.setError("Favor de ingresar un nombre");
+            campoEncuestador.requestFocus();
             return false;
         }
         return true;
@@ -141,10 +143,16 @@ public class MainActivity extends AppCompatActivity {
         metadataId = (int) metadataRepository.insert(metadata);
         metadata.setId(metadataId);
 
+        StringBuilder fileName = new StringBuilder();
+        fileName.append(campoNoRuta.getText().toString());
+        fileName.append("-");
+        fileName.append(campoNumEcon.getText().toString());
+        fileName.append("-Recorrido-");
+        fileName.append(String.valueOf(metadataId));
+        fileName.append(".txt");
+
         // Create Metadata file
-        ExportData.createFile(campoNoRuta.getText().toString()
-                + "-" + campoNumEcon.getText().toString() + "-Recorrido-"
-                + String.valueOf(metadataId) + ".txt", metadata.toString());
+        ExportData.createFile(fileName.toString(), metadata.toString());
 
         return metadata;
     }
@@ -197,12 +205,12 @@ public class MainActivity extends AppCompatActivity {
                     apiClient.postMetadata(metadata, metadataRepository);
 
                     msg = "Bienvenido " + campoEncuestador.getText().toString();
-                    Intent myIntent = new Intent(MainActivity.this, TrackerActivity.class);
+                    Intent myIntent = new Intent(TrackerFormActivity.this, TrackerActivity.class);
                     myIntent.putExtra(METADATA_ID_PROPERTY, String.valueOf(metadataId));
                     myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
                     myIntent.putExtra("Route", metadata.getRoute());
                     myIntent.putExtra("econNumber", metadata.getEconomicNumber());
-                    MainActivity.this.startActivity(myIntent);
+                    TrackerFormActivity.this.startActivity(myIntent);
                     finish();
 
                 } else
@@ -213,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         Log.d(TAG, "Auth:" + msg);
-        Toast.makeText(MainActivity.this, msg,
+        Toast.makeText(TrackerFormActivity.this, msg,
                 Toast.LENGTH_SHORT).show();
     }
 }
