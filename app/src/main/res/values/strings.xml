@@ -3,4 +3,12 @@
     <string name="buttonStart">Comenzar</string>
     <string name="menuItemAboutUs">Ayuda</string>
     <string name="menuItemEnd">Finalizar</string>
+    <string-array name="types">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+    </string-array>
 </resources>

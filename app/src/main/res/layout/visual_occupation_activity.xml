@@ -1,75 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background_color"
-    tools:context=".TrackerFormActivity">
+    android:layout_margin="5dp"
+    android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editTextStudyVia"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Via de estudio" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:showDividers="middle"
+        android:divider="@drawable/border_gray"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/editTextWayDirection"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Sentido / Carril" />
+            <AutoCompleteTextView
+                android:id="@+id/route_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="5"
+                android:hint="Ruta"
+                android:inputType="textVisiblePassword" />
 
-    <EditText
-        android:id="@+id/editTextWaterConditions"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Estado del tiempo" />
+            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:id="@+id/occupation_level_spinner"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="3"
+                android:entries="@array/types"
+                android:gravity="right" />
 
-    <EditText
-        android:id="@+id/editTextCross"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="text"
-        android:hint="Cruce" />
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@android:drawable/ic_menu_save"
+                android:onClick="onSave" />
 
-    <EditText
-        android:id="@+id/editTextEnc"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="text"
-        android:hint="Encuestador" />
-
-    <EditText
-        android:id="@+id/editTextObservations"
-        android:layout_width="fill_parent"
-        android:layout_height="80dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="text"
-        android:hint="Observaciones" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/econNum_edit_text"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="5"
+                android:hint="No Economico"
+                android:inputType="textAutoComplete" />
+            <EditText
+                android:id="@+id/vehicle_type_edit_text"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="5"
+                android:hint="Vehiculo"
+                android:inputType="textAutoComplete" />
+        </LinearLayout>
+    </LinearLayout>
 
     <Button style="@style/Widget.AppCompat.Button.Colored"
-        android:id="@+id/btnStartStudy"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="150dp"
+        android:id="@+id/add_field_button"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="@string/buttonStart"
-        android:onClick="onClick"/>
-
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center"
+        android:onClick="onAddField"
+        android:text="Agregar formulario"
+        android:paddingLeft="5dp"/>
 </LinearLayout>

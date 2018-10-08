@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_color"
+    tools:context=".TrackerFormActivity">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:text="Vía de estudio"
+        />
+    <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+        android:id="@+id/spinnerStudyVia"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="textVisiblePassword" />
+
+    <EditText
+        android:id="@+id/editTextWayDirection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="textVisiblePassword"
+        android:hint="Sentido / Carril" />
+
+    <EditText
+        android:id="@+id/editTextWaterConditions"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="textVisiblePassword"
+        android:hint="Estado del tiempo" />
+
+    <EditText
+        android:id="@+id/editTextCross"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="text"
+        android:hint="Cruce" />
+
+    <EditText
+        android:id="@+id/editTextEnc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="text"
+        android:hint="Encuestador" />
+
+    <EditText
+        android:id="@+id/editTextObservations"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="text"
+        android:hint="Observaciones" />
+
+    <Button style="@style/Widget.AppCompat.Button.Colored"
+        android:id="@+id/btnStartStudy"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/buttonStart"
+        android:onClick="onClick"/>
+
+</LinearLayout>

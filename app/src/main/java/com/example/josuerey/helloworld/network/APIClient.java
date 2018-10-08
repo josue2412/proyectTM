@@ -15,6 +15,8 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
+import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
+import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadataRepository;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
@@ -103,6 +105,47 @@ public class APIClient {
                         postMap.put("economicNumber", m.getEconomicNumber());
                         postMap.put("capturist", m.getCapturist());
                         postMap.put("deviceId", m.getDeviceId());
+
+                        return postMap;
+                    }
+                };
+        //make the request to your server as indicated in your request url
+        Volley.newRequestQueue(app).add(stringRequest);
+    }
+
+    public void postVisualOccStudyMetadata(final List<VisualOccupationMetadata> studyMetadata,
+                                           final VisualOccupationMetadataRepository repository) {
+        final String requestUrl = "http://u856955919.hostingerapp.com/api/persist/visualOccMeta";
+        StringRequest stringRequest =
+                new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //the response contains the result from the server, a
+                        // json string or any other object returned by your server
+                        Log.d(TAG, "VisualOccMetadataArrayResult" + response);
+
+                        for (VisualOccupationMetadata metadata : studyMetadata) {
+                            metadata.getBackedUpRemotely();
+                        }
+
+                        repository.updateVisualOccMetadata(
+                                studyMetadata.toArray(new VisualOccupationMetadata[studyMetadata.size()]));
+                        Log.d(TAG, "VisualOccMetadata updated successfully");
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        error.getMessage();
+                    }
+                }){
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> postMap = new HashMap<>();
+                        String list2JsonArray = new Gson().toJson(studyMetadata);
+                        postMap.put("dataArray", list2JsonArray);
+                        Log.i(TAG, "JsonArray: " + list2JsonArray);
 
                         return postMap;
                     }
