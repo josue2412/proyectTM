@@ -30,7 +30,7 @@ public class BusOccupation {
     private int studyMetadataId;
 
     @ColumnInfo(name = "economicNumber")
-    private String economicNumber;
+    private String economicNumber = "Desconocido";
 
     @ColumnInfo(name = "route")
     private String route;

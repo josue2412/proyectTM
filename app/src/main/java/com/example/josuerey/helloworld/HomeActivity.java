@@ -77,11 +77,17 @@ public class HomeActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Did not worked");
                 pdLoading.dismiss();
+                blockApp();
             }
         });
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    private void blockApp() {
+        passengersAscDes.setEnabled(false);
+        visualOcStudy.setEnabled(false);
     }
 
     private void evalResponse(JSONObject response) throws JSONException {
@@ -92,12 +98,12 @@ public class HomeActivity extends AppCompatActivity {
             if (!isActive.equals("1")) {
 
                 msg = "You are not allowed to use this app anymore, please contact the owners.";
-                passengersAscDes.setEnabled(false);
-                visualOcStudy.setEnabled(false);
-
+                blockApp();
             }
         } else {
             msg = "Unable to connect to remote server.";
+            blockApp();
+            Log.d(TAG, msg);
         }
         Log.d(TAG, "Auth:" + msg);
         Toast.makeText(this, msg,

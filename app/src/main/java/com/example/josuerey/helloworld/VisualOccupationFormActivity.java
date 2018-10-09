@@ -62,6 +62,8 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
 
         Log.d(TAG, "Existing vias: " + existingVias.length);
 
+        //Added empty option
+        routes.add("");
         for (ViaOfStudy via : existingVias) {
             routes.add(via.getVia());
         }
@@ -114,7 +116,7 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
                         VisualOccupationActivity.class);
                 studyIntent.putExtra("ViaOfStudy", visualOccMetadata.getViaOfStudy());
                 studyIntent.putExtra("ViaOfStudyId",
-                        String.valueOf(spinnerStudyVia.getSelectedItemId() + 1));
+                        String.valueOf(spinnerStudyVia.getSelectedItemId()));
                 studyIntent.putExtra("studyMetadataId",
                         String.valueOf(visualOccMetadata.getId()));
 
@@ -135,6 +137,16 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
             editTextEnc.requestFocus();
             return false;
         }
+
+        if (spinnerStudyVia.getSelectedItemPosition() < 1){
+            spinnerStudyVia.requestFocus();
+            return false;
+        }
+
+        if (spinnerWayDirection.getSelectedItemPosition() < 1){
+            return false;
+        }
+
         return true;
     }
 }

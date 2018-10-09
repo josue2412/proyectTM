@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -85,6 +86,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
+                mlocManager.removeUpdates(mlocListener);
                 Intent myIntent = new Intent(VisualOccupationActivity.this, HomeActivity.class);
                 VisualOccupationActivity.this.startActivity(myIntent);
                 finish();
@@ -97,6 +99,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.visual_occupation_activity);
 
         Bundle extras = getIntent().getExtras();
@@ -117,6 +120,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
         Log.d(TAG, "Existing bus routes: " + existingBusRoutes.length + " associated with " +
                 "via of study id:" + viaOfStudyId);
 
+        busRoutes.add("Ruta");
         for (BusRoute existingBusRoute : existingBusRoutes) {
             busRoutes.add(existingBusRoute.toString());
             Log.d(TAG, existingBusRoute.toString());
@@ -148,46 +152,79 @@ public class VisualOccupationActivity extends AppCompatActivity {
         requestPermissions();
     }
 
+    private boolean validateSpinners(int positionSpinnerRoute,
+                                  int positionSpinnerOccLevel,
+                                  int positionSpinnerVehiType){
+        if (positionSpinnerRoute < 1) {
+            Toast.makeText(getApplicationContext(), "Ingresa una ruta",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (positionSpinnerOccLevel < 1) {
+            Toast.makeText(getApplicationContext(), "Ingresa un nivel de ocupación",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (positionSpinnerVehiType < 1) {
+            Toast.makeText(getApplicationContext(), "Ingresa un tipo de vehiculo",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     public void onSave(View v) {
         BusOccupation.BusOccupationBuilder busOccupationBuilder = BusOccupation.builder();
         int formNumberSaved = 0;
 
         switch (v.getId()) {
             case R.id.save_button:
-                busOccupationBuilder.route(spinnerRoute.getSelectedItem().toString())
-                        .occupationLevel(spinnerOccupationLevel.getSelectedItem().toString())
-                    .economicNumber(econNumEditText.getText().toString())
-                    .busType(spinnerVehicleType.getSelectedItem().toString());
-                formNumberSaved = 1;
+                if (validateSpinners(spinnerRoute.getSelectedItemPosition(),
+                        spinnerOccupationLevel.getSelectedItemPosition(),
+                        spinnerVehicleType.getSelectedItemPosition())) {
+
+                    busOccupationBuilder.route(spinnerRoute.getSelectedItem().toString())
+                            .occupationLevel(spinnerOccupationLevel.getSelectedItem().toString())
+                            .economicNumber(econNumEditText.getText().toString())
+                            .busType(spinnerVehicleType.getSelectedItem().toString());
+                    formNumberSaved = 1;
+                }
                 break;
             case R.id.save_button2:
-                busOccupationBuilder.route(spinnerRoute2.getSelectedItem().toString())
-                        .occupationLevel(spinnerOccupationLevel2.getSelectedItem().toString())
-                        .economicNumber(econNumEditText2.getText().toString())
-                        .busType(spinnerVehicleType2.getSelectedItem().toString());
-                formNumberSaved = 2;
+                if (validateSpinners(spinnerRoute2.getSelectedItemPosition(),
+                        spinnerOccupationLevel2.getSelectedItemPosition(),
+                        spinnerVehicleType2.getSelectedItemPosition())) {
+                    busOccupationBuilder.route(spinnerRoute2.getSelectedItem().toString())
+                            .occupationLevel(spinnerOccupationLevel2.getSelectedItem().toString())
+                            .economicNumber(econNumEditText2.getText().toString())
+                            .busType(spinnerVehicleType2.getSelectedItem().toString());
+                    formNumberSaved = 2;
+                }
                 break;
             case R.id.save_button3:
-                busOccupationBuilder.route(spinnerRoute3.getSelectedItem().toString())
-                        .occupationLevel(spinnerOccupationLevel3.getSelectedItem().toString())
-                        .economicNumber(econNumEditText3.getText().toString())
-                        .busType(spinnerVehicleType3.getSelectedItem().toString());
-                formNumberSaved = 3;
+                if (validateSpinners(spinnerRoute3.getSelectedItemPosition(),
+                        spinnerOccupationLevel3.getSelectedItemPosition(),
+                        spinnerVehicleType3.getSelectedItemPosition())) {
+                    busOccupationBuilder.route(spinnerRoute3.getSelectedItem().toString())
+                            .occupationLevel(spinnerOccupationLevel3.getSelectedItem().toString())
+                            .economicNumber(econNumEditText3.getText().toString())
+                            .busType(spinnerVehicleType3.getSelectedItem().toString());
+                    formNumberSaved = 3;
+                }
                 break;
         }
 
-        busOccupationBuilder.backedUpRemotely(0)
-                .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()))
-                .studyMetadataId(studyMetadataId);
+        if (formNumberSaved > 0) {
+            busOccupationBuilder.backedUpRemotely(0)
+                    .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()))
+                    .studyMetadataId(studyMetadataId);
 
-        if (currentLocation != null){
-            busOccupationBuilder.lat(currentLocation.getLat());
-            busOccupationBuilder.lon(currentLocation.getLon());
+            if (currentLocation != null){
+                busOccupationBuilder.lat(currentLocation.getLat());
+                busOccupationBuilder.lon(currentLocation.getLon());
+            }
+
+            BusOccupation busOccupation = busOccupationBuilder.build();
+            backUpRecord(busOccupation);
+            cleanForm(formNumberSaved);
         }
-
-        BusOccupation busOccupation = busOccupationBuilder.build();
-        backUpRecord(busOccupation);
-        cleanForm(formNumberSaved);
     }
 
     private void backUpRecord(BusOccupation busOccupationRecord) {
@@ -206,12 +243,21 @@ public class VisualOccupationActivity extends AppCompatActivity {
         switch (formPosition) {
             case 1:
                 econNumEditText.setText("");
+                spinnerRoute.setSelection(0);
+                spinnerOccupationLevel.setSelection(0);
+                spinnerVehicleType.setSelection(0);
                 break;
             case 2:
                 econNumEditText2.setText("");
+                spinnerRoute2.setSelection(0);
+                spinnerOccupationLevel2.setSelection(0);
+                spinnerVehicleType2.setSelection(0);
                 break;
             case 3:
                 econNumEditText3.setText("");
+                spinnerRoute3.setSelection(0);
+                spinnerOccupationLevel3.setSelection(0);
+                spinnerVehicleType3.setSelection(0);
                 break;
         }
         Toast.makeText(getApplicationContext(), "Registro guardado",Toast.LENGTH_SHORT).show();

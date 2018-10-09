@@ -43,6 +43,9 @@ public class Metadata {
     @ColumnInfo(name = "capturist")
     private String capturist;
 
+    @ColumnInfo(name = "initialPassengers")
+    private int initialPassengers;
+
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 

@@ -106,6 +106,7 @@ public class APIClient {
                         postMap.put("via", m.getVia());
                         postMap.put("economicNumber", m.getEconomicNumber());
                         postMap.put("capturist", m.getCapturist());
+                        postMap.put("initialPassengers", String.valueOf(m.getInitialPassengers()));
                         postMap.put("deviceId", m.getDeviceId());
 
                         return postMap;

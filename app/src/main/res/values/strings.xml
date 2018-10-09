@@ -4,6 +4,8 @@
     <string name="menuItemAboutUs">Ayuda</string>
     <string name="menuItemEnd">Finalizar</string>
     <string-array name="occupation_level">
+        <item>Ocupación</item>
+        <item>Vacio</item>
         <item>Hasta 10 pasajeros</item>
         <item>Mitad asientos ocupados</item>
         <item>Total asientos ocupados</item>
@@ -12,14 +14,15 @@
         <item>Muy lleno</item>
     </string-array>
     <string-array name="bus_types">
+        <item>Vehículo</item>
         <item>Autobus</item>
         <item>Autobus c/rampa p/disc</item>
-        <item>Minibus</item>
-        <item>Minibus c/rampa p/disc</item>
+        <item>Midibus</item>
+        <item>Midibus c/rampa p/disc</item>
         <item>Autobus de lujo</item>
-        <item>Suburbano</item>
     </string-array>
     <string-array name="orientation_options">
+        <item></item>
         <item>NS</item>
         <item>SN</item>
         <item>PO</item>

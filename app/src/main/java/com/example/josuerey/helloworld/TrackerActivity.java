@@ -123,6 +123,8 @@ public class TrackerActivity extends AppCompatActivity {
                     .getString(TrackerFormActivity.METADATA_ID_PROPERTY));
             route = extras.getString("Route");
             econNumber = extras.getString("econNumber");
+            totalNumberOfPassengers = Integer.valueOf(extras.getString("initialPassengers"));
+
         }
 
         android_device_id = Settings.Secure.getString(this.getContentResolver(),
@@ -147,9 +149,10 @@ public class TrackerActivity extends AppCompatActivity {
             }
         });
 
+        totalPassengersTextView.setText(" Total pasajeros: " + totalNumberOfPassengers + " ");
+
         numberPickerUp = (NumberPicker) findViewById(R.id.number_pickerUP);
         numberPickerDown = (NumberPicker) findViewById(R.id.number_pickerDown);
-        totalNumberOfPassengers = 0;
 
         busStopViewModel = ViewModelProviders.of(this).get(BusStopViewModel.class);
         gpsLocationViewModel = ViewModelProviders.of(this).get(GPSLocationViewModel.class);

@@ -1,6 +1,7 @@
 package com.example.josuerey.helloworld;
 
-import android.app.ProgressDialog;
+
+import android.arch.persistence.room.util.StringUtil;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -9,15 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
 import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
@@ -27,8 +20,6 @@ import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilidades.ExportData;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class TrackerFormActivity extends AppCompatActivity {
 
@@ -38,6 +29,7 @@ public class TrackerFormActivity extends AppCompatActivity {
     private EditText campoVia;
     private EditText campoNumEcon;
     private EditText campoEncuestador;
+    private EditText initialPassengers;
     private MetadataRepository metadataRepository;
     private GPSLocationRepository gpsLocationRepository;
     private BusStopRepository busStopRepository;
@@ -60,6 +52,7 @@ public class TrackerFormActivity extends AppCompatActivity {
         campoVia = (EditText) findViewById(R.id.editTextVia);
         campoNumEcon = (EditText) findViewById(R.id.editTextNumEcon);
         campoEncuestador = (EditText) findViewById(R.id.editTextEnc);
+        initialPassengers = (EditText) findViewById(R.id.editTextInitialPassengers);
 
         metadataRepository = new MetadataRepository(getApplication());
         gpsLocationRepository = new GPSLocationRepository(getApplication());
@@ -107,6 +100,8 @@ public class TrackerFormActivity extends AppCompatActivity {
                         myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
                         myIntent.putExtra("Route", metadata.getRoute());
                         myIntent.putExtra("econNumber", metadata.getEconomicNumber());
+                        myIntent.putExtra("initialPassengers",
+                                String.valueOf(metadata.getInitialPassengers()));
                         TrackerFormActivity.this.startActivity(myIntent);
                         finish();
                     }
@@ -138,11 +133,17 @@ public class TrackerFormActivity extends AppCompatActivity {
      */
     private Metadata saveMetadata(){
 
+        int defaultInitialPassengers = 0;
+        if (!initialPassengers.getText().toString().isEmpty()) {
+            defaultInitialPassengers = Integer.valueOf(initialPassengers.getText().toString());
+        }
+
         Metadata metadata = Metadata.builder()
                 .capturist(campoEncuestador.getText().toString())
                 .economicNumber(campoNumEcon.getText().toString())
                 .via(campoVia.getText().toString())
                 .deviceId(androidDeviceId)
+                .initialPassengers(defaultInitialPassengers)
                 .backedUpRemotely(0)
                 .route(campoNoRuta.getText().toString()).build();
 
