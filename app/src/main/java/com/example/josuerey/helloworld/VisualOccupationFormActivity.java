@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -21,13 +20,16 @@ import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilidades.ExportData;
 import com.google.common.collect.Lists;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class VisualOccupationFormActivity extends AppCompatActivity {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Spinner spinnerStudyVia;
-    private EditText editTextWayDirection;
+    private Spinner spinnerWayDirection;
     private EditText editTextWaterConditions;
     private EditText editTextCross;
     private EditText editTextEnc;
@@ -45,7 +47,7 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
 
         setContentView(R.layout.visual_occupation_form_activity);
         spinnerStudyVia = (Spinner) findViewById(R.id.spinnerStudyVia);
-        editTextWayDirection = (EditText) findViewById(R.id.editTextWayDirection);
+        spinnerWayDirection = (Spinner) findViewById(R.id.spinnerWayDirection);
         editTextWaterConditions = (EditText) findViewById(R.id.editTextWaterConditions);
         editTextCross = (EditText) findViewById(R.id.editTextCross);
         editTextEnc = (EditText) findViewById(R.id.editTextEnc);
@@ -80,10 +82,11 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
         VisualOccupationMetadata visualOccMetadata = VisualOccupationMetadata.builder()
                 .capturist(editTextEnc.getText().toString())
                 .viaOfStudy(spinnerStudyVia.getSelectedItem().toString())
-                .directionLane(editTextWayDirection.getText().toString())
+                .directionLane(spinnerWayDirection.getSelectedItem().toString())
                 .crossroads(editTextCross.getText().toString())
                 .observations(editTextObservations.getText().toString())
                 .waterConditions(editTextWaterConditions.getText().toString())
+                .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()))
                 .backedUpRemotely(0)
                 .deviceId(android_device_id)
                 .build();
@@ -91,10 +94,11 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
         //Persist in database
         long generatedId = visualOccupationMetadataRepository.save(visualOccMetadata);
         visualOccMetadata.setId((int)generatedId);
-        //apiClient.postVisualOccStudyMetadata(Lists.newArrayList(visualOccMetadata),
-                //visualOccupationMetadataRepository);
+        // Backup in remote server
+        apiClient.postBusOccupationMeta(Lists.newArrayList(visualOccMetadata), visualOccupationMetadataRepository);
+        //apiClient.postVisOccMeta(visualOccMetadata, visualOccupationMetadataRepository);
         // Create Metadata file
-        //ExportData.createFile(String.format("OcupacionVisual-%d", generatedId), visualOccMetadata.toString());
+        ExportData.createFile(String.format("OcupacionVisual-%d.txt", generatedId), visualOccMetadata.toString());
         return visualOccMetadata;
     }
 
@@ -109,7 +113,10 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
                         VisualOccupationFormActivity.this,
                         VisualOccupationActivity.class);
                 studyIntent.putExtra("ViaOfStudy", visualOccMetadata.getViaOfStudy());
-                studyIntent.putExtra("ViaOfStudyId", String.valueOf(visualOccMetadata.getId()));
+                studyIntent.putExtra("ViaOfStudyId",
+                        String.valueOf(spinnerStudyVia.getSelectedItemId() + 1));
+                studyIntent.putExtra("studyMetadataId",
+                        String.valueOf(visualOccMetadata.getId()));
 
                 this.startActivity(studyIntent);
                 this.finish();
@@ -118,25 +125,16 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
     }
 
     private boolean fieldsValidateSuccess() {
-
-        if(TextUtils.isEmpty(editTextWayDirection.getText().toString())) {
-            editTextWayDirection.setError("Favor de ingresar un carril / sentido");
-            editTextWayDirection.requestFocus();
-            return false;
-        }
-
         if(TextUtils.isEmpty(editTextCross.getText().toString())) {
             editTextCross.setError("Favor de ingresar un cruce");
             editTextCross.requestFocus();
             return false;
         }
-
         if(TextUtils.isEmpty(editTextEnc.getText().toString())) {
             editTextEnc.setError("Favor de ingresar un nombre");
             editTextEnc.requestFocus();
             return false;
         }
-
         return true;
     }
 }

@@ -97,13 +97,19 @@ public class TrackerFormActivity extends AppCompatActivity {
         switch (view.getId()){
 
             case R.id.btnStart:
-                try{
-                    if (fieldsValidateSuccess()){
-                        getAuthorization();
+                    if (fieldsValidateSuccess()) {
+                        Metadata metadata = saveMetadata();
+                        Log.d(TAG, metadata.toString());
+                        apiClient.postMetadata(metadata, metadataRepository);
+
+                        Intent myIntent = new Intent(TrackerFormActivity.this, TrackerActivity.class);
+                        myIntent.putExtra(METADATA_ID_PROPERTY, String.valueOf(metadataId));
+                        myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
+                        myIntent.putExtra("Route", metadata.getRoute());
+                        myIntent.putExtra("econNumber", metadata.getEconomicNumber());
+                        TrackerFormActivity.this.startActivity(myIntent);
+                        finish();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 break;
         }
         if (miIntent!=null){
@@ -157,71 +163,4 @@ public class TrackerFormActivity extends AppCompatActivity {
         return metadata;
     }
 
-    private void getAuthorization() throws JSONException {
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String userToken= "1234";
-        String url ="http://u856955919.hostingerapp.com/api/user?api_token="+userToken;
-        final ProgressDialog pdLoading = new ProgressDialog(this);
-        pdLoading.setMessage("\tLoading...");
-        pdLoading.show();
-
-        // Request a string response from the provided URL.
-        JsonRequest<JSONObject> stringRequest = new JsonObjectRequest(Request.Method.GET, url,
-                null,new Response.Listener<JSONObject >() {
-            @Override
-            public void onResponse(JSONObject  response) {
-                // Display the first 500 characters of the response string.
-                Log.d(TAG, response.toString());
-                try {
-
-                    evalResponse(response);
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-                pdLoading.dismiss();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Did not worked");
-                pdLoading.dismiss();
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-    private void evalResponse(JSONObject response) throws JSONException {
-        String msg;
-        if (response != null) {
-            String isActive = response.getString("activo");
-
-                if (isActive.equals("1")) {
-                    Metadata metadata = saveMetadata();
-                    Log.d(TAG, metadata.toString());
-                    apiClient.postMetadata(metadata, metadataRepository);
-
-                    msg = "Bienvenido " + campoEncuestador.getText().toString();
-                    Intent myIntent = new Intent(TrackerFormActivity.this, TrackerActivity.class);
-                    myIntent.putExtra(METADATA_ID_PROPERTY, String.valueOf(metadataId));
-                    myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
-                    myIntent.putExtra("Route", metadata.getRoute());
-                    myIntent.putExtra("econNumber", metadata.getEconomicNumber());
-                    TrackerFormActivity.this.startActivity(myIntent);
-                    finish();
-
-                } else
-                    msg = "You are not allowed to use this app anymore, until you pay.";
-
-            } else {
-                msg = "Unable to connect to remote server.";
-            }
-
-        Log.d(TAG, "Auth:" + msg);
-        Toast.makeText(TrackerFormActivity.this, msg,
-                Toast.LENGTH_SHORT).show();
-    }
 }

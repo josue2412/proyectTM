@@ -1,5 +1,6 @@
 package com.example.josuerey.helloworld.domain.routeviarelationship;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 
@@ -32,7 +33,10 @@ import lombok.Setter;
 )
 public class RouteViaRelationship {
 
+    @ColumnInfo(name = "routeId")
     private int routeId;
+
+    @ColumnInfo(name = "viaOfStudyId")
     private int viaOfStudyId;
 
 }

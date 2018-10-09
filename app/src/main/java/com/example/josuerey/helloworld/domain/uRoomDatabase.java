@@ -7,6 +7,8 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
+import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationDao;
 import com.example.josuerey.helloworld.domain.busroute.BusRoute;
 import com.example.josuerey.helloworld.domain.busroute.BusRouteDao;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
@@ -34,7 +36,8 @@ import java.util.concurrent.Executors;
         BusRoute.class,
         ViaOfStudy.class,
         VisualOccupationMetadata.class,
-        RouteViaRelationship.class},
+        RouteViaRelationship.class,
+        BusOccupation.class},
         version = 2, exportSchema = false)
 public abstract class uRoomDatabase extends RoomDatabase {
 
@@ -51,6 +54,8 @@ public abstract class uRoomDatabase extends RoomDatabase {
     public abstract VisualOccupationMetadataDao visualOccupationMetadataDao();
 
     public abstract RouteViaRelationshipDao routeViaRelationshipDao();
+
+    public abstract BusOccupationDao busOccupationDao();
 
     private static uRoomDatabase INSTANCE;
 

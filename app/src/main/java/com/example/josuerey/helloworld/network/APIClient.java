@@ -9,6 +9,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
+import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
 import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
@@ -113,47 +115,6 @@ public class APIClient {
         Volley.newRequestQueue(app).add(stringRequest);
     }
 
-    public void postVisualOccStudyMetadata(final List<VisualOccupationMetadata> studyMetadata,
-                                           final VisualOccupationMetadataRepository repository) {
-        final String requestUrl = "http://u856955919.hostingerapp.com/api/persist/visualOccMeta";
-        StringRequest stringRequest =
-                new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //the response contains the result from the server, a
-                        // json string or any other object returned by your server
-                        Log.d(TAG, "VisualOccMetadataArrayResult" + response);
-
-                        for (VisualOccupationMetadata metadata : studyMetadata) {
-                            metadata.getBackedUpRemotely();
-                        }
-
-                        repository.updateVisualOccMetadata(
-                                studyMetadata.toArray(new VisualOccupationMetadata[studyMetadata.size()]));
-                        Log.d(TAG, "VisualOccMetadata updated successfully");
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        error.getMessage();
-                    }
-                }){
-
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> postMap = new HashMap<>();
-                        String list2JsonArray = new Gson().toJson(studyMetadata);
-                        postMap.put("dataArray", list2JsonArray);
-                        Log.i(TAG, "JsonArray: " + list2JsonArray);
-
-                        return postMap;
-                    }
-                };
-        //make the request to your server as indicated in your request url
-        Volley.newRequestQueue(app).add(stringRequest);
-    }
-
     public void PostArray(final List<GPSLocation> route, final GPSLocationRepository gpsLocationRepository) {
         String requestUrl = "http://u856955919.hostingerapp.com/api/persist/route";
         StringRequest stringRequest =
@@ -193,4 +154,82 @@ public class APIClient {
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
     }
+
+    public void postBusOccupationMeta(final List<VisualOccupationMetadata> visOccMeta,
+                                      final VisualOccupationMetadataRepository visualOccMetaRepo) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccMetadata";
+        StringRequest stringRequest =
+                new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //the response contains the result from the server, a
+                        // json string or any other object returned by your server
+                        Log.d("BusOccMetaResult", ""+response);
+
+                        for (VisualOccupationMetadata record : visOccMeta) {
+                            record.getBackedUpRemotely();
+                        }
+                        visualOccMetaRepo.updateVisualOccMetadata(
+                                visOccMeta.toArray(new VisualOccupationMetadata[visOccMeta.size()]));
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }){
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> postMap = new HashMap<>();
+                        String list2JsonArray = new Gson().toJson(visOccMeta);
+                        postMap.put("busOccMetaArray", list2JsonArray);
+                        Log.i(TAG, "busOccMetadata: " + list2JsonArray);
+
+                        return postMap;
+                    }
+                };
+        //make the request to your server as indicated in your request url
+        Volley.newRequestQueue(app).add(stringRequest);
+    }
+
+    public void postBusOccupation(final List<BusOccupation> busOcc, final BusOccupationRepository busOccupationRepository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccRecord";
+        StringRequest stringRequest =
+                new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //the response contains the result from the server, a
+                        // json string or any other object returned by your server
+                        Log.d("BusOccResult", ""+response);
+
+                        for (BusOccupation record : busOcc) {
+                            record.getBackedUpRemotely();
+                        }
+                        busOccupationRepository.updateBusOccRecordsBackedUp(
+                                busOcc.toArray(new BusOccupation[busOcc.size()]));
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+
+                    }
+                }){
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> postMap = new HashMap<>();
+                        String list2JsonArray = new Gson().toJson(busOcc);
+                        postMap.put("busOccData", list2JsonArray);
+                        Log.i(TAG, "busOccData: " + list2JsonArray);
+
+                        return postMap;
+                    }
+                };
+        //make the request to your server as indicated in your request url
+        Volley.newRequestQueue(app).add(stringRequest);
+    }
+
+
 }

@@ -11,7 +11,7 @@ import com.example.josuerey.helloworld.domain.busroute.BusRoute;
 public interface RouteViaRelationshipDao {
 
     @Query("SELECT * FROM BusRoute INNER JOIN RouteViaRelationship ON " +
-            "BusRoute.id = RouteViaRelationship.viaOfStudyId " +
+            "BusRoute.id = RouteViaRelationship.routeId " +
             "where RouteViaRelationship.viaOfStudyId = :viaOfStudy")
     BusRoute[] findRoutesForViaOfStudy(final int viaOfStudy);
 

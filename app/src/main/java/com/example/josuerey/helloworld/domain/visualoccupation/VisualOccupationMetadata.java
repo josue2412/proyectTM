@@ -50,6 +50,9 @@ public class VisualOccupationMetadata {
     @ColumnInfo(name = "backedUpRemotely")
     private int backedUpRemotely;
 
+    @ColumnInfo(name = "timeStamp")
+    private String timeStamp;
+
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;

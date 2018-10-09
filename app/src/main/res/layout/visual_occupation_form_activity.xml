@@ -19,16 +19,25 @@
     <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
         android:id="@+id/spinnerStudyVia"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:inputType="textVisiblePassword" />
 
-    <EditText
-        android:id="@+id/editTextWayDirection"
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:text="Sentido"
+        />
+    <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+        android:id="@+id/spinnerWayDirection"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:entries="@array/orientation_options"
         android:layout_marginRight="15dp"
         android:inputType="textVisiblePassword"
         android:hint="Sentido / Carril" />
