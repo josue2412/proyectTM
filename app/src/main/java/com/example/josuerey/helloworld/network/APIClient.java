@@ -158,7 +158,7 @@ public class APIClient {
 
     public void postBusOccupationMeta(final List<VisualOccupationMetadata> visOccMeta,
                                       final VisualOccupationMetadataRepository visualOccMetaRepo) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccMetadata";
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccMetadataV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -168,7 +168,7 @@ public class APIClient {
                         Log.d("BusOccMetaResult", ""+response);
 
                         for (VisualOccupationMetadata record : visOccMeta) {
-                            record.getBackedUpRemotely();
+                            record.remotelyBackedUpSuccessfully();
                         }
                         visualOccMetaRepo.updateVisualOccMetadata(
                                 visOccMeta.toArray(new VisualOccupationMetadata[visOccMeta.size()]));
@@ -194,8 +194,9 @@ public class APIClient {
         Volley.newRequestQueue(app).add(stringRequest);
     }
 
-    public void postBusOccupation(final List<BusOccupation> busOcc, final BusOccupationRepository busOccupationRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccRecord";
+    public void postBusOccupation(final List<BusOccupation> busOcc,
+                                  final BusOccupationRepository busOccupationRepository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccRecordV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -205,7 +206,7 @@ public class APIClient {
                         Log.d("BusOccResult", ""+response);
 
                         for (BusOccupation record : busOcc) {
-                            record.getBackedUpRemotely();
+                            record.remotelyBackedUpSuccessfully();
                         }
                         busOccupationRepository.updateBusOccRecordsBackedUp(
                                 busOcc.toArray(new BusOccupation[busOcc.size()]));
@@ -231,6 +232,5 @@ public class APIClient {
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
     }
-
 
 }

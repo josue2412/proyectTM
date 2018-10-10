@@ -21,4 +21,9 @@ public class VisualOccupationMetadataRepository {
 
         visualOccupationMetadataDao.updateVisualOccupationMetadata(metadata);
     }
+
+    public VisualOccupationMetadata[] findPendingToBackup() {
+
+        return visualOccupationMetadataDao.findRecordsPendingToBackup(0);
+    }
 }

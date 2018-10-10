@@ -23,4 +23,9 @@ public class BusOccupationRepository {
 
         busOccupationDao.updateBusOccupation(busOccupations);
     }
+
+    public BusOccupation[] findPendingToBackup(){
+
+        return busOccupationDao.findPendingToBackup(0);
+    }
 }

@@ -35,6 +35,9 @@ public class VisualOccupationMetadata {
     @ColumnInfo(name = "crossroads")
     private String crossroads;
 
+    @ColumnInfo(name = "composedId")
+    private String composedId;
+
     @ColumnInfo(name = "observations")
     private String observations;
 

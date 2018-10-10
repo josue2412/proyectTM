@@ -22,4 +22,7 @@ public interface VisualOccupationMetadataDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateVisualOccupationMetadata(VisualOccupationMetadata... metadata);
+
+    @Query("SELECT * FROM VisualOccupationMetadata WHERE backedUpRemotely = :value")
+    VisualOccupationMetadata[] findRecordsPendingToBackup(int value);
 }

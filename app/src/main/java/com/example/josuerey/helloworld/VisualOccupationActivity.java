@@ -71,6 +71,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
     private GPSLocation currentLocation;
     private MyLocationListener mlocListener;
     private LocationManager mlocManager;
+    private String composeId;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,7 +87,10 @@ public class VisualOccupationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
-                mlocManager.removeUpdates(mlocListener);
+
+                if (mlocManager != null && mlocListener != null ) {
+                    mlocManager.removeUpdates(mlocListener);
+                }
                 Intent myIntent = new Intent(VisualOccupationActivity.this, HomeActivity.class);
                 VisualOccupationActivity.this.startActivity(myIntent);
                 finish();
@@ -108,6 +112,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
                     .getString("ViaOfStudyId"));
             studyMetadataId = Integer.valueOf(extras.getString("studyMetadataId"));
             viaOfStudy = extras.getString("ViaOfStudy");
+            composeId = extras.getString("composedId");
         }
 
         routeViaRelationshipRepository = new RouteViaRelationshipRepository(getApplication());
@@ -221,6 +226,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
                 busOccupationBuilder.lon(currentLocation.getLon());
             }
 
+            busOccupationBuilder.composedId(composeId);
             BusOccupation busOccupation = busOccupationBuilder.build();
             backUpRecord(busOccupation);
             cleanForm(formNumberSaved);

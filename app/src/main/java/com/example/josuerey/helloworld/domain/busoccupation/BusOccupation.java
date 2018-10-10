@@ -32,6 +32,9 @@ public class BusOccupation {
     @ColumnInfo(name = "economicNumber")
     private String economicNumber = "Desconocido";
 
+    @ColumnInfo(name = "composedId")
+    private String composedId;
+
     @ColumnInfo(name = "route")
     private String route;
 

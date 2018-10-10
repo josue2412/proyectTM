@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
+import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudy;
 import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudyRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
@@ -22,6 +24,7 @@ import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -40,6 +43,8 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
     private VisualOccupationMetadataRepository visualOccupationMetadataRepository;
     private APIClient apiClient;
     private final String TAG = this.getClass().getSimpleName();
+    private BusOccupationRepository busOccupationRepository;
+    private String composeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,7 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
 
         viaOfStudyRepository = new ViaOfStudyRepository(getApplication());
         visualOccupationMetadataRepository = new VisualOccupationMetadataRepository(getApplication());
+        busOccupationRepository = new BusOccupationRepository(getApplication());
 
         ViaOfStudy[] existingVias = viaOfStudyRepository.findAll();
         List<String> routes = new ArrayList<>();
@@ -77,6 +83,36 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
         android_device_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         apiClient = APIClient.builder().app(getApplication()).build();
+
+        checkForRecordsPendingToBackup();
+    }
+
+    private void checkForRecordsPendingToBackup() {
+
+        BusOccupation[] recordsPendingToBackup = busOccupationRepository.findPendingToBackup();
+        if (recordsPendingToBackup.length > 0) {
+
+            Log.d(TAG, String.format("Retrying to backup %d busOccupationMetadata records",
+                    recordsPendingToBackup.length));
+            apiClient.postBusOccupation(Arrays.asList(recordsPendingToBackup), busOccupationRepository);
+        } else {
+
+            Log.d(TAG, "There are no busOccupation records to update");
+        }
+
+        VisualOccupationMetadata[] metaRecordsPendingToBackup =
+                visualOccupationMetadataRepository.findPendingToBackup();
+
+        if (metaRecordsPendingToBackup.length > 0) {
+
+            Log.d(TAG, String.format("Retrying to backup %d busOccupation records",
+                    metaRecordsPendingToBackup.length));
+            apiClient.postBusOccupationMeta(Arrays.asList(metaRecordsPendingToBackup),
+                    visualOccupationMetadataRepository);
+        } else {
+            Log.d(TAG, "There are no busOccupationMeta records to update");
+        }
+
     }
 
     private VisualOccupationMetadata backup() {
@@ -96,6 +132,17 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
         //Persist in database
         long generatedId = visualOccupationMetadataRepository.save(visualOccMetadata);
         visualOccMetadata.setId((int)generatedId);
+
+        composeId = String.format("%s-%d%n-%d%n",
+                android_device_id,
+                generatedId,
+                Calendar.getInstance().getTimeInMillis());
+
+        visualOccMetadata.setComposedId(composeId);
+        visualOccupationMetadataRepository.updateVisualOccMetadata(
+                Lists.newArrayList(visualOccMetadata).toArray(new VisualOccupationMetadata[1]));
+
+
         // Backup in remote server
         apiClient.postBusOccupationMeta(Lists.newArrayList(visualOccMetadata), visualOccupationMetadataRepository);
         //apiClient.postVisOccMeta(visualOccMetadata, visualOccupationMetadataRepository);
@@ -119,6 +166,7 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
                         String.valueOf(spinnerStudyVia.getSelectedItemId()));
                 studyIntent.putExtra("studyMetadataId",
                         String.valueOf(visualOccMetadata.getId()));
+                studyIntent.putExtra("composedId", composeId);
 
                 this.startActivity(studyIntent);
                 this.finish();
