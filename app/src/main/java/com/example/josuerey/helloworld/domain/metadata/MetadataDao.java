@@ -3,7 +3,9 @@ package com.example.josuerey.helloworld.domain.metadata;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 /**
  * This interface abstracts the database operations regarding the Metadata table.
@@ -41,4 +43,7 @@ public interface MetadataDao {
      */
     @Query("UPDATE Metadata SET backedUpRemotely = 1 where id = :id")
     void updateMetadataBackupRemotelyById(int id);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateMetadata(Metadata ... metadata);
 }

@@ -44,7 +44,7 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
     private APIClient apiClient;
     private final String TAG = this.getClass().getSimpleName();
     private BusOccupationRepository busOccupationRepository;
-    private String composeId;
+    private String composedId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,12 +133,12 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
         long generatedId = visualOccupationMetadataRepository.save(visualOccMetadata);
         visualOccMetadata.setId((int)generatedId);
 
-        composeId = String.format("%s-%d%n-%d%n",
+        composedId = String.format("%s-%d%n-%d%n",
                 android_device_id,
                 generatedId,
                 Calendar.getInstance().getTimeInMillis());
 
-        visualOccMetadata.setComposedId(composeId);
+        visualOccMetadata.setComposedId(composedId);
         visualOccupationMetadataRepository.updateVisualOccMetadata(
                 Lists.newArrayList(visualOccMetadata).toArray(new VisualOccupationMetadata[1]));
 
@@ -166,7 +166,7 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
                         String.valueOf(spinnerStudyVia.getSelectedItemId()));
                 studyIntent.putExtra("studyMetadataId",
                         String.valueOf(visualOccMetadata.getId()));
-                studyIntent.putExtra("composedId", composeId);
+                studyIntent.putExtra("composedId", composedId);
 
                 this.startActivity(studyIntent);
                 this.finish();

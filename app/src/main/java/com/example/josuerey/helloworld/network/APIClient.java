@@ -37,16 +37,22 @@ public class APIClient {
     private final Application app;
     private final String TAG = this.getClass().getSimpleName();
 
-    public void postBusStop(final BusStop bs, final BusStopRepository busStopRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeBusStop";
+    public void postBusStopInBatch(final List<BusStop> busStop,
+                                  final BusStopRepository busStopRepository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeBusStopV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //the response contains the result from the server, a
                         // json string or any other object returned by your server
-                        Log.d("BusStopResult", ""+response);
-                        busStopRepository.updateBusStopBackedUpSuccessById(bs.getId());
+                        Log.d("BusStop", ""+response);
+
+                        for (BusStop record : busStop) {
+                            record.remotelyBackedUpSuccessfully();
+                        }
+                        busStopRepository.updateBusStopInBatch(
+                                busStop.toArray(new BusStop[busStop.size()]));
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -59,18 +65,9 @@ public class APIClient {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> postMap = new HashMap<>();
-                        postMap.put("id", String.valueOf(bs.getId()));
-                        postMap.put("idMetadata", String.valueOf(bs.getIdMetadata()));
-                        postMap.put("stopType", bs.getStopType());
-                        postMap.put("passengersUp", String.valueOf(bs.getPassengersUp()));
-                        postMap.put("passengersDown", String.valueOf(bs.getPassengersDown()));
-                        postMap.put("totalPassengers", String.valueOf(bs.getTotalPassengers()));
-                        postMap.put("lat", String.valueOf(bs.getLat()));
-                        postMap.put("lon", String.valueOf(bs.getLon()));
-                        postMap.put("isOfficial", String.valueOf(bs.isOfficial() ? 1 : 0));
-                        postMap.put("stop_begin", bs.getStopBegin());
-                        postMap.put("stop_end", bs.getStopEnd());
-                        postMap.put("deviceId", bs.getDeviceId());
+                        String list2JsonArray = new Gson().toJson(busStop);
+                        postMap.put("busStopData", list2JsonArray);
+                        Log.i(TAG, "busStopData: " + list2JsonArray);
 
                         return postMap;
                     }
@@ -79,16 +76,22 @@ public class APIClient {
         Volley.newRequestQueue(app).add(stringRequest);
     }
 
-    public void postMetadata(final Metadata m, final MetadataRepository repository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeMetadata";
+    public void postMetadataInBatch (final List<Metadata> metadata,
+                                    final MetadataRepository repository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeMetadataV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //the response contains the result from the server, a
                         // json string or any other object returned by your server
-                        Log.d("MetadataResult", ""+response);
-                        repository.updateMetadataBackedUpSuccessById(m.getId());
+                        Log.d("Metadata", ""+response);
+
+                        for (Metadata record : metadata) {
+                            record.remotelyBackedUpSuccessfully();
+                        }
+                        repository.updateMetadataInBatch(
+                                metadata.toArray(new Metadata[metadata.size()]));
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -101,13 +104,9 @@ public class APIClient {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> postMap = new HashMap<>();
-                        postMap.put("id", String.valueOf(m.getId()));
-                        postMap.put("route", m.getRoute());
-                        postMap.put("via", m.getVia());
-                        postMap.put("economicNumber", m.getEconomicNumber());
-                        postMap.put("capturist", m.getCapturist());
-                        postMap.put("initialPassengers", String.valueOf(m.getInitialPassengers()));
-                        postMap.put("deviceId", m.getDeviceId());
+                        String list2JsonArray = new Gson().toJson(metadata);
+                        postMap.put("metadataData", list2JsonArray);
+                        Log.i(TAG, "metadataData: " + list2JsonArray);
 
                         return postMap;
                     }
@@ -116,8 +115,9 @@ public class APIClient {
         Volley.newRequestQueue(app).add(stringRequest);
     }
 
-    public void PostArray(final List<GPSLocation> route, final GPSLocationRepository gpsLocationRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/route";
+    public void postGpsLocationInBatch(final List<GPSLocation> route,
+                                       final GPSLocationRepository gpsLocationRepository) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -146,8 +146,8 @@ public class APIClient {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> postMap = new HashMap<>();
                         String list2JsonArray = new Gson().toJson(route);
-                        postMap.put("RouteArray", list2JsonArray);
-                        Log.i(TAG, "JsonArray: " + list2JsonArray);
+                        postMap.put("RouteData", list2JsonArray);
+                        Log.i(TAG, "RouteData: " + list2JsonArray);
 
                         return postMap;
                     }

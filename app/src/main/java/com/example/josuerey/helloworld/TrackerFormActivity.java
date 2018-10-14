@@ -1,7 +1,6 @@
 package com.example.josuerey.helloworld;
 
 
-import android.arch.persistence.room.util.StringUtil;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +18,10 @@ import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilidades.ExportData;
+import com.google.common.collect.Lists;
+
+import java.util.Arrays;
+import java.util.Calendar;
 
 
 public class TrackerFormActivity extends AppCompatActivity {
@@ -37,6 +40,7 @@ public class TrackerFormActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     private APIClient apiClient;
     private String androidDeviceId;
+    private String composedId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +71,20 @@ public class TrackerFormActivity extends AppCompatActivity {
 
         Metadata[] metadataRecords = metadataRepository.findMetadataByBackedUpRemotely(0);
         Log.d(TAG, "Metadata records pending to backup: " + metadataRecords.length);
-        for (Metadata record : metadataRecords) {
-            Log.d(TAG, record.toString());
+        if (metadataRecords.length > 0) {
+            apiClient.postMetadataInBatch(Arrays.asList(metadataRecords), metadataRepository);
         }
 
         BusStop[] busStopsRecords = busStopRepository.findBusStopByBackedUpRemotely(0);
         Log.d(TAG, "BusStop records pending to backup: " + busStopsRecords.length);
-        for (BusStop record : busStopsRecords) {
-            Log.d(TAG, record.toString());
+        if (busStopsRecords.length > 0) {
+            apiClient.postBusStopInBatch(Arrays.asList(busStopsRecords), busStopRepository);
         }
 
         GPSLocation[] gpsLocationsRecords = gpsLocationRepository.findGPSLocationByBackedUpRemotely(0);
         Log.d(TAG, "GPSLocation records pending to backup: " + gpsLocationsRecords.length);
-        for (GPSLocation record : gpsLocationsRecords) {
-            Log.d(TAG, record.toString());
+        if (gpsLocationsRecords.length > 0) {
+            apiClient.postGpsLocationInBatch(Arrays.asList(gpsLocationsRecords), gpsLocationRepository);
         }
     }
 
@@ -93,7 +97,7 @@ public class TrackerFormActivity extends AppCompatActivity {
                     if (fieldsValidateSuccess()) {
                         Metadata metadata = saveMetadata();
                         Log.d(TAG, metadata.toString());
-                        apiClient.postMetadata(metadata, metadataRepository);
+                        apiClient.postMetadataInBatch(Arrays.asList(metadata), metadataRepository);
 
                         Intent myIntent = new Intent(TrackerFormActivity.this, TrackerActivity.class);
                         myIntent.putExtra(METADATA_ID_PROPERTY, String.valueOf(metadataId));
@@ -102,6 +106,7 @@ public class TrackerFormActivity extends AppCompatActivity {
                         myIntent.putExtra("econNumber", metadata.getEconomicNumber());
                         myIntent.putExtra("initialPassengers",
                                 String.valueOf(metadata.getInitialPassengers()));
+                        myIntent.putExtra("composedId", metadata.getComposedId());
                         TrackerFormActivity.this.startActivity(myIntent);
                         finish();
                     }
@@ -149,6 +154,14 @@ public class TrackerFormActivity extends AppCompatActivity {
 
         metadataId = (int) metadataRepository.insert(metadata);
         metadata.setId(metadataId);
+
+        composedId = String.format("%s-%d%n-%d%n",
+                androidDeviceId,
+                metadataId,
+                Calendar.getInstance().getTimeInMillis());
+        metadata.setComposedId(composedId);
+
+        metadataRepository.updateMetadataInBatch(Lists.newArrayList(metadata).toArray(new Metadata[1]));
 
         StringBuilder fileName = new StringBuilder();
         fileName.append(campoNoRuta.getText().toString());

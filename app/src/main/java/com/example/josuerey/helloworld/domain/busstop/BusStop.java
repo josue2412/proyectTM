@@ -3,6 +3,7 @@ package com.example.josuerey.helloworld.domain.busstop;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,9 @@ public class BusStop {
 
     @ColumnInfo(name = "deviceId")
     private String deviceId;
+
+    @ColumnInfo(name = "composedId")
+    private String composedId;
 
     @ColumnInfo(name = "stopType")
     private String stopType;
@@ -60,4 +64,10 @@ public class BusStop {
 
     @ColumnInfo(name = "backedUpRemotely")
     private int backedUpRemotely;
+
+    public void remotelyBackedUpSuccessfully() {
+
+        this.backedUpRemotely = 1;
+        Log.d("BusStop", this.id + " Successfully backed up in remote server.");
+    }
 }

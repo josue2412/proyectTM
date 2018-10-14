@@ -38,6 +38,7 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilidades.ExportData;
+import com.google.common.collect.Lists;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.io.IOException;
@@ -71,6 +72,7 @@ public class TrackerActivity extends AppCompatActivity {
 
     private int totalNumberOfPassengers;
     private GPSLocation currentLocation;
+    private String composedId;
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -99,7 +101,7 @@ public class TrackerActivity extends AppCompatActivity {
                 return true;
             case R.id.finishRoute:
                 mlocManager.removeUpdates(mlocListener);
-                apiClient.PostArray(gpsLocationList, gpsLocationRepository);
+                apiClient.postGpsLocationInBatch(gpsLocationList, gpsLocationRepository);
                 Intent myIntent = new Intent(TrackerActivity.this, HomeActivity.class);
                 TrackerActivity.this.startActivity(myIntent);
                 finish();
@@ -124,7 +126,7 @@ public class TrackerActivity extends AppCompatActivity {
             route = extras.getString("Route");
             econNumber = extras.getString("econNumber");
             totalNumberOfPassengers = Integer.valueOf(extras.getString("initialPassengers"));
-
+            composedId = extras.getString("composedId");
         }
 
         android_device_id = Settings.Secure.getString(this.getContentResolver(),
@@ -169,7 +171,7 @@ public class TrackerActivity extends AppCompatActivity {
         gpsLocationViewModel.findGPSLocationsByMetadataId(currentMetadataId).observe(this, new Observer<List<GPSLocation>>() {
             @Override
             public void onChanged(@Nullable List<GPSLocation> gpsLocations) {
-                gpsLocationList =gpsLocations;
+                gpsLocationList = gpsLocations;
             }
         });
 
@@ -305,6 +307,7 @@ public class TrackerActivity extends AppCompatActivity {
                     .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
                     .deviceId(android_device_id)
                     .backedUpRemotely(0)
+                    .composedId(composedId)
                     .build();
 
             String Text = "Lat = "+ currentLocation.getLat() + "\n Long = " + currentLocation.getLon();
@@ -370,12 +373,13 @@ public class TrackerActivity extends AppCompatActivity {
                 .totalPassengers(totalNumberOfPassengers)
                 .stopBegin(DATE_FORMAT.format(beginStopInstant))
                 .stopEnd(DATE_FORMAT.format(new Date()))
+                .composedId(composedId)
                 .backedUpRemotely(0)
                 .build();
 
         int id = (int)busStopRepository.insert(newBusStop);
         newBusStop.setId(id);
-        apiClient.postBusStop(newBusStop, busStopRepository);
+        apiClient.postBusStopInBatch(Lists.newArrayList(newBusStop), busStopRepository);
 
         // Create BusStop file
         ExportData.createFile(route + "-" + econNumber + "-Paradas-"

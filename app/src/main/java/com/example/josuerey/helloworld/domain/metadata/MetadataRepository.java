@@ -30,4 +30,9 @@ public class MetadataRepository {
 
         return metadataDao.findMetadataByBackedUpRemotely(value);
     }
+
+    public void updateMetadataInBatch(Metadata[] metadata) {
+
+        metadataDao.updateMetadata(metadata);
+    }
 }

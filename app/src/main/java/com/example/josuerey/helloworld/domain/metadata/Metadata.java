@@ -3,6 +3,7 @@ package com.example.josuerey.helloworld.domain.metadata;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,9 @@ public class Metadata {
     @ColumnInfo(name = "id")
     private int id;
 
+    @ColumnInfo(name = "composedId")
+    private String composedId;
+
     @ColumnInfo(name = "route")
     private String route;
 
@@ -51,5 +55,11 @@ public class Metadata {
 
     @ColumnInfo(name = "backedUpRemotely")
     private int backedUpRemotely;
+
+    public void remotelyBackedUpSuccessfully() {
+
+        this.backedUpRemotely = 1;
+        Log.d("Metadata", this.id + " Successfully backed up in remote server.");
+    }
 
 }

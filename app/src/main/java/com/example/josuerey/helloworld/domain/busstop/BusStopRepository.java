@@ -38,4 +38,9 @@ public class BusStopRepository {
 
         return busStopDao.findBusStopsByBackedUpRemotely(value);
     }
+
+    public void updateBusStopInBatch(BusStop[] busStops) {
+
+        busStopDao.updateBusStop(busStops);
+    }
 }

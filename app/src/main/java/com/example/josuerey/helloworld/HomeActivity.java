@@ -77,7 +77,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Did not worked");
                 pdLoading.dismiss();
-                blockApp();
             }
         });
 

@@ -3,7 +3,11 @@ package com.example.josuerey.helloworld.domain.busstop;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
+
+import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 
 import java.util.List;
 
@@ -24,4 +28,7 @@ public interface BusStopDao {
 
     @Query("SELECT * FROM BusStop where backedUpRemotely = :value")
     BusStop[] findBusStopsByBackedUpRemotely(int value);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateBusStop(BusStop ... busStops);
 }

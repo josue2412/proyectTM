@@ -32,6 +32,9 @@ public class GPSLocation {
     @ColumnInfo(name = "idMetadata")
     private int idMetadata;
 
+    @ColumnInfo(name = "composedId")
+    private String composedId;
+
     @ColumnInfo(name = "timeStamp")
     private String timeStamp;
 
@@ -50,6 +53,6 @@ public class GPSLocation {
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;
-        Log.d("GPSLocation", "Successfully backed up in remote server.");
+        Log.d("GPSLocation", this.id + " Successfully backed up in remote server.");
     }
 }
