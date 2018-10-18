@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecciona los movimientos a estudiar:"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:background="@drawable/image_view_selector"
+                android:src="@drawable/straight_no_background"/>
+
+            <ImageButton
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:background="@drawable/image_view_selector"
+                android:src="@drawable/turn_left_no_background"/>
+
+            <ImageButton
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:background="@drawable/image_view_selector"
+                android:src="@drawable/turn_right_no_background"/>
+
+            <ImageButton
+                android:layout_width="90dp"
+                android:layout_height="120dp"
+                android:background="@drawable/image_view_selector"
+                android:src="@drawable/return_no_background"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:text="Vía de estudio"
+            />
+        <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:id="@+id/spinnerStudyVia"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/spinner_style"
+            android:inputType="textVisiblePassword" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:text="Sentido"
+            />
+        <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:id="@+id/spinnerWayDirection"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/spinner_style"
+            android:entries="@array/orientation_options"
+            android:inputType="textVisiblePassword"
+            android:hint="Sentido / Carril" />
+
+        <Button style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/btnStartStudy"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/buttonStart"
+            android:onClick="onClick"/>
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

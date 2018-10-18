@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity">
+        <activity android:name=".VehicularCapacityForm">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,6 +35,10 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".VisualOccupationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
     </application>
