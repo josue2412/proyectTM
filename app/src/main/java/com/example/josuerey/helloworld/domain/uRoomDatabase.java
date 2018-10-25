@@ -19,6 +19,10 @@ import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataDao;
 import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationship;
 import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationshipDao;
+import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
+import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacityDao;
+import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
+import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordDao;
 import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudy;
 import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudyDao;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
@@ -37,25 +41,22 @@ import java.util.concurrent.Executors;
         ViaOfStudy.class,
         VisualOccupationMetadata.class,
         RouteViaRelationship.class,
-        BusOccupation.class},
+        BusOccupation.class,
+        VehicularCapacity.class,
+        VehicularCapacityRecord.class},
         version = 2, exportSchema = false)
 public abstract class uRoomDatabase extends RoomDatabase {
 
     public abstract GPSLocationDao gpsLocationDao();
-
     public abstract MetadataDao metadataDao();
-
     public abstract BusStopDao busStopDao();
-
     public abstract BusRouteDao busRouteDao();
-
     public abstract ViaOfStudyDao viaOfStudyDao();
-
     public abstract VisualOccupationMetadataDao visualOccupationMetadataDao();
-
     public abstract RouteViaRelationshipDao routeViaRelationshipDao();
-
     public abstract BusOccupationDao busOccupationDao();
+    public abstract VehicularCapacityDao vehicularCapacityDao();
+    public abstract VehicularCapacityRecordDao vehicularCapacityRecordDao();
 
     private static uRoomDatabase INSTANCE;
 

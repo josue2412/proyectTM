@@ -90,9 +90,7 @@ public class TrackerFormActivity extends AppCompatActivity {
 
     public void onClick(View view){
 
-        Intent miIntent = null;
         switch (view.getId()){
-
             case R.id.btnStart:
                     if (fieldsValidateSuccess()) {
                         Metadata metadata = saveMetadata();
@@ -111,9 +109,6 @@ public class TrackerFormActivity extends AppCompatActivity {
                         finish();
                     }
                 break;
-        }
-        if (miIntent!=null){
-            startActivity(miIntent);
         }
     }
 

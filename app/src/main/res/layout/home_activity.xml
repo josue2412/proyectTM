@@ -9,13 +9,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/logged_capturist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="20dp" />
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_color">
-
 
             <Button style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/btnAscDescPassengers"
@@ -38,8 +46,18 @@
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
                 android:text="Ocupación visual de pasajeros" />
+
+            <Button style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/btnVehicularCap"
+                android:layout_width="150dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_height="160dp"
+                android:layout_below="@id/btnAscDescPassengers"
+                android:layout_alignParentLeft="true"
+                android:onClick="onClick"
+                android:text="Ocupación vehicular" />
         </RelativeLayout>
     </LinearLayout>
-
 
 </LinearLayout>

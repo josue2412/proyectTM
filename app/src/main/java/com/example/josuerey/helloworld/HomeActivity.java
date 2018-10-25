@@ -8,8 +8,12 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -20,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
+import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +34,34 @@ public class HomeActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     private Button passengersAscDes;
     private Button visualOcStudy;
+    private TextView capturistLogged;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.tracker_activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.finishRoute:
+                finish();
+                return true;
+            case R.id.changeUser:
+                SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
+                Intent myIntent = new Intent(HomeActivity.this, LoginActivity.class);
+                HomeActivity.this.startActivity(myIntent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +78,9 @@ public class HomeActivity extends AppCompatActivity {
 
         passengersAscDes = (Button) findViewById(R.id.btnAscDescPassengers);
         visualOcStudy = (Button) findViewById(R.id.btnVisualOccupation);
+        capturistLogged = (TextView) findViewById(R.id.logged_capturist);
+
+        capturistLogged.setText("Usuario: " + SaveSharedPreference.getUserName(getApplicationContext()));
     }
 
     private void getAuthorization() throws JSONException {
@@ -118,6 +154,9 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.btnVisualOccupation:
                 studyIntent = new Intent(HomeActivity.this, VisualOccupationFormActivity.class);
+                break;
+            case R.id.btnVehicularCap:
+                studyIntent = new Intent(HomeActivity.this, VehicularCapacityForm.class);
                 break;
         }
 

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -17,6 +18,10 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
+import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
+import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacityRepository;
+import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
+import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadataRepository;
 import com.google.gson.Gson;
@@ -233,4 +238,83 @@ public class APIClient {
         Volley.newRequestQueue(app).add(stringRequest);
     }
 
+    public void postVehicularCapMeta(final List<VehicularCapacity> VehicularCap,
+                                     final VehicularCapacityRepository vehicularCapRepo) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/vehicCapMetadata";
+        StringRequest stringRequest =
+                new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //the response contains the result from the server, a
+                        // json string or any other object returned by your server
+                        Log.d("vehicularCapResult", ""+response);
+
+                        for (VehicularCapacity record : VehicularCap) {
+                            record.remotelyBackedUpSuccessfully();
+                        }
+                        vehicularCapRepo.updateInBatch(
+                                VehicularCap.toArray(new VehicularCapacity[VehicularCap.size()]));
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }){
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> postMap = new HashMap<>();
+                        String list2JsonArray = new Gson().toJson(VehicularCap);
+                        postMap.put("vehicCapData", list2JsonArray);
+                        Log.i(TAG, "vehicCapData: " + list2JsonArray);
+
+                        return postMap;
+                    }
+                };
+        //make the request to your server as indicated in your request url
+        Volley.newRequestQueue(app).add(stringRequest);
+    }
+
+    public void postVehicularCapRecord(final List<VehicularCapacityRecord> VehicularCap,
+                                       final VehicularCapacityRecordRepository vehicularCapRepo) {
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/vehicCapRecord";
+        StringRequest stringRequest =
+                new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //the response contains the result from the server, a
+                        // json string or any other object returned by your server
+                        Log.d("CapRecordResult", ""+response);
+
+                        for (VehicularCapacityRecord record : VehicularCap) {
+                            record.remotelyBackedUpSuccessfully();
+                        }
+                        vehicularCapRepo.updateInBatch(
+                                VehicularCap.toArray(new VehicularCapacityRecord[VehicularCap.size()]));
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }){
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> postMap = new HashMap<>();
+                        String list2JsonArray = new Gson().toJson(VehicularCap);
+                        postMap.put("vehicCapData", list2JsonArray);
+                        Log.i(TAG, "vehicCapData: " + list2JsonArray);
+
+                        return postMap;
+                    }
+                };
+        //make the request to your server as indicated in your request url
+        Volley.newRequestQueue(app).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
 }

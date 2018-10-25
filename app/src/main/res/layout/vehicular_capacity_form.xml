@@ -22,29 +22,37 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageButton
+            <CheckBox
+                android:id="@+id/straightCheckbox"
+                android:layout_width="80dp"
+                android:text="derecho"
+                android:textColor="@color/colorBackground"
+                android:layout_height="120dp"
+                android:button="@drawable/straight_no_background"/>
+
+            <CheckBox
+                android:id="@+id/turnLeftCheckbox"
                 android:layout_width="80dp"
                 android:layout_height="120dp"
-                android:background="@drawable/image_view_selector"
-                android:src="@drawable/straight_no_background"/>
+                android:text="izquierda"
+                android:textColor="@color/colorBackground"
+                android:button="@drawable/turn_left_no_background"/>
 
-            <ImageButton
+            <CheckBox
+                android:id="@+id/turnRightCheckbox"
                 android:layout_width="80dp"
                 android:layout_height="120dp"
-                android:background="@drawable/image_view_selector"
-                android:src="@drawable/turn_left_no_background"/>
+                android:text="derecha"
+                android:textColor="@color/colorBackground"
+                android:button="@drawable/turn_right_no_background"/>
 
-            <ImageButton
-                android:layout_width="80dp"
-                android:layout_height="120dp"
-                android:background="@drawable/image_view_selector"
-                android:src="@drawable/turn_right_no_background"/>
-
-            <ImageButton
+            <CheckBox
+                android:id="@+id/returnCheckbox"
                 android:layout_width="90dp"
+                android:text="retorno"
+                android:textColor="@color/colorBackground"
                 android:layout_height="120dp"
-                android:background="@drawable/image_view_selector"
-                android:src="@drawable/return_no_background"/>
+                android:button="@drawable/return_no_background"/>
         </LinearLayout>
 
         <TextView
@@ -58,6 +66,7 @@
             android:id="@+id/spinnerStudyVia"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
+            android:entries="@array/orientation_options"
             android:background="@drawable/spinner_style"
             android:inputType="textVisiblePassword" />
 

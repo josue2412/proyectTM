@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/help"
         android:title="@string/menuItemAboutUs" />
+    <item android:id="@+id/changeUser"
+        android:title="Cambiar de usuario" />
     <item android:id="@+id/finishRoute"
         android:title="@string/menuItemEnd" />
 </menu>
