@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
@@ -15,11 +16,14 @@ import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacit
 import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacityRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
+import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudy;
+import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudyRepository;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
 import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -30,6 +34,7 @@ public class VehicularCapacityForm extends AppCompatActivity {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private VehicularCapacityRepository vehicularCapacityRepository;
     private VehicularCapacityRecordRepository vehicularCapacityRecordRepository;
+    private ViaOfStudyRepository viaOfStudyRepository;
     private APIClient apiClient;
     private Spinner viaOfStudySpinner;
     private Spinner wayDirectionSpinner;
@@ -69,6 +74,24 @@ public class VehicularCapacityForm extends AppCompatActivity {
 
         setCheckBoxListeners();
         checkForRecordsPendingToBackup();
+
+        viaOfStudyRepository = new ViaOfStudyRepository(getApplication());
+        ViaOfStudy[] existingVias = viaOfStudyRepository.findAll();
+        List<String> routes = new ArrayList<>();
+
+        Log.d(TAG, "Existing vias: " + existingVias.length);
+
+        //Added empty option
+        routes.add("");
+        for (ViaOfStudy via : existingVias) {
+            routes.add(via.getVia());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, routes.toArray(new String[routes.size()]));
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        viaOfStudySpinner.setAdapter(adapter);
     }
 
     private void setCheckBoxListeners() {
@@ -148,6 +171,7 @@ public class VehicularCapacityForm extends AppCompatActivity {
             VehicularCapacity vehicularCapacity = backup();
             Intent myIntent = new Intent(VehicularCapacityForm.this, VehicularCapacityActivity.class);
             myIntent.putExtra("composedId", vehicularCapacity.getComposedId());
+            myIntent.putExtra("movements", vehicularCapacity.getVehicleMove());
             VehicularCapacityForm.this.startActivity(myIntent);
             this.finish();
         }

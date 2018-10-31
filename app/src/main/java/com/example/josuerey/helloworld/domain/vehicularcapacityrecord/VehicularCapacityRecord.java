@@ -31,6 +31,9 @@ public class VehicularCapacityRecord {
     @ColumnInfo(name = "composedId")
     private String composedId;
 
+    @ColumnInfo(name = "movement")
+    private String movement;
+
     @ColumnInfo(name = "numberOfCars")
     private int numberOfCars;
 

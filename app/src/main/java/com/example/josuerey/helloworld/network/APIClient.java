@@ -79,6 +79,10 @@ public class APIClient {
                 };
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     public void postMetadataInBatch (final List<Metadata> metadata,
@@ -118,6 +122,10 @@ public class APIClient {
                 };
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     public void postGpsLocationInBatch(final List<GPSLocation> route,
@@ -159,6 +167,10 @@ public class APIClient {
                 };
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     public void postBusOccupationMeta(final List<VisualOccupationMetadata> visOccMeta,
@@ -197,6 +209,10 @@ public class APIClient {
                 };
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     public void postBusOccupation(final List<BusOccupation> busOcc,
@@ -236,6 +252,10 @@ public class APIClient {
                 };
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     public void postVehicularCapMeta(final List<VehicularCapacity> VehicularCap,
@@ -274,6 +294,10 @@ public class APIClient {
                 };
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(app).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     public void postVehicularCapRecord(final List<VehicularCapacityRecord> VehicularCap,

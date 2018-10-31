@@ -25,15 +25,15 @@
             <CheckBox
                 android:id="@+id/straightCheckbox"
                 android:layout_width="80dp"
+                android:layout_height="100dp"
                 android:text="derecho"
                 android:textColor="@color/colorBackground"
-                android:layout_height="120dp"
                 android:button="@drawable/straight_no_background"/>
 
             <CheckBox
                 android:id="@+id/turnLeftCheckbox"
                 android:layout_width="80dp"
-                android:layout_height="120dp"
+                android:layout_height="100dp"
                 android:text="izquierda"
                 android:textColor="@color/colorBackground"
                 android:button="@drawable/turn_left_no_background"/>
@@ -41,17 +41,17 @@
             <CheckBox
                 android:id="@+id/turnRightCheckbox"
                 android:layout_width="80dp"
-                android:layout_height="120dp"
+                android:layout_height="100dp"
                 android:text="derecha"
                 android:textColor="@color/colorBackground"
                 android:button="@drawable/turn_right_no_background"/>
 
             <CheckBox
                 android:id="@+id/returnCheckbox"
-                android:layout_width="90dp"
+                android:layout_width="80dp"
+                android:layout_height="100dp"
                 android:text="retorno"
                 android:textColor="@color/colorBackground"
-                android:layout_height="120dp"
                 android:button="@drawable/return_no_background"/>
         </LinearLayout>
 
