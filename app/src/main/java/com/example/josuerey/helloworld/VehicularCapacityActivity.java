@@ -124,7 +124,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 return true;
             case R.id.finishRoute:
                 stopTimerTask();
-                Intent myIntent = new Intent(VehicularCapacityActivity.this, HomeActivity.class);
+                Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
                 VehicularCapacityActivity.this.startActivity(myIntent);
                 finish();
                 return true;

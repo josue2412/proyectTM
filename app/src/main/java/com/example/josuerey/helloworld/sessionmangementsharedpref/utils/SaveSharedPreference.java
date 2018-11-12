@@ -29,6 +29,12 @@ public class SaveSharedPreference {
         editor.apply();
     }
 
+    public static void setUserNameKey(Context context, String userNameKey) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putString(LOGGED_IN_USERNAME_KEY, userNameKey);
+        editor.apply();
+    }
+
     /**
      * Get the Login Status
      * @param context
@@ -40,5 +46,9 @@ public class SaveSharedPreference {
 
     public static String getUserName(Context context) {
         return getPreferences(context).getString(LOGGED_IN_USERNAME, null);
+    }
+
+    public static String getUserNameKey(Context context) {
+        return getPreferences(context).getString(LOGGED_IN_USERNAME_KEY, null);
     }
 }

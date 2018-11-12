@@ -26,12 +26,40 @@
         android:layout_alignBottom="@+id/usernameTextView"
         android:layout_marginLeft="37dp"
         android:layout_marginStart="37dp"
+        android:textStyle="italic"
         android:layout_toEndOf="@+id/usernameTextView"
         android:layout_toRightOf="@+id/usernameTextView"
         android:inputType="textNoSuggestions"
         android:background="@null"
         android:ems="10"
-        android:hint="username" />
+        android:hint="nombre de usuario" />
+
+    <TextView
+        android:id="@+id/user_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/usernameTextView"
+        android:textSize="18dp"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:text="Clave: " />
+
+    <EditText
+        android:id="@+id/user_key_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/user_key"
+        android:layout_marginLeft="41dp"
+        android:layout_marginStart="46dp"
+        android:layout_toEndOf="@+id/user_key"
+        android:textStyle="italic"
+        android:layout_toRightOf="@+id/user_key"
+        android:inputType="textNoSuggestions"
+        android:background="@null"
+        android:ems="10"
+        android:hint="clave de usuario" />
 
     <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/submit"
