@@ -34,7 +34,7 @@
                 android:id="@+id/spentTimeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tiempo de estudio: 0 minutos"
+                android:text="Tiempo restante: 0 minutos"
                 android:textColor="@color/colorPrimary"
                 android:gravity="left"/>
         </LinearLayout>
@@ -200,34 +200,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
-            <EditText
-                android:id="@+id/pedestrianCounterEditText"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:enabled="false"
-                android:gravity="center_horizontal"
-                android:paddingRight="10dp"/>
-            <ImageButton
-                android:id="@+id/pedestrianCounterBtn2"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/pedestrian"
-                android:onClick="onClick"/>
-            <ImageButton
-                android:id="@+id/pedestrianCounterBtn"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/pedestrian"
-                android:onClick="onClick"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:paddingLeft="80dp"
             android:gravity="center_horizontal">
             <EditText
@@ -247,6 +219,27 @@
                 android:gravity="center_horizontal"
                 android:paddingRight="10dp"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <Button style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/interruptStudyBtn"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Interrumpir estudio"
+                android:onClick="onClick"/>
+            <Button style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/emergencyBtn"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Emergencia"
+                android:onClick="onClick"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

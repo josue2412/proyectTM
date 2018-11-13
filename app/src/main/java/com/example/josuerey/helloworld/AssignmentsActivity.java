@@ -100,6 +100,7 @@ public class AssignmentsActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityActivity.class);
                 myIntent.putExtra("composedId", String.valueOf(dataModel.getId()));
                 myIntent.putExtra("movements", dataModel.getMovement());
+                myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDuration_in_hours()));
                 AssignmentsActivity.this.startActivity(myIntent);
                 finish();
             }

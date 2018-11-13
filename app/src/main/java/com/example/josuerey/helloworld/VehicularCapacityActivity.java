@@ -21,6 +21,7 @@ import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularC
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.utilidades.StudyDuration;
 import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
@@ -65,12 +66,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private EditText motorcycleCounterEditText;
     private ImageButton motorcycleCounterBtn;
 
-    private int pedestrianCounter;
-    private int pedestrianCounter2;
-    private int globalPedestrianCounter;
-    private EditText pedestrianCounterEditText;
-    private ImageButton pedestrianCounterBtn;
-
     private int truckCounter;
     private int truckCounter2;
     private int globalTruckCounter;
@@ -106,6 +101,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private int secondaryMovementCounter;
 
     private Date beginningOfTheStudy;
+    private int studyDuration;
 
     private final static int INTERVAL_TIME = 60000;
 
@@ -149,7 +145,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         busCounterEditText = (EditText) findViewById(R.id.busCounterEditText);
         bikeCounterEditText = (EditText) findViewById(R.id.bikeCounterEditText);
         motorcycleCounterEditText = (EditText) findViewById(R.id.motorcycleCounterEditText);
-        pedestrianCounterEditText = (EditText) findViewById(R.id.pedestrianCounterEditText);
         truckCounterEditText = (EditText) findViewById(R.id.truckCounterEditText);
 
         mainMove = (ImageView) findViewById(R.id.direction);
@@ -169,6 +164,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         if (extras != null) {
             composeId = extras.getString("composedId");
             movements = extras.getString("movements").split(" ");
+            studyDuration = Integer.valueOf(extras.getString("studyDuration"));
             numberOfMovements = movements.length;
             manageSecondMove(movements);
         }
@@ -208,10 +204,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         motorcycleCounterBtn.setClickable(false);
         motorcycleCounterBtn.setBackgroundResource(R.color.colorBackground);
 
-        pedestrianCounterBtn = (ImageButton) findViewById(R.id.pedestrianCounterBtn2);
-        pedestrianCounterBtn.setClickable(false);
-        pedestrianCounterBtn.setBackgroundResource(R.color.colorBackground);
-
         truckCounterBtn = (ImageButton) findViewById(R.id.truckCounterBtn2);
         truckCounterBtn.setClickable(false);
         truckCounterBtn.setBackgroundResource(R.color.colorBackground);
@@ -245,7 +237,11 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        stopTimerTask();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
     }
 
     private void stopTimerTask() {
@@ -257,6 +253,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
     private void generateVehicularCapacityRecord() {
 
+        Log.d(TAG, "Pack vehicular capacity record");
         endTimeInterval = Calendar.getInstance().getTime();
         List<VehicularCapacityRecord> records = new LinkedList<>();
 
@@ -270,7 +267,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 .numberOfBikes(bikeCounter)
                 .numberOfBusses(busCounter)
                 .numberOfMotorcycles(motorcycleCounter)
-                .numberOfPedestrians(pedestrianCounter)
                 .numberOfTrucks(truckCounter)
                 .composedId(composeId)
                 .build();
@@ -291,7 +287,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     .numberOfBikes(bikeCounter2)
                     .numberOfBusses(busCounter2)
                     .numberOfMotorcycles(motorcycleCounter2)
-                    .numberOfPedestrians(pedestrianCounter2)
                     .numberOfTrucks(truckCounter2)
                     .composedId(composeId)
                     .build();
@@ -305,7 +300,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         apiClient.postVehicularCapRecord(records, vehicularCapacityRecordRepository);
 
         long difference = getDateDiff(beginningOfTheStudy, endTimeInterval, TimeUnit.MINUTES);
-        spentTimeTextView.setText("Tiempo de estudio: " + String.valueOf(difference) + " minutos");
+        String remainingTime = StudyDuration.remainingTime((int) difference, studyDuration);
+        spentTimeTextView.setText("Tiempo restante: " + remainingTime);
 
         resetCounters();
     }
@@ -323,8 +319,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         this.busCounter2 = 0;
         this.motorcycleCounter = 0;
         this.motorcycleCounter2 = 0;
-        this.pedestrianCounter = 0;
-        this.pedestrianCounter2 = 0;
         this.truckCounter = 0;
         this.truckCounter2 = 0;
         this.carCounter = 0;
@@ -393,22 +387,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 motorcycleCounter2 = motorcycleCounter2 + 1;
                 globalMotorcycleCounter = globalMotorcycleCounter + 1;
                 motorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
-                secondaryMovementCounter = secondaryMovementCounter + 1;
-                secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
-                break;
-
-            case R.id.pedestrianCounterBtn:
-                pedestrianCounter = pedestrianCounter + 1;
-                globalPedestrianCounter = globalPedestrianCounter + 1;
-                pedestrianCounterEditText.setText(String.valueOf(globalPedestrianCounter));
-                mainMovementCounter = mainMovementCounter + 1;
-                mainMoveEditText.setText(String.valueOf(mainMovementCounter));
-                break;
-
-            case R.id.pedestrianCounterBtn2:
-                pedestrianCounter2 = pedestrianCounter2 + 1;
-                globalPedestrianCounter = globalPedestrianCounter + 1;
-                pedestrianCounterEditText.setText(String.valueOf(globalPedestrianCounter));
                 secondaryMovementCounter = secondaryMovementCounter + 1;
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
                 break;
