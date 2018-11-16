@@ -12,13 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.network.AssignmentResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CustomAdapter extends ArrayAdapter<AssignmentResponse> implements View.OnClickListener{
+public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnClickListener{
 
-    private ArrayList<AssignmentResponse> dataSet;
+    private List<Assignment> dataSet;
     private final String TAG = this.getClass().getSimpleName();
     Context mContext;
 
@@ -28,9 +30,10 @@ public class CustomAdapter extends ArrayAdapter<AssignmentResponse> implements V
         TextView destiny;
         TextView begin_date;
         TextView duration;
+        TextView remainingTime;
     }
 
-    public CustomAdapter(ArrayList<AssignmentResponse> data, Context context) {
+    public CustomAdapter(List<Assignment> data, Context context) {
         super(context, R.layout.assginment_view, data);
         this.dataSet = data;
         this.mContext=context;
@@ -42,7 +45,7 @@ public class CustomAdapter extends ArrayAdapter<AssignmentResponse> implements V
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        AssignmentResponse dataModel = (AssignmentResponse)object;
+        Assignment dataModel = (Assignment)object;
 
         switch (v.getId())
         {
@@ -57,7 +60,7 @@ public class CustomAdapter extends ArrayAdapter<AssignmentResponse> implements V
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        AssignmentResponse dataModel = getItem(position);
+        Assignment dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -72,6 +75,7 @@ public class CustomAdapter extends ArrayAdapter<AssignmentResponse> implements V
             viewHolder.destiny = (TextView) convertView.findViewById(R.id.destiny_value);
             viewHolder.begin_date = (TextView) convertView.findViewById(R.id.begin_date_value);
             viewHolder.duration = (TextView) convertView.findViewById(R.id.duration_value);
+            viewHolder.remainingTime = (TextView) convertView.findViewById(R.id.remainingTime_value);
 
             result=convertView;
 
@@ -85,10 +89,11 @@ public class CustomAdapter extends ArrayAdapter<AssignmentResponse> implements V
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.origin.setText(dataModel.getStreet_from() + " " + dataModel.getStreet_from_direction());
-        viewHolder.destiny.setText(dataModel.getStreet_to() + " " + dataModel.getStreet_to_direction());
-        viewHolder.begin_date.setText(dataModel.getBegin_at());
-        viewHolder.duration.setText(String.valueOf(dataModel.getDuration_in_hours()));
+        viewHolder.origin.setText(dataModel.getStreetFrom() + " " + dataModel.getStreetFromDirection());
+        viewHolder.destiny.setText(dataModel.getStreetTo() + " " + dataModel.getStreetToDirection());
+        viewHolder.begin_date.setText(dataModel.getBeginAt());
+        viewHolder.duration.setText(String.valueOf(dataModel.getDurationInHours()) + " hrs");
+        viewHolder.remainingTime.setText(String.valueOf(dataModel.getTimeOfStudy()));
         // Return the completed view to render on screen
         return convertView;
     }

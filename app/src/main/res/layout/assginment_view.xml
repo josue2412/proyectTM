@@ -41,7 +41,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/begin_date_label"
-            android:text="Duración (hrs): "
+            android:text="Duración: "
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/remainingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/duration"
+            android:text="Tiempo restante: "
             android:textColor="@android:color/black" />
     </LinearLayout>
 
@@ -88,6 +96,16 @@
             android:textStyle="bold"
             android:layout_below="@+id/begin_date_label"
             android:text="Duración"
+            android:textColor="@android:color/black" />
+
+
+        <TextView
+            android:id="@+id/remainingTime_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_below="@+id/duration_value"
+            android:text="Tiempo restante"
             android:textColor="@android:color/black" />
     </LinearLayout>
 

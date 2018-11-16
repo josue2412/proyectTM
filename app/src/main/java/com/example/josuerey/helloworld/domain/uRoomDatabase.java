@@ -7,6 +7,8 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.example.josuerey.helloworld.domain.assignment.Assignment;
+import com.example.josuerey.helloworld.domain.assignment.AssignmentDao;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationDao;
 import com.example.josuerey.helloworld.domain.busroute.BusRoute;
@@ -43,8 +45,9 @@ import java.util.concurrent.Executors;
         RouteViaRelationship.class,
         BusOccupation.class,
         VehicularCapacity.class,
-        VehicularCapacityRecord.class},
-        version = 2, exportSchema = false)
+        VehicularCapacityRecord.class,
+        Assignment.class},
+        version = 1, exportSchema = false)
 public abstract class uRoomDatabase extends RoomDatabase {
 
     public abstract GPSLocationDao gpsLocationDao();
@@ -57,6 +60,7 @@ public abstract class uRoomDatabase extends RoomDatabase {
     public abstract BusOccupationDao busOccupationDao();
     public abstract VehicularCapacityDao vehicularCapacityDao();
     public abstract VehicularCapacityRecordDao vehicularCapacityRecordDao();
+    public abstract AssignmentDao assignmentDao();
 
     private static uRoomDatabase INSTANCE;
 

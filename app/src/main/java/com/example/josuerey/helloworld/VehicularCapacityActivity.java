@@ -11,12 +11,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
@@ -83,6 +85,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private String composeId;
     private String android_device_id;
     private VehicularCapacityRecordRepository vehicularCapacityRecordRepository;
+    private AssignmentRepository assignmentRepository;
     private APIClient apiClient;
 
     private int numberOfMovements;
@@ -102,6 +105,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
     private Date beginningOfTheStudy;
     private int studyDuration;
+    private String remainingTime;
+    private int serverId;
 
     private final static int INTERVAL_TIME = 60000;
 
@@ -152,7 +157,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
         mainMoveEditText = (EditText) findViewById(R.id.mainMovementCounterEditText);
         secondaryMoveEditText = (EditText) findViewById(R.id.secondMovementCounterEditText);
-        spentTimeTextView = (TextView) findViewById(R.id.spentTimeTextView);
+        spentTimeTextView = (TextView) findViewById(R.id.spentTimeValueTextView);
         beginningTimeTextView = (TextView) findViewById(R.id.beginningTimeTextView);
 
         beginningOfTheStudy = Calendar.getInstance().getTime();
@@ -165,13 +170,17 @@ public class VehicularCapacityActivity extends AppCompatActivity {
             composeId = extras.getString("composedId");
             movements = extras.getString("movements").split(" ");
             studyDuration = Integer.valueOf(extras.getString("studyDuration"));
+            remainingTime = extras.getString("remainingTime");
+            serverId = Integer.valueOf(extras.getString("serverId"));
             numberOfMovements = movements.length;
             manageSecondMove(movements);
         }
 
+        spentTimeTextView.setText(remainingTime);
         android_device_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         vehicularCapacityRecordRepository = new VehicularCapacityRecordRepository(getApplication());
+        assignmentRepository = new AssignmentRepository(getApplication());
         apiClient = APIClient.builder().app(getApplication()).build();
         startTimer();
     }
@@ -301,7 +310,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
         long difference = getDateDiff(beginningOfTheStudy, endTimeInterval, TimeUnit.MINUTES);
         String remainingTime = StudyDuration.remainingTime((int) difference, studyDuration);
-        spentTimeTextView.setText("Tiempo restante: " + remainingTime);
+        spentTimeTextView.setText(remainingTime);
 
         resetCounters();
     }
@@ -423,5 +432,13 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
                 break;
         }
+    }
+
+    public void interruptStudy(View target) {
+        assignmentRepository.updateAssignmentRemainingTime(spentTimeTextView.getText().toString(), serverId);
+        stopTimerTask();
+        Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
+        VehicularCapacityActivity.this.startActivity(myIntent);
+        finish();
     }
 }

@@ -14,11 +14,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.josuerey.helloworld.domain.assignment.Assignment;
+import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
 import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacityRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
@@ -27,21 +30,31 @@ import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.network.AssignmentResponse;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilidades.CustomAdapter;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class AssignmentsActivity extends AppCompatActivity {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final String TAG = this.getClass().getSimpleName();
     private ListView assignmentsListView;
     private TextView capturistTextView;
 
     private VehicularCapacityRecordRepository vehicularCapacityRecordRepository;
+    private AssignmentRepository assignmentRepository;
     private APIClient apiClient;
+    private List<Assignment> availableAssignments;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,25 +95,97 @@ public class AssignmentsActivity extends AppCompatActivity {
         retrieveAssignments(SaveSharedPreference.getUserNameKey(getApplicationContext()));
 
         vehicularCapacityRecordRepository = new VehicularCapacityRecordRepository(getApplication());
+        assignmentRepository = new AssignmentRepository(getApplication());
         apiClient = APIClient.builder().app(getApplication()).build();
 
+        availableAssignments = new ArrayList<>();
         checkForRecordsPendingToBackup();
     }
 
-    private void setAssignments(final ArrayList<AssignmentResponse> assignments) {
+    /**
+     * Check if either remote assignments aren't yet in the local database or if there were updated,
+     * and merge them with local ones if it is the case.
+     *
+     * @param remoteAssignments
+     */
+    private void mergeAssignments(final ArrayList<AssignmentResponse> remoteAssignments) throws ParseException {
 
-        CustomAdapter customAdapter = new CustomAdapter(assignments, getApplicationContext());
+        for (AssignmentResponse remoteAssignment : remoteAssignments) {
+
+            Optional<Assignment> existingAssignment = assignmentRepository
+                    .findByServerId(remoteAssignment.getId());
+
+            if (existingAssignment.isPresent()) {
+
+                Date remoteLastUpdatedDate = DATE_FORMAT.parse(remoteAssignment.getUpdated_at());
+                Date localLastUpdatedDate = DATE_FORMAT.parse(existingAssignment.get().getUpdatedAt());
+
+                Assignment incomingAssignment = buildAssignment(remoteAssignment);
+                // if remote assignment is newer, then replace the existing one
+                if (remoteLastUpdatedDate.after(localLastUpdatedDate)) {
+
+                    incomingAssignment.setId(existingAssignment.get().getId());
+
+                    assignmentRepository.updateAssignment(incomingAssignment);
+                    Log.d(TAG, "Merged assignment with id: " + String.valueOf(incomingAssignment.getId()));
+                }
+
+                if (incomingAssignment.getEnabled() == 1) {
+                    incomingAssignment.setTimeOfStudy(existingAssignment.get().getTimeOfStudy());
+                    availableAssignments.add(incomingAssignment);
+                }
+            } else {
+
+                Assignment incomingAssignment = buildAssignment(remoteAssignment);
+                availableAssignments.add(incomingAssignment);
+                long generatedId = assignmentRepository.save(incomingAssignment);
+                Log.d(TAG, "Inserted new assignment with id: " + String.valueOf(generatedId));
+            }
+        }
+
+        setAssignments();
+    }
+
+    private Assignment buildAssignment(AssignmentResponse assignmentResponse) {
+
+        return Assignment.builder()
+                .serverId(assignmentResponse.getId())
+                .capturistId(assignmentResponse.getCapturist_id())
+                .projectId(assignmentResponse.getProject_id())
+                .status("En proceso")
+                .timeOfStudy(String.valueOf(assignmentResponse.getDuration_in_hours()) + " hrs")
+                .beginAt(assignmentResponse.getBegin_at())
+                .durationInHours(assignmentResponse.getDuration_in_hours())
+                .streetFrom(assignmentResponse.getStreet_from())
+                .streetTo(assignmentResponse.getStreet_to())
+                .streetFromDirection(assignmentResponse.getStreet_from_direction())
+                .streetToDirection(assignmentResponse.getStreet_to_direction())
+                .streetFromCode(assignmentResponse.getStreet_from_code())
+                .streetToCode(assignmentResponse.getStreet_to_code())
+                .movement(assignmentResponse.getMovement())
+                .movementCode(assignmentResponse.getMovement_code())
+                .enabled(assignmentResponse.getEnabled())
+                .createdAt(assignmentResponse.getCreated_at())
+                .updatedAt(assignmentResponse.getUpdated_at())
+                .build();
+    }
+
+    private void setAssignments() {
+
+        CustomAdapter customAdapter = new CustomAdapter(availableAssignments, getApplicationContext());
         assignmentsListView.setAdapter(customAdapter);
         assignmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                AssignmentResponse dataModel= assignments.get(position);
+                Assignment dataModel= availableAssignments.get(position);
 
                 Intent myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityActivity.class);
                 myIntent.putExtra("composedId", String.valueOf(dataModel.getId()));
                 myIntent.putExtra("movements", dataModel.getMovement());
-                myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDuration_in_hours()));
+                myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));
+                myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
+                myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDurationInHours()));
                 AssignmentsActivity.this.startActivity(myIntent);
                 finish();
             }
@@ -132,10 +217,10 @@ public class AssignmentsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             AssignmentResponse[] assignmentResponse = mapper.readValue(response, AssignmentResponse[].class);
-                            setAssignments(new ArrayList<AssignmentResponse>(Arrays.asList(assignmentResponse)));
+                            mergeAssignments(new ArrayList<AssignmentResponse>(Arrays.asList(assignmentResponse)));
                             pdLoading.dismiss();
                             Log.d(TAG, "Assignments: " + assignmentResponse[0].getMovement());
-                        } catch (IOException e) {
+                        } catch (IOException | ParseException e) {
                             e.printStackTrace();
                         }
                     }
@@ -149,5 +234,9 @@ public class AssignmentsActivity extends AppCompatActivity {
                 };
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(getApplication()).add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                3000,
+                3,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 }
