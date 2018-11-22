@@ -28,8 +28,8 @@ public class VehicularCapacityRecord {
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 
-    @ColumnInfo(name = "composedId")
-    private String composedId;
+    @ColumnInfo(name = "assignmentId")
+    private int assignmentId;
 
     @ColumnInfo(name = "movement")
     private String movement;

@@ -22,18 +22,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
-import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
-import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacityRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.network.AssignmentResponse;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilidades.CustomAdapter;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 
 
 import java.io.IOException;
@@ -42,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class AssignmentsActivity extends AppCompatActivity {
@@ -153,7 +150,7 @@ public class AssignmentsActivity extends AppCompatActivity {
                 .capturistId(assignmentResponse.getCapturist_id())
                 .projectId(assignmentResponse.getProject_id())
                 .status("En proceso")
-                .timeOfStudy(String.valueOf(assignmentResponse.getDuration_in_hours()) + " hrs")
+                .timeOfStudy("0" + String.valueOf(assignmentResponse.getDuration_in_hours()) + ":00:00")
                 .beginAt(assignmentResponse.getBegin_at())
                 .durationInHours(assignmentResponse.getDuration_in_hours())
                 .streetFrom(assignmentResponse.getStreet_from())
@@ -172,16 +169,18 @@ public class AssignmentsActivity extends AppCompatActivity {
 
     private void setAssignments() {
 
-        CustomAdapter customAdapter = new CustomAdapter(availableAssignments, getApplicationContext());
+        final List<Assignment> groupedAssignments = groupAssignments(availableAssignments);
+
+        CustomAdapter customAdapter = new CustomAdapter(groupedAssignments, getApplicationContext());
         assignmentsListView.setAdapter(customAdapter);
         assignmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Assignment dataModel= availableAssignments.get(position);
+                Assignment dataModel= groupedAssignments.get(position);
 
                 Intent myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityActivity.class);
-                myIntent.putExtra("composedId", String.valueOf(dataModel.getId()));
+                myIntent.putExtra("assignmentId", String.valueOf(dataModel.getServerId()));
                 myIntent.putExtra("movements", dataModel.getMovement());
                 myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));
                 myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
@@ -190,6 +189,49 @@ public class AssignmentsActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private List<Assignment> groupAssignments(List<Assignment> assignments) {
+        HashMap<String, Assignment> assignmentHashMap = new HashMap<>();
+
+        for (Assignment assignment : assignments) {
+
+            if (!assignmentHashMap.containsKey(assignment.getBeginAt())) {
+
+                StringBuilder origin = new StringBuilder();
+                origin.append(assignment.getStreetFrom());
+                origin.append(" " + assignment.getStreetFromDirection() + "\n");
+
+                StringBuilder destiny = new StringBuilder();
+                destiny.append(assignment.getStreetTo());
+                destiny.append(" " + assignment.getStreetToDirection() + "\n");
+
+                assignment.setNumberOfMovements(1);
+                assignment.setStreetFrom(origin.toString());
+                assignment.setStreetTo(destiny.toString());
+                assignmentHashMap.put(assignment.getBeginAt(), assignment);
+            } else {
+
+                Assignment existingAssignment = assignmentHashMap.get(assignment.getBeginAt());
+                int numberOfMovements = existingAssignment.getNumberOfMovements() + 1;
+
+                StringBuilder origin = new StringBuilder();
+                origin.append(existingAssignment.getStreetFrom() + assignment.getStreetFrom());
+                origin.append(" " + assignment.getStreetFromDirection());
+
+                StringBuilder destiny = new StringBuilder();
+                destiny.append(existingAssignment.getStreetTo() + assignment.getStreetTo());
+                destiny.append(" " + assignment.getStreetToDirection());
+
+                String movements = existingAssignment.getMovement() + " " + assignment.getMovement();
+                existingAssignment.setMovement(movements);
+                existingAssignment.setNumberOfMovements(numberOfMovements);
+                existingAssignment.setStreetFrom(origin.toString());
+                existingAssignment.setStreetTo(destiny.toString());
+            }
+        }
+
+        return new ArrayList<>(assignmentHashMap.values());
     }
 
     private void checkForRecordsPendingToBackup() {

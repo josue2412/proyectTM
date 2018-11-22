@@ -56,7 +56,7 @@
         android:layout_toEndOf="@+id/user_key"
         android:textStyle="italic"
         android:layout_toRightOf="@+id/user_key"
-        android:inputType="textNoSuggestions"
+        android:inputType="number"
         android:background="@null"
         android:ems="10"
         android:hint="clave de usuario" />

@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,14 +23,8 @@ import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularC
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilidades.StudyDuration;
-import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -82,7 +75,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private Date beginTimeInterval;
     private Date endTimeInterval;
 
-    private String composeId;
+    private int assignmentId;
     private String android_device_id;
     private VehicularCapacityRecordRepository vehicularCapacityRecordRepository;
     private AssignmentRepository assignmentRepository;
@@ -99,6 +92,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
     private TextView spentTimeTextView;
     private TextView beginningTimeTextView;
+    private TextView movementsTextView;
 
     private int mainMovementCounter;
     private int secondaryMovementCounter;
@@ -159,6 +153,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         secondaryMoveEditText = (EditText) findViewById(R.id.secondMovementCounterEditText);
         spentTimeTextView = (TextView) findViewById(R.id.spentTimeValueTextView);
         beginningTimeTextView = (TextView) findViewById(R.id.beginningTimeTextView);
+        movementsTextView = (TextView) findViewById(R.id.movementsValueTextView);
 
         beginningOfTheStudy = Calendar.getInstance().getTime();
 
@@ -167,7 +162,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            composeId = extras.getString("composedId");
+            assignmentId = Integer.valueOf(extras.getString("assignmentId"));
             movements = extras.getString("movements").split(" ");
             studyDuration = Integer.valueOf(extras.getString("studyDuration"));
             remainingTime = extras.getString("remainingTime");
@@ -190,8 +185,10 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         if (movements.length == 2) {
             mainMove.setBackgroundResource(deriveMoveSrc(movements[0]));
             secondaryMove.setBackgroundResource(deriveMoveSrc(movements[1]));
+            movementsTextView.setText(movements[1] + "/" + movements[0]);
         } else if (movements.length == 1) {
             mainMove.setBackgroundResource(deriveMoveSrc(movements[0]));
+            movementsTextView.setText(movements[0]);
             disableSecondMoveButtons();
         }
     }
@@ -277,7 +274,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 .numberOfBusses(busCounter)
                 .numberOfMotorcycles(motorcycleCounter)
                 .numberOfTrucks(truckCounter)
-                .composedId(composeId)
+                .assignmentId(assignmentId)
                 .build();
 
         long generatedId = vehicularCapacityRecordRepository.save(vehicularCapacityRecord);
@@ -297,7 +294,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     .numberOfBusses(busCounter2)
                     .numberOfMotorcycles(motorcycleCounter2)
                     .numberOfTrucks(truckCounter2)
-                    .composedId(composeId)
+                    .assignmentId(assignmentId)
                     .build();
 
             long generatedId2 = vehicularCapacityRecordRepository.save(vehicularCapacityRecord2);
@@ -309,8 +306,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         apiClient.postVehicularCapRecord(records, vehicularCapacityRecordRepository);
 
         long difference = getDateDiff(beginningOfTheStudy, endTimeInterval, TimeUnit.MINUTES);
-        String remainingTime = StudyDuration.remainingTime((int) difference, studyDuration);
-        spentTimeTextView.setText(remainingTime);
+        String localRemainingTime = StudyDuration.remainingTime((int) difference, remainingTime);
+        spentTimeTextView.setText(localRemainingTime);
 
         resetCounters();
     }

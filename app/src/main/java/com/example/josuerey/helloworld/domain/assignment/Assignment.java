@@ -70,6 +70,9 @@ public class Assignment {
     @ColumnInfo(name = "movementCode")
     private int movementCode;
 
+    @ColumnInfo(name = "numberOfMovements")
+    private int numberOfMovements;
+
     @ColumnInfo(name = "enabled")
     private int enabled;
 

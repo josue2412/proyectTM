@@ -8,14 +8,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
-import com.example.josuerey.helloworld.network.AssignmentResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnClickListener{
@@ -29,7 +26,7 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
         TextView origin;
         TextView destiny;
         TextView begin_date;
-        TextView duration;
+        TextView numberOfMovements;
         TextView remainingTime;
     }
 
@@ -74,7 +71,7 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
             viewHolder.origin = (TextView) convertView.findViewById(R.id.origin_value);
             viewHolder.destiny = (TextView) convertView.findViewById(R.id.destiny_value);
             viewHolder.begin_date = (TextView) convertView.findViewById(R.id.begin_date_value);
-            viewHolder.duration = (TextView) convertView.findViewById(R.id.duration_value);
+            viewHolder.numberOfMovements = (TextView) convertView.findViewById(R.id.number_of_movements_value);
             viewHolder.remainingTime = (TextView) convertView.findViewById(R.id.remainingTime_value);
 
             result=convertView;
@@ -89,10 +86,10 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.origin.setText(dataModel.getStreetFrom() + " " + dataModel.getStreetFromDirection());
-        viewHolder.destiny.setText(dataModel.getStreetTo() + " " + dataModel.getStreetToDirection());
+        viewHolder.origin.setText(dataModel.getStreetFrom());
+        viewHolder.destiny.setText(dataModel.getStreetTo());
         viewHolder.begin_date.setText(dataModel.getBeginAt());
-        viewHolder.duration.setText(String.valueOf(dataModel.getDurationInHours()) + " hrs");
+        viewHolder.numberOfMovements.setText(String.valueOf(dataModel.getNumberOfMovements()));
         viewHolder.remainingTime.setText(String.valueOf(dataModel.getTimeOfStudy()));
         // Return the completed view to render on screen
         return convertView;
