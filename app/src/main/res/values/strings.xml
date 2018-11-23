@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BusTracking</string>
+    <string name="app_name">EPS app</string>
     <string name="buttonStart">Comenzar</string>
     <string name="menuItemAboutUs">Ayuda</string>
     <string name="menuItemEnd">Finalizar</string>
