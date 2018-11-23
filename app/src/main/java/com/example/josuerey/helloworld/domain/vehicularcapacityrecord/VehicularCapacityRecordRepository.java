@@ -3,6 +3,7 @@ package com.example.josuerey.helloworld.domain.vehicularcapacityrecord;
 import android.app.Application;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
+import com.example.josuerey.helloworld.utilities.ExportData;
 
 public class VehicularCapacityRecordRepository {
     private VehicularCapacityRecordDao vehicularCapacityRecordDao;
@@ -15,7 +16,13 @@ public class VehicularCapacityRecordRepository {
 
     public long save(VehicularCapacityRecord vehicularCapacityRecord) {
 
-        return vehicularCapacityRecordDao.save(vehicularCapacityRecord);
+        long generatedId = vehicularCapacityRecordDao.save(vehicularCapacityRecord);
+
+        vehicularCapacityRecord.setId((int)generatedId);
+        ExportData.createFile(String.format("%s-%d.txt", vehicularCapacityRecord.getMovement(),
+                vehicularCapacityRecord.getAssignmentId()),
+                vehicularCapacityRecord.toString());
+        return generatedId;
     }
 
     public void updateInBatch(VehicularCapacityRecord[] vehicularCapacityRecords) {

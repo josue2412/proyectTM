@@ -1,9 +1,9 @@
-package com.example.josuerey.helloworld.utilidades;
+package com.example.josuerey.helloworld.utilities;
 
 import android.util.Log;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class StudyDuration {
 
@@ -43,5 +43,17 @@ public class StudyDuration {
         int seconds = totalSecs % 60;
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    /**
+     * Returns the difference between date1 and date2
+     * @param date1 begin date
+     * @param date2 end date
+     * @param timeUnit unit of difference
+     * @return
+     */
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 }

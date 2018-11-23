@@ -1,8 +1,7 @@
-package com.example.josuerey.helloworld.utilidades;
+package com.example.josuerey.helloworld.utilities;
 
 import android.os.Environment;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

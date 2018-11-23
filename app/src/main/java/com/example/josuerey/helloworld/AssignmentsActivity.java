@@ -27,7 +27,7 @@ import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularC
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.network.AssignmentResponse;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
-import com.example.josuerey.helloworld.utilidades.CustomAdapter;
+import com.example.josuerey.helloworld.utilities.CustomAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 

@@ -29,8 +29,7 @@ import com.example.josuerey.helloworld.domain.busroute.BusRoute;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationshipRepository;
 import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.utilidades.ExportData;
-import com.google.common.base.Optional;
+import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;

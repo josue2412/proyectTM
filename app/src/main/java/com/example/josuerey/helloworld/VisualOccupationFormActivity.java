@@ -19,7 +19,7 @@ import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudyRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadataRepository;
 import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.utilidades.ExportData;
+import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;

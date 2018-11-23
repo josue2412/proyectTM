@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.utilidades;
+package com.example.josuerey.helloworld.utilities;
 
 import android.content.Context;
 import android.util.Log;

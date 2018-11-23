@@ -5,6 +5,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.util.Log;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringJoiner;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,14 +53,17 @@ public class VehicularCapacityRecord {
     @ColumnInfo(name = "numberOfTrucks")
     private int numberOfTrucks;
 
-    @ColumnInfo(name = "numberOfPedestrians")
-    private int numberOfPedestrians;
-
     @ColumnInfo(name = "beginTimeInterval")
     private String beginTimeInterval;
 
     @ColumnInfo(name = "endTimeInterval")
     private String endTimeInterval;
+
+    @ColumnInfo(name = "lat")
+    private double lat;
+
+    @ColumnInfo(name = "lon")
+    private double lon;
 
     @ColumnInfo(name = "backedUpRemotely")
     private int backedUpRemotely;
@@ -69,15 +76,19 @@ public class VehicularCapacityRecord {
 
     @Override
     public String toString() {
+
         StringBuilder objectAsString = new StringBuilder();
-        objectAsString.append("Inicio: " + this.beginTimeInterval);
-        objectAsString.append("\nCarros: " + String.valueOf(numberOfCars));
-        objectAsString.append("\nAutobuses: " + String.valueOf(numberOfBusses));
-        objectAsString.append("\nMotocicletas: " + String.valueOf(numberOfMotorcycles));
-        objectAsString.append("\nBicicletas: " + String.valueOf(numberOfBikes));
-        objectAsString.append("\nCamiones: " + String.valueOf(numberOfTrucks));
-        objectAsString.append("\nPeatones: " + String.valueOf(numberOfPedestrians));
-        objectAsString.append("\nFin: " + this.endTimeInterval);
+        objectAsString.append("Id: " + this.id);
+        objectAsString.append(", Inicio: " + this.beginTimeInterval);
+        objectAsString.append(", Fin: " + this.endTimeInterval);
+        objectAsString.append(", Carros: " + String.valueOf(numberOfCars));
+        objectAsString.append(", Autobuses: " + String.valueOf(numberOfBusses));
+        objectAsString.append(", Motocicletas: " + String.valueOf(numberOfMotorcycles));
+        objectAsString.append(", Bicicletas: " + String.valueOf(numberOfBikes));
+        objectAsString.append(", Camiones: " + String.valueOf(numberOfTrucks));
+        objectAsString.append(", Latitud: " + String.valueOf(lat));
+        objectAsString.append(", Longitud: " + String.valueOf(lon));
+
         return objectAsString.toString();
     }
 }

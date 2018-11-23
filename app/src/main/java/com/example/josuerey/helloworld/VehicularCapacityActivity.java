@@ -1,9 +1,17 @@
 package com.example.josuerey.helloworld;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -18,11 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
+import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
-import com.example.josuerey.helloworld.utilidades.StudyDuration;
+import com.example.josuerey.helloworld.utilities.StudyDuration;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,6 +43,8 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
+
+import lombok.Setter;
 
 public class VehicularCapacityActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
@@ -98,11 +109,14 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private int secondaryMovementCounter;
 
     private Date beginningOfTheStudy;
-    private int studyDuration;
     private String remainingTime;
     private int serverId;
 
     private final static int INTERVAL_TIME = 60000;
+
+    private GPSLocation currentLocation;
+    private MyLocationListener mlocListener;
+    private LocationManager mlocManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,7 +132,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
-                stopTimerTask();
                 Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
                 VehicularCapacityActivity.this.startActivity(myIntent);
                 finish();
@@ -139,6 +152,35 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.vehicular_capacity);
+        bindViews();
+
+        beginningOfTheStudy = Calendar.getInstance().getTime();
+        beginningTimeTextView.setText(new SimpleDateFormat("HH:mm:ss").format(beginningOfTheStudy));
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            assignmentId = Integer.valueOf(extras.getString("assignmentId"));
+            movements = extras.getString("movements").split(" ");
+            remainingTime = extras.getString("remainingTime");
+            serverId = Integer.valueOf(extras.getString("serverId"));
+            numberOfMovements = movements.length;
+            manageSecondMove(movements);
+        }
+
+        spentTimeTextView.setText(remainingTime);
+        android_device_id = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+
+        vehicularCapacityRecordRepository = new VehicularCapacityRecordRepository(getApplication());
+        assignmentRepository = new AssignmentRepository(getApplication());
+        apiClient = APIClient.builder().app(getApplication()).build();
+
+        requestPermissions();
+        startTimer();
+    }
+
+    private void bindViews() {
 
         carCounterEditText = (EditText) findViewById(R.id.carCounterEditText);
         busCounterEditText = (EditText) findViewById(R.id.busCounterEditText);
@@ -152,32 +194,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         mainMoveEditText = (EditText) findViewById(R.id.mainMovementCounterEditText);
         secondaryMoveEditText = (EditText) findViewById(R.id.secondMovementCounterEditText);
         spentTimeTextView = (TextView) findViewById(R.id.spentTimeValueTextView);
-        beginningTimeTextView = (TextView) findViewById(R.id.beginningTimeTextView);
+        beginningTimeTextView = (TextView) findViewById(R.id.beginningTimeValueTextView);
         movementsTextView = (TextView) findViewById(R.id.movementsValueTextView);
 
-        beginningOfTheStudy = Calendar.getInstance().getTime();
-
-        beginningTimeTextView.setText(beginningTimeTextView.getText() +
-                new SimpleDateFormat("HH:mm:ss").format(beginningOfTheStudy));
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            assignmentId = Integer.valueOf(extras.getString("assignmentId"));
-            movements = extras.getString("movements").split(" ");
-            studyDuration = Integer.valueOf(extras.getString("studyDuration"));
-            remainingTime = extras.getString("remainingTime");
-            serverId = Integer.valueOf(extras.getString("serverId"));
-            numberOfMovements = movements.length;
-            manageSecondMove(movements);
-        }
-
-        spentTimeTextView.setText(remainingTime);
-        android_device_id = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        vehicularCapacityRecordRepository = new VehicularCapacityRecordRepository(getApplication());
-        assignmentRepository = new AssignmentRepository(getApplication());
-        apiClient = APIClient.builder().app(getApplication()).build();
-        startTimer();
     }
 
     private void manageSecondMove(@Nonnull String[] movements) {
@@ -234,7 +253,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         beginTimeInterval = Calendar.getInstance().getTime();
         timer = new Timer();
 
-        Log.d(TAG, "Schedule task started");
+        Log.d(TAG, String.format("Schedule task started at: %s", DATE_FORMAT.format(beginTimeInterval)));
         initializeTimerTask();
 
         timer.schedule(timerTask, INTERVAL_TIME, INTERVAL_TIME);
@@ -242,12 +261,15 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        locationStop();
         super.onPause();
     }
 
     @Override
     protected void onResume(){
+
         super.onResume();
+        locationStart();
     }
 
     private void stopTimerTask() {
@@ -259,8 +281,10 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
     private void generateVehicularCapacityRecord() {
 
-        Log.d(TAG, "Pack vehicular capacity record");
         endTimeInterval = Calendar.getInstance().getTime();
+
+        Log.d(TAG, String.format("Pack vehicular capacity record from %s to %s",
+                DATE_FORMAT.format(beginTimeInterval), DATE_FORMAT.format(endTimeInterval)));
         List<VehicularCapacityRecord> records = new LinkedList<>();
 
         VehicularCapacityRecord vehicularCapacityRecord = VehicularCapacityRecord.builder()
@@ -275,6 +299,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 .numberOfMotorcycles(motorcycleCounter)
                 .numberOfTrucks(truckCounter)
                 .assignmentId(assignmentId)
+                .lat(currentLocation.getLat())
+                .lon(currentLocation.getLon())
                 .build();
 
         long generatedId = vehicularCapacityRecordRepository.save(vehicularCapacityRecord);
@@ -295,6 +321,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     .numberOfMotorcycles(motorcycleCounter2)
                     .numberOfTrucks(truckCounter2)
                     .assignmentId(assignmentId)
+                    .lat(currentLocation.getLat())
+                    .lon(currentLocation.getLon())
                     .build();
 
             long generatedId2 = vehicularCapacityRecordRepository.save(vehicularCapacityRecord2);
@@ -305,16 +333,11 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
         apiClient.postVehicularCapRecord(records, vehicularCapacityRecordRepository);
 
-        long difference = getDateDiff(beginningOfTheStudy, endTimeInterval, TimeUnit.MINUTES);
+        long difference = StudyDuration.getDateDiff(beginningOfTheStudy, endTimeInterval, TimeUnit.MINUTES);
         String localRemainingTime = StudyDuration.remainingTime((int) difference, remainingTime);
         spentTimeTextView.setText(localRemainingTime);
 
         resetCounters();
-    }
-
-    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
-        long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
     private void resetCounters() {
@@ -432,10 +455,119 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     }
 
     public void interruptStudy(View target) {
+        Log.d(TAG, String.format("Study interrupted at: %s", DATE_FORMAT.format(Calendar.getInstance().getTime())));
         assignmentRepository.updateAssignmentRemainingTime(spentTimeTextView.getText().toString(), serverId);
-        stopTimerTask();
+
         Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
         VehicularCapacityActivity.this.startActivity(myIntent);
         finish();
+    }
+
+    // Location services methods
+    private void requestPermissions() {
+        // Request external file write permission
+        String[] PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(this, PERMISSIONS, 112);
+
+        // Check for GPS usage permission
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+
+        } else {
+            locationStart();
+        }
+    }
+
+    @Setter
+    public class MyLocationListener implements LocationListener {
+
+        private VehicularCapacityActivity vehicularCapacityActivity;
+
+        @Override
+        public void onLocationChanged(Location loc) {
+            // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
+            // debido a la deteccion de un cambio de ubicacion
+
+            currentLocation = GPSLocation.builder()
+                    .lat(loc.getLatitude())
+                    .lon(loc.getLongitude())
+                    .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
+                    .deviceId(android_device_id)
+                    .build();
+
+            Log.d(TAG, String.format("Location change: Lat = %s, Lon= %s", String.valueOf(currentLocation.getLat()),
+                    String.valueOf(currentLocation.getLon())));
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es desactivado
+            Toast.makeText(getApplicationContext(), "GPS desactivado",Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es activado
+            Toast.makeText(getApplicationContext(), "GPS activado",Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            switch (status) {
+                case LocationProvider.AVAILABLE:
+                    Log.d(TAG, "LocationProvider.AVAILABLE");
+                    break;
+                case LocationProvider.OUT_OF_SERVICE:
+                    Log.d(TAG, "LocationProvider.OUT_OF_SERVICE");
+                    break;
+                case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                    Log.d(TAG, "LocationProvider.TEMPORARILY_UNAVAILABLE");
+                    break;
+            }
+        }
+    }
+
+    private void locationStart() {
+
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mlocListener = new MyLocationListener();
+        mlocListener.setVehicularCapacityActivity(this);
+        final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!gpsEnabled) {
+            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(settingsIntent);
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
+                    1000);
+            Log.d(TAG,"Going back, no permission :(");
+            return;
+        }
+
+        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 20,
+                (LocationListener) mlocListener);
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
+                (LocationListener) mlocListener);
+    }
+
+    private void locationStop() {
+        if (mlocManager != null) {
+            mlocManager.removeUpdates(mlocListener);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        Log.d(TAG, String.format("Activity destroyed, stopping location services and" +
+                "timer task"));
+        locationStop();
+        stopTimerTask();
+        super.onDestroy();
     }
 }

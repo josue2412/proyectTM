@@ -17,7 +17,7 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.utilidades.ExportData;
+import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 
 import java.util.Arrays;

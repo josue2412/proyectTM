@@ -37,7 +37,7 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
 import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.utilidades.ExportData;
+import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 import com.travijuu.numberpicker.library.NumberPicker;
 
