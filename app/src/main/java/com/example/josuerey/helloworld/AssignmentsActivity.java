@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +43,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AssignmentsActivity extends AppCompatActivity {
 
@@ -47,6 +51,8 @@ public class AssignmentsActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     private ListView assignmentsListView;
     private TextView capturistTextView;
+    private TextView app_status;
+    private Button retryRetrieveAssignments;
 
     private VehicularCapacityRecordRepository vehicularCapacityRecordRepository;
     private AssignmentRepository assignmentRepository;
@@ -87,6 +93,8 @@ public class AssignmentsActivity extends AppCompatActivity {
 
         assignmentsListView = (ListView) findViewById(R.id.listOfAssignments);
         capturistTextView = (TextView) findViewById(R.id.capturist_name);
+        app_status = (TextView) findViewById(R.id.app_status);
+        retryRetrieveAssignments = (Button) findViewById(R.id.retry_assignments);
 
         capturistTextView.setText(SaveSharedPreference.getUserName(getApplicationContext()));
         retrieveAssignments(SaveSharedPreference.getUserNameKey(getApplicationContext()));
@@ -250,7 +258,7 @@ public class AssignmentsActivity extends AppCompatActivity {
         final ObjectMapper mapper = new ObjectMapper();
         String requestUrl = "http://u856955919.hostingerapp.com/api/capturistAssignments?capturist_id=" + capturistId;
         final ProgressDialog pdLoading = new ProgressDialog(this);
-        pdLoading.setMessage("\tLoading...");
+        pdLoading.setMessage("\tCargando asignaciones...");
         pdLoading.show();
 
         StringRequest stringRequest =
@@ -259,9 +267,10 @@ public class AssignmentsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             AssignmentResponse[] assignmentResponse = mapper.readValue(response, AssignmentResponse[].class);
-                            mergeAssignments(new ArrayList<AssignmentResponse>(Arrays.asList(assignmentResponse)));
+                            mergeAssignments(new ArrayList<>(Arrays.asList(assignmentResponse)));
+                            setStatusMsg(null, true);
                             pdLoading.dismiss();
-                            Log.d(TAG, "Assignments: " + assignmentResponse[0].getMovement());
+                            Log.d(TAG, String.format("Number of assignments retrieved: %d", assignmentResponse.length));
                         } catch (IOException | ParseException e) {
                             e.printStackTrace();
                         }
@@ -269,7 +278,10 @@ public class AssignmentsActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        String msg = "Fallo la conexion a interner";
+                        Log.e(TAG, "Volley error response");
                         error.printStackTrace();
+                        setStatusMsg(msg, false);
                         pdLoading.dismiss();
                     }
                 }){
@@ -277,8 +289,25 @@ public class AssignmentsActivity extends AppCompatActivity {
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(getApplication()).add(stringRequest);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                3000,
-                3,
+                (int) TimeUnit.SECONDS.toMillis(15),
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
+    public void retryRetrieveAssignments(View view) {
+        Log.d(TAG, "Retrying to retrieve assignments");
+        retrieveAssignments(SaveSharedPreference.getUserNameKey(getApplicationContext()));
+    }
+
+    private void setStatusMsg(String msg, boolean succeed) {
+
+        if (succeed) {
+            app_status.setVisibility(View.INVISIBLE);
+            retryRetrieveAssignments.setVisibility(View.INVISIBLE);
+        } else {
+            retryRetrieveAssignments.setVisibility(View.VISIBLE);
+            app_status.setVisibility(View.VISIBLE);
+            app_status.setText(msg);
+        }
     }
 }

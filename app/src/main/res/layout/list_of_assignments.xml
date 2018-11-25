@@ -7,21 +7,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Asignaciones para: "/>
+            android:orientation="horizontal"
+            android:gravity="center">
 
-        <TextView
-            android:id="@+id/capturist_name"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asignaciones para: "/>
+
+            <TextView
+                android:id="@+id/capturist_name"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre"/>
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/app_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estado: "
+                android:visibility="invisible"/>
+            <Button
+                android:id="@+id/retry_assignments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:onClick="retryRetrieveAssignments"
+                android:text="Reintentar"/>
+        </LinearLayout>
+
     </LinearLayout>
+
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listOfAssignments"

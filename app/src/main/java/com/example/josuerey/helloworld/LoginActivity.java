@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveShar
 
 public class LoginActivity extends AppCompatActivity {
 
+    private final String TAG = this.getClass().getSimpleName();
     private EditText username;
     private EditText usernameKey;
     private Button submitBtn;
@@ -41,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
             loginForm.setVisibility(View.VISIBLE);
         }
 
-
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Make form visible
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         SaveSharedPreference.setUserName(getApplicationContext(), username);
         SaveSharedPreference.setUserNameKey(getApplicationContext(), usernameKey);
 
+        Log.d(TAG, String.format("User logged as %s and key %s", username, usernameKey));
         Intent intent = new Intent(getApplicationContext(), AssignmentsActivity.class);
         startActivity(intent);
         finish();
@@ -64,21 +66,25 @@ public class LoginActivity extends AppCompatActivity {
 
     private void requestPermissions() {
         // Request external file write permission
-        String[] PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        ActivityCompat.requestPermissions(this, PERMISSIONS, 112);
-
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+        String [] permissions = new String[2];
+        boolean requestPermissions = false;
 
         // Check for GPS usage permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            permissions[0] = Manifest.permission.ACCESS_FINE_LOCATION;
+            requestPermissions = true;
+        }
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissions[1] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            requestPermissions = true;
+        }
 
+        if (requestPermissions) {
+            Log.d(TAG, "Requesting permissions");
+            ActivityCompat.requestPermissions(this, permissions, 112);
         }
     }
 }
