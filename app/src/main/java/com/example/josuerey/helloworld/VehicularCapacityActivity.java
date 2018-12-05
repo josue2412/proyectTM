@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -53,30 +54,35 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private int globalCarCounter;
     private EditText carCounterEditText;
     private ImageButton carCounterBtn;
+    private ImageButton carCounterBtn2;
 
     private int busCounter;
     private int busCounter2;
     private int globalBusCounter;
     private EditText busCounterEditText;
     private ImageButton busCounterBtn;
+    private ImageButton busCounterBtn2;
 
     private int bikeCounter;
     private int bikeCounter2;
     private int globalBikeCounter;
     private EditText bikeCounterEditText;
     private ImageButton bikeCounterBtn;
+    private ImageButton bikeCounterBtn2;
 
     private int motorcycleCounter;
     private int motorcycleCounter2;
     private int globalMotorcycleCounter;
     private EditText motorcycleCounterEditText;
     private ImageButton motorcycleCounterBtn;
+    private ImageButton motorcycleCounterBtn2;
 
     private int truckCounter;
     private int truckCounter2;
     private int globalTruckCounter;
     private EditText truckCounterEditText;
     private ImageButton truckCounterBtn;
+    private ImageButton truckCounterBtn2;
 
     private Timer timer;
     private TimerTask timerTask;
@@ -101,7 +107,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private EditText mainMoveEditText;
     private EditText secondaryMoveEditText;
 
-    private TextView spentTimeTextView;
+    private String spentTime;
     private TextView beginningTimeTextView;
     private TextView movementsTextView;
 
@@ -117,6 +123,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private GPSLocation currentLocation;
     private MyLocationListener mlocListener;
     private LocationManager mlocManager;
+    private Button emergencyBtn;
+    private boolean countingChanged;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -167,7 +175,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
             manageSecondMove(movements);
         }
 
-        spentTimeTextView.setText(remainingTime);
+        spentTime = remainingTime;
         android_device_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
@@ -181,6 +189,29 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     }
 
     private void bindViews() {
+        View.OnLongClickListener onLongClickListener = longClickListener();
+
+        carCounterBtn = (ImageButton) findViewById(R.id.carCounterBtn);
+        carCounterBtn.setOnLongClickListener(onLongClickListener);
+        busCounterBtn = (ImageButton) findViewById(R.id.busCounterBtn);
+        busCounterBtn.setOnLongClickListener(onLongClickListener);
+        bikeCounterBtn = (ImageButton) findViewById(R.id.bikeCounterBtn);
+        bikeCounterBtn.setOnLongClickListener(onLongClickListener);
+        motorcycleCounterBtn = (ImageButton) findViewById(R.id.motorcycleCounterBtn);
+        motorcycleCounterBtn.setOnLongClickListener(onLongClickListener);
+        truckCounterBtn = (ImageButton) findViewById(R.id.truckCounterBtn);
+        truckCounterBtn.setOnLongClickListener(onLongClickListener);
+
+        carCounterBtn2 = (ImageButton) findViewById(R.id.carCounterBtn2);
+        carCounterBtn2.setOnLongClickListener(onLongClickListener);
+        busCounterBtn2 = (ImageButton) findViewById(R.id.busCounterBtn2);
+        busCounterBtn2.setOnLongClickListener(onLongClickListener);
+        bikeCounterBtn2 = (ImageButton) findViewById(R.id.bikeCounterBtn2);
+        bikeCounterBtn2.setOnLongClickListener(onLongClickListener);
+        motorcycleCounterBtn2 = (ImageButton) findViewById(R.id.motorcycleCounterBtn2);
+        motorcycleCounterBtn2.setOnLongClickListener(onLongClickListener);
+        truckCounterBtn2 = (ImageButton) findViewById(R.id.truckCounterBtn2);
+        truckCounterBtn2.setOnLongClickListener(onLongClickListener);
 
         carCounterEditText = (EditText) findViewById(R.id.carCounterEditText);
         busCounterEditText = (EditText) findViewById(R.id.busCounterEditText);
@@ -193,10 +224,115 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
         mainMoveEditText = (EditText) findViewById(R.id.mainMovementCounterEditText);
         secondaryMoveEditText = (EditText) findViewById(R.id.secondMovementCounterEditText);
-        spentTimeTextView = (TextView) findViewById(R.id.spentTimeValueTextView);
         beginningTimeTextView = (TextView) findViewById(R.id.beginningTimeValueTextView);
         movementsTextView = (TextView) findViewById(R.id.movementsValueTextView);
 
+        emergencyBtn = (Button) findViewById(R.id.emergencyBtn);
+
+
+
+    }
+
+    private View.OnLongClickListener longClickListener() {
+        return new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                String vehicle = "";
+                switch (v.getId()) {
+                    case R.id.carCounterBtn:
+                        carCounter = carCounter - 1;
+                        globalCarCounter = globalCarCounter - 1;
+                        carCounterEditText.setText(String.valueOf(globalCarCounter));
+                        mainMovementCounter = mainMovementCounter - 1;
+                        mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                        vehicle = "carro";
+                        break;
+
+                    case R.id.carCounterBtn2:
+                        carCounter2 = carCounter2 - 1;
+                        globalCarCounter = globalCarCounter - 1;
+                        carCounterEditText.setText(String.valueOf(globalCarCounter));
+                        secondaryMovementCounter = secondaryMovementCounter - 1;
+                        secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                        vehicle = "carro";
+                        break;
+
+                    case R.id.busCounterBtn:
+                        busCounter = busCounter - 1;
+                        globalBusCounter = globalBusCounter - 1;
+                        busCounterEditText.setText(String.valueOf(globalBusCounter));
+                        mainMovementCounter = mainMovementCounter - 1;
+                        mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                        vehicle = "autobus";
+                        break;
+
+                    case R.id.busCounterBtn2:
+                        busCounter2 = busCounter2 - 1;
+                        globalBusCounter = globalBusCounter - 1;
+                        busCounterEditText.setText(String.valueOf(globalBusCounter));
+                        secondaryMovementCounter = secondaryMovementCounter - 1;
+                        secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                        vehicle = "autobus";
+                        break;
+
+                    case R.id.motorcycleCounterBtn:
+                        motorcycleCounter = motorcycleCounter - 1;
+                        globalMotorcycleCounter = globalMotorcycleCounter - 1;
+                        motorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
+                        mainMovementCounter = mainMovementCounter - 1;
+                        mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                        vehicle = "motocicleta";
+                        break;
+
+                    case R.id.motorcycleCounterBtn2:
+                        motorcycleCounter2 = motorcycleCounter2 - 1;
+                        globalMotorcycleCounter = globalMotorcycleCounter - 1;
+                        motorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
+                        secondaryMovementCounter = secondaryMovementCounter - 1;
+                        secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                        vehicle = "motocicleta";
+                        break;
+
+                    case R.id.truckCounterBtn:
+                        truckCounter = truckCounter - 1;
+                        globalTruckCounter = globalTruckCounter - 1;
+                        truckCounterEditText.setText(String.valueOf(globalTruckCounter));
+                        mainMovementCounter = mainMovementCounter - 1;
+                        mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                        vehicle = "camion";
+                        break;
+
+                    case R.id.truckCounterBtn2:
+                        truckCounter2 = truckCounter2 - 1;
+                        globalTruckCounter = globalTruckCounter - 1;
+                        truckCounterEditText.setText(String.valueOf(globalTruckCounter));
+                        secondaryMovementCounter = secondaryMovementCounter - 1;
+                        secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                        vehicle = "camion";
+                        break;
+
+                    case R.id.bikeCounterBtn:
+                        bikeCounter = bikeCounter - 1;
+                        globalBikeCounter = globalBikeCounter - 1;
+                        bikeCounterEditText.setText(String.valueOf(globalBikeCounter));
+                        mainMovementCounter = mainMovementCounter - 1;
+                        mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                        vehicle = "bicicleta";
+                        break;
+
+                    case R.id.bikeCounterBtn2:
+                        bikeCounter2 = bikeCounter2 - 1;
+                        globalBikeCounter = globalBikeCounter - 1;
+                        bikeCounterEditText.setText(String.valueOf(globalBikeCounter));
+                        secondaryMovementCounter = secondaryMovementCounter - 1;
+                        secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                        vehicle = "bicicleta";
+                        break;
+                }
+                Toast.makeText(getApplicationContext(), String.format("-1 %s", vehicle),Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        };
     }
 
     private void manageSecondMove(@Nonnull String[] movements) {
@@ -213,25 +349,20 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     }
 
     private void disableSecondMoveButtons() {
-        carCounterBtn = (ImageButton) findViewById(R.id.carCounterBtn2);
-        carCounterBtn.setClickable(false);
-        carCounterBtn.setBackgroundResource(R.color.colorBackground);
+        carCounterBtn2.setClickable(false);
+        carCounterBtn2.setBackgroundResource(R.color.colorBackground);
 
-        busCounterBtn = (ImageButton) findViewById(R.id.busCounterBtn2);
-        busCounterBtn.setClickable(false);
-        busCounterBtn.setBackgroundResource(R.color.colorBackground);
+        busCounterBtn2.setClickable(false);
+        busCounterBtn2.setBackgroundResource(R.color.colorBackground);
 
-        bikeCounterBtn = (ImageButton) findViewById(R.id.bikeCounterBtn2);
-        bikeCounterBtn.setClickable(false);
-        bikeCounterBtn.setBackgroundResource(R.color.colorBackground);
+        bikeCounterBtn2.setClickable(false);
+        bikeCounterBtn2.setBackgroundResource(R.color.colorBackground);
 
-        motorcycleCounterBtn = (ImageButton) findViewById(R.id.motorcycleCounterBtn2);
-        motorcycleCounterBtn.setClickable(false);
-        motorcycleCounterBtn.setBackgroundResource(R.color.colorBackground);
+        motorcycleCounterBtn2.setClickable(false);
+        motorcycleCounterBtn2.setBackgroundResource(R.color.colorBackground);
 
-        truckCounterBtn = (ImageButton) findViewById(R.id.truckCounterBtn2);
-        truckCounterBtn.setClickable(false);
-        truckCounterBtn.setBackgroundResource(R.color.colorBackground);
+        truckCounterBtn2.setClickable(false);
+        truckCounterBtn2.setBackgroundResource(R.color.colorBackground);
     }
 
     private int deriveMoveSrc(@Nonnull String move) {
@@ -261,19 +392,19 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        locationStop();
         super.onPause();
+        locationStop();
     }
 
     @Override
     protected void onResume(){
-
         super.onResume();
         locationStart();
     }
 
     private void stopTimerTask() {
         if (timer != null) {
+            Log.d(TAG, String.format("Stopping timer task %s", timer.toString()));
             timer.cancel();
             timer = null;
         }
@@ -283,61 +414,66 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
         endTimeInterval = Calendar.getInstance().getTime();
 
-        Log.d(TAG, String.format("Pack vehicular capacity record from %s to %s",
-                DATE_FORMAT.format(beginTimeInterval), DATE_FORMAT.format(endTimeInterval)));
-        List<VehicularCapacityRecord> records = new LinkedList<>();
+        if (countingChanged) {
+            Log.d(TAG, String.format("Pack vehicular capacity record from %s to %s",
+                    DATE_FORMAT.format(beginTimeInterval), DATE_FORMAT.format(endTimeInterval)));
+            List<VehicularCapacityRecord> records = new LinkedList<>();
 
-        VehicularCapacityRecord vehicularCapacityRecord = VehicularCapacityRecord.builder()
-                .backedUpRemotely(0)
-                .deviceId(android_device_id)
-                .movement(movements[0])
-                .beginTimeInterval(DATE_FORMAT.format(beginTimeInterval))
-                .endTimeInterval(DATE_FORMAT.format(endTimeInterval))
-                .numberOfCars(carCounter)
-                .numberOfBikes(bikeCounter)
-                .numberOfBusses(busCounter)
-                .numberOfMotorcycles(motorcycleCounter)
-                .numberOfTrucks(truckCounter)
-                .assignmentId(assignmentId)
-                .lat(currentLocation.getLat())
-                .lon(currentLocation.getLon())
-                .build();
-
-        long generatedId = vehicularCapacityRecordRepository.save(vehicularCapacityRecord);
-        vehicularCapacityRecord.setId((int) generatedId);
-
-        records.add(vehicularCapacityRecord);
-
-        if (numberOfMovements > 1){
-            VehicularCapacityRecord vehicularCapacityRecord2 = VehicularCapacityRecord.builder()
+            VehicularCapacityRecord vehicularCapacityRecord = VehicularCapacityRecord.builder()
                     .backedUpRemotely(0)
                     .deviceId(android_device_id)
-                    .movement(movements[1])
+                    .movement(movements[0])
                     .beginTimeInterval(DATE_FORMAT.format(beginTimeInterval))
                     .endTimeInterval(DATE_FORMAT.format(endTimeInterval))
-                    .numberOfCars(carCounter2)
-                    .numberOfBikes(bikeCounter2)
-                    .numberOfBusses(busCounter2)
-                    .numberOfMotorcycles(motorcycleCounter2)
-                    .numberOfTrucks(truckCounter2)
+                    .numberOfCars(carCounter)
+                    .numberOfBikes(bikeCounter)
+                    .numberOfBusses(busCounter)
+                    .numberOfMotorcycles(motorcycleCounter)
+                    .numberOfTrucks(truckCounter)
                     .assignmentId(assignmentId)
                     .lat(currentLocation.getLat())
                     .lon(currentLocation.getLon())
                     .build();
 
-            long generatedId2 = vehicularCapacityRecordRepository.save(vehicularCapacityRecord2);
-            vehicularCapacityRecord2.setId((int) generatedId2);
+            long generatedId = vehicularCapacityRecordRepository.save(vehicularCapacityRecord);
+            vehicularCapacityRecord.setId((int) generatedId);
 
-            records.add(vehicularCapacityRecord2);
+            records.add(vehicularCapacityRecord);
+
+            if (numberOfMovements > 1){
+                VehicularCapacityRecord vehicularCapacityRecord2 = VehicularCapacityRecord.builder()
+                        .backedUpRemotely(0)
+                        .deviceId(android_device_id)
+                        .movement(movements[1])
+                        .beginTimeInterval(DATE_FORMAT.format(beginTimeInterval))
+                        .endTimeInterval(DATE_FORMAT.format(endTimeInterval))
+                        .numberOfCars(carCounter2)
+                        .numberOfBikes(bikeCounter2)
+                        .numberOfBusses(busCounter2)
+                        .numberOfMotorcycles(motorcycleCounter2)
+                        .numberOfTrucks(truckCounter2)
+                        .assignmentId(assignmentId)
+                        .lat(currentLocation.getLat())
+                        .lon(currentLocation.getLon())
+                        .build();
+
+                long generatedId2 = vehicularCapacityRecordRepository.save(vehicularCapacityRecord2);
+                vehicularCapacityRecord2.setId((int) generatedId2);
+
+                records.add(vehicularCapacityRecord2);
+            }
+
+            apiClient.postVehicularCapRecord(records, vehicularCapacityRecordRepository);
+            resetCounters();
+            countingChanged = false;
+        } else {
+            Log.d(TAG, String.format("There were no changes, transmission delay to %s",
+                    DATE_FORMAT.format(endTimeInterval)));
         }
-
-        apiClient.postVehicularCapRecord(records, vehicularCapacityRecordRepository);
 
         long difference = StudyDuration.getDateDiff(beginningOfTheStudy, endTimeInterval, TimeUnit.MINUTES);
         String localRemainingTime = StudyDuration.remainingTime((int) difference, remainingTime);
-        spentTimeTextView.setText(localRemainingTime);
-
-        resetCounters();
+        spentTime = localRemainingTime;
     }
 
     private void resetCounters() {
@@ -452,11 +588,12 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
                 break;
         }
+        countingChanged = true;
     }
 
     public void interruptStudy(View target) {
         Log.d(TAG, String.format("Study interrupted at: %s", DATE_FORMAT.format(Calendar.getInstance().getTime())));
-        assignmentRepository.updateAssignmentRemainingTime(spentTimeTextView.getText().toString(), serverId);
+        assignmentRepository.updateAssignmentRemainingTime(spentTime, serverId);
 
         Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
         VehicularCapacityActivity.this.startActivity(myIntent);
@@ -471,8 +608,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
         // Check for GPS usage permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
@@ -558,16 +693,15 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private void locationStop() {
         if (mlocManager != null) {
             mlocManager.removeUpdates(mlocListener);
+            Log.d(TAG, String.format("Stopping location updates %s", mlocManager.toString()));
+            mlocManager=null;
         }
     }
 
     @Override
     protected void onDestroy() {
-
-        Log.d(TAG, String.format("Activity destroyed, stopping location services and" +
-                "timer task"));
+        super.onDestroy();
         locationStop();
         stopTimerTask();
-        super.onDestroy();
     }
 }

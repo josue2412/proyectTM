@@ -278,7 +278,7 @@ public class AssignmentsActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        String msg = "Fallo la conexion a interner";
+                        String msg = "Fallo la conexión a internet";
                         Log.e(TAG, "Volley error response");
                         error.printStackTrace();
                         setStatusMsg(msg, false);
