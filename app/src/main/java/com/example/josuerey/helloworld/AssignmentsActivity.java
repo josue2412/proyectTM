@@ -185,18 +185,26 @@ public class AssignmentsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Assignment dataModel= groupedAssignments.get(position);
-
-                Intent myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityActivity.class);
-                myIntent.putExtra("assignmentId", String.valueOf(dataModel.getServerId()));
-                myIntent.putExtra("movements", dataModel.getMovement());
-                myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));
-                myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
-                myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDurationInHours()));
-                AssignmentsActivity.this.startActivity(myIntent);
-                finish();
+                beginStudy(groupedAssignments.get(position));
             }
         });
+    }
+
+    private void beginStudy(Assignment dataModel) {
+        Intent myIntent;
+        if (dataModel.getNumberOfMovements() > 2) {
+            myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityExtendedActivity.class);
+        } else {
+            myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityActivity.class);
+        }
+
+        myIntent.putExtra("assignmentId", String.valueOf(dataModel.getServerId()));
+        myIntent.putExtra("movements", dataModel.getMovement());
+        myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));
+        myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
+        myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDurationInHours()));
+        AssignmentsActivity.this.startActivity(myIntent);
+        finish();
     }
 
     private List<Assignment> groupAssignments(List<Assignment> assignments) {
@@ -206,36 +214,21 @@ public class AssignmentsActivity extends AppCompatActivity {
 
             if (!assignmentHashMap.containsKey(assignment.getBeginAt())) {
 
-                StringBuilder origin = new StringBuilder();
-                origin.append(assignment.getStreetFrom());
-                origin.append(" " + assignment.getStreetFromDirection() + "\n");
-
-                StringBuilder destiny = new StringBuilder();
-                destiny.append(assignment.getStreetTo());
-                destiny.append(" " + assignment.getStreetToDirection() + "\n");
-
                 assignment.setNumberOfMovements(1);
-                assignment.setStreetFrom(origin.toString());
-                assignment.setStreetTo(destiny.toString());
+                assignment.setStreetFrom(String.format("%s %s", assignment.getStreetFrom(), assignment.getStreetFromDirection()));
+                assignment.setStreetTo(String.format("%s %s", assignment.getStreetTo(), assignment.getStreetToDirection()));
                 assignmentHashMap.put(assignment.getBeginAt(), assignment);
             } else {
 
                 Assignment existingAssignment = assignmentHashMap.get(assignment.getBeginAt());
                 int numberOfMovements = existingAssignment.getNumberOfMovements() + 1;
 
-                StringBuilder origin = new StringBuilder();
-                origin.append(existingAssignment.getStreetFrom() + assignment.getStreetFrom());
-                origin.append(" " + assignment.getStreetFromDirection());
-
-                StringBuilder destiny = new StringBuilder();
-                destiny.append(existingAssignment.getStreetTo() + assignment.getStreetTo());
-                destiny.append(" " + assignment.getStreetToDirection());
-
-                String movements = existingAssignment.getMovement() + " " + assignment.getMovement();
-                existingAssignment.setMovement(movements);
+                existingAssignment.setMovement(String.format("%s %s", existingAssignment.getMovement(), assignment.getMovement()));
                 existingAssignment.setNumberOfMovements(numberOfMovements);
-                existingAssignment.setStreetFrom(origin.toString());
-                existingAssignment.setStreetTo(destiny.toString());
+                existingAssignment.setStreetFrom(String.format("%s \n %s %s", existingAssignment.getStreetFrom(),
+                        assignment.getStreetFrom(), assignment.getStreetFromDirection()));
+                existingAssignment.setStreetTo(String.format("%s \n %s %s", existingAssignment.getStreetTo(),
+                        assignment.getStreetTo(), assignment.getStreetToDirection()));
             }
         }
 
@@ -250,7 +243,7 @@ public class AssignmentsActivity extends AppCompatActivity {
             Log.d(TAG, "Retrying to backup " + vehicularRecordsPendingToBackup.length + " records");
             apiClient.postVehicularCapRecord(Arrays.asList(vehicularRecordsPendingToBackup), vehicularCapacityRecordRepository);
         } else {
-            Log.d(TAG, "There are no records pending to backup");
+            Log.d(TAG, "There are no VehicularCapacityRecords pending to backup");
         }
     }
 
@@ -268,7 +261,14 @@ public class AssignmentsActivity extends AppCompatActivity {
                         try {
                             AssignmentResponse[] assignmentResponse = mapper.readValue(response, AssignmentResponse[].class);
                             mergeAssignments(new ArrayList<>(Arrays.asList(assignmentResponse)));
-                            setStatusMsg(null, true);
+
+                            if (assignmentResponse.length == 0) {
+
+                                setStatusMsg("No se encontraron tareas para tu usuario", false);
+                            } else {
+                                setStatusMsg(null, true);
+                            }
+
                             pdLoading.dismiss();
                             Log.d(TAG, String.format("Number of assignments retrieved: %d", assignmentResponse.length));
                         } catch (IOException | ParseException e) {
@@ -278,7 +278,7 @@ public class AssignmentsActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        String msg = "Fallo la conexión a internet";
+                        String msg = "Falló la conexión a Internet";
                         Log.e(TAG, "Volley error response");
                         error.printStackTrace();
                         setStatusMsg(msg, false);
