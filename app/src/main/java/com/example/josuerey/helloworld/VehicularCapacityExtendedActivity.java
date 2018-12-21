@@ -317,6 +317,16 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         finish();
     }
 
+    public void emergencyNotification(View target) {
+        Log.d(TAG, String.format("Study interrupted by an emergency at: %s", DATE_FORMAT.format(Calendar.getInstance().getTime())));
+        assignmentRepository.updateAssignmentRemainingTime(spentTime, serverId);
+
+        Intent myIntent = new Intent(VehicularCapacityExtendedActivity.this, EmergencyNotificationActivity.class);
+        myIntent.putExtra("assignmentId", String.valueOf(assignmentId));
+        VehicularCapacityExtendedActivity.this.startActivity(myIntent);
+        finish();
+    }
+
     /**
      * Set movements images to ImageViews given the current movements.
      * @param movements

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
@@ -596,6 +597,16 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         assignmentRepository.updateAssignmentRemainingTime(spentTime, serverId);
 
         Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
+        VehicularCapacityActivity.this.startActivity(myIntent);
+        finish();
+    }
+
+    public void emergencyNotification(View target) {
+        Log.d(TAG, String.format("Study interrupted by an emergency at: %s", DATE_FORMAT.format(Calendar.getInstance().getTime())));
+        assignmentRepository.updateAssignmentRemainingTime(spentTime, serverId);
+
+        Intent myIntent = new Intent(VehicularCapacityActivity.this, EmergencyNotificationActivity.class);
+        myIntent.putExtra("assignmentId", String.valueOf(assignmentId));
         VehicularCapacityActivity.this.startActivity(myIntent);
         finish();
     }

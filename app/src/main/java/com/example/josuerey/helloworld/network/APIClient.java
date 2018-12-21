@@ -347,46 +347,4 @@ public class APIClient {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
-    public void retrieveAssignments(final String capturistId){
-        mapper = new ObjectMapper();
-        String requestUrl = "http://u856955919.hostingerapp.com/api/capturistAssignments?capturist_id=1";
-        StringRequest stringRequest =
-                new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //the response contains the result from the server, a
-                        // json string or any other object returned by your server
-                        try {
-                            AssignmentResponse[] assignmentResponse = mapper.readValue(response, AssignmentResponse[].class);
-
-                            Log.d(TAG, "Assignments: " + assignmentResponse[0].getMovement());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }){
-
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> postMap = new HashMap<>();
-                        postMap.put("capturist_id", capturistId);
-                        Log.i(TAG, "Retrieving assignments for capturis: : " + capturistId);
-
-                        return postMap;
-                    }
-                };
-        //make the request to your server as indicated in your request url
-        Volley.newRequestQueue(app).add(stringRequest);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                0,
-                -1,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-    }
 }
