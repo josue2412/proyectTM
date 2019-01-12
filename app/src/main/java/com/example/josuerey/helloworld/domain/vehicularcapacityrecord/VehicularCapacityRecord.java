@@ -32,11 +32,8 @@ public class VehicularCapacityRecord {
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 
-    @ColumnInfo(name = "assignmentId")
-    private int assignmentId;
-
-    @ColumnInfo(name = "movement")
-    private String movement;
+    @ColumnInfo(name = "movementId")
+    private int movementId;
 
     @ColumnInfo(name = "numberOfCars")
     private int numberOfCars;

@@ -4,6 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -32,6 +33,7 @@ import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationM
 import com.example.josuerey.helloworld.preloaddata.BusRouteData;
 import com.example.josuerey.helloworld.preloaddata.RouteViaRelationshipData;
 import com.example.josuerey.helloworld.preloaddata.ViaOfStudyData;
+import com.example.josuerey.helloworld.utilities.MovementConverter;
 
 import java.util.concurrent.Executors;
 
@@ -48,6 +50,7 @@ import java.util.concurrent.Executors;
         VehicularCapacityRecord.class,
         Assignment.class},
         version = 1, exportSchema = false)
+@TypeConverters({MovementConverter.class})
 public abstract class uRoomDatabase extends RoomDatabase {
 
     public abstract GPSLocationDao gpsLocationDao();

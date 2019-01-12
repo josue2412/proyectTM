@@ -29,6 +29,7 @@ import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.network.AssignmentResponse;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.CustomAdapter;
+import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 
@@ -91,10 +92,10 @@ public class AssignmentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
 
-        assignmentsListView = (ListView) findViewById(R.id.listOfAssignments);
-        capturistTextView = (TextView) findViewById(R.id.capturist_name);
-        app_status = (TextView) findViewById(R.id.app_status);
-        retryRetrieveAssignments = (Button) findViewById(R.id.retry_assignments);
+        assignmentsListView = findViewById(R.id.listOfAssignments);
+        capturistTextView = findViewById(R.id.capturist_name);
+        app_status = findViewById(R.id.app_status);
+        retryRetrieveAssignments = findViewById(R.id.retry_assignments);
 
         capturistTextView.setText(SaveSharedPreference.getUserName(getApplicationContext()));
         retrieveAssignments(SaveSharedPreference.getUserNameKey(getApplicationContext()));
@@ -151,55 +152,29 @@ public class AssignmentsActivity extends AppCompatActivity {
         setAssignments();
     }
 
-    private Assignment buildAssignment(AssignmentResponse assignmentResponse) {
-
-        return Assignment.builder()
-                .serverId(assignmentResponse.getId())
-                .capturistId(assignmentResponse.getCapturist_id())
-                .projectId(assignmentResponse.getProject_id())
-                .status("En proceso")
-                .timeOfStudy("0" + String.valueOf(assignmentResponse.getDuration_in_hours()) + ":00:00")
-                .beginAt(assignmentResponse.getBegin_at())
-                .durationInHours(assignmentResponse.getDuration_in_hours())
-                .streetFrom(assignmentResponse.getStreet_from())
-                .streetTo(assignmentResponse.getStreet_to())
-                .streetFromDirection(assignmentResponse.getStreet_from_direction())
-                .streetToDirection(assignmentResponse.getStreet_to_direction())
-                .streetFromCode(assignmentResponse.getStreet_from_code())
-                .streetToCode(assignmentResponse.getStreet_to_code())
-                .movement(assignmentResponse.getMovement())
-                .movementCode(assignmentResponse.getMovement_code())
-                .enabled(assignmentResponse.getEnabled())
-                .createdAt(assignmentResponse.getCreated_at())
-                .updatedAt(assignmentResponse.getUpdated_at())
-                .build();
-    }
-
     private void setAssignments() {
 
-        final List<Assignment> groupedAssignments = groupAssignments(availableAssignments);
-
-        CustomAdapter customAdapter = new CustomAdapter(groupedAssignments, getApplicationContext());
+        CustomAdapter customAdapter = new CustomAdapter(availableAssignments, getApplicationContext());
         assignmentsListView.setAdapter(customAdapter);
         assignmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                beginStudy(groupedAssignments.get(position));
+                beginStudy(availableAssignments.get(position));
             }
         });
     }
 
     private void beginStudy(Assignment dataModel) {
         Intent myIntent;
-        if (dataModel.getNumberOfMovements() > 2) {
+        if (dataModel.getMovements().size() > 2) {
             myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityExtendedActivity.class);
         } else {
             myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityActivity.class);
         }
 
         myIntent.putExtra("assignmentId", String.valueOf(dataModel.getServerId()));
-        myIntent.putExtra("movements", dataModel.getMovement());
+        myIntent.putExtra("movements", new MovementConverter().fromMovementList(dataModel.getMovements()));
         myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));
         myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
         myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDurationInHours()));
@@ -207,32 +182,22 @@ public class AssignmentsActivity extends AppCompatActivity {
         finish();
     }
 
-    private List<Assignment> groupAssignments(List<Assignment> assignments) {
-        HashMap<String, Assignment> assignmentHashMap = new HashMap<>();
 
-        for (Assignment assignment : assignments) {
+    private Assignment buildAssignment(AssignmentResponse assignmentResponse) {
 
-            if (!assignmentHashMap.containsKey(assignment.getBeginAt())) {
-
-                assignment.setNumberOfMovements(1);
-                assignment.setStreetFrom(String.format("%s %s", assignment.getStreetFrom(), assignment.getStreetFromDirection()));
-                assignment.setStreetTo(String.format("%s %s", assignment.getStreetTo(), assignment.getStreetToDirection()));
-                assignmentHashMap.put(assignment.getBeginAt(), assignment);
-            } else {
-
-                Assignment existingAssignment = assignmentHashMap.get(assignment.getBeginAt());
-                int numberOfMovements = existingAssignment.getNumberOfMovements() + 1;
-
-                existingAssignment.setMovement(String.format("%s %s", existingAssignment.getMovement(), assignment.getMovement()));
-                existingAssignment.setNumberOfMovements(numberOfMovements);
-                existingAssignment.setStreetFrom(String.format("%s \n %s %s", existingAssignment.getStreetFrom(),
-                        assignment.getStreetFrom(), assignment.getStreetFromDirection()));
-                existingAssignment.setStreetTo(String.format("%s \n %s %s", existingAssignment.getStreetTo(),
-                        assignment.getStreetTo(), assignment.getStreetToDirection()));
-            }
-        }
-
-        return new ArrayList<>(assignmentHashMap.values());
+        return Assignment.builder()
+                .serverId(assignmentResponse.getId())
+                .capturistId(assignmentResponse.getCapturist_id())
+                .projectId(assignmentResponse.getProject_id())
+                .status("En proceso")
+                .movements(assignmentResponse.getMovements())
+                .timeOfStudy("0" + String.valueOf(assignmentResponse.getDuration_in_hours()) + ":00:00")
+                .beginAt(assignmentResponse.getBegin_at())
+                .durationInHours(assignmentResponse.getDuration_in_hours())
+                .enabled(assignmentResponse.getEnabled())
+                .createdAt(assignmentResponse.getCreated_at())
+                .updatedAt(assignmentResponse.getUpdated_at())
+                .build();
     }
 
     private void checkForRecordsPendingToBackup() {

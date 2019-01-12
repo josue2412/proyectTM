@@ -32,7 +32,9 @@ import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacit
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
+import com.example.josuerey.helloworld.network.AssignmentResponse;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.example.josuerey.helloworld.utilities.StudyDuration;
 
 import java.text.SimpleDateFormat;
@@ -100,7 +102,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private APIClient apiClient;
 
     private int numberOfMovements;
-    private String[] movements;
+    private List<AssignmentResponse.Movement> movements;
 
     private ImageView mainMove;
     private ImageView secondaryMove;
@@ -169,10 +171,10 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             assignmentId = Integer.valueOf(extras.getString("assignmentId"));
-            movements = extras.getString("movements").split(" ");
+            movements = new MovementConverter().toMovementList(extras.getString("movements"));
             remainingTime = extras.getString("remainingTime");
             serverId = Integer.valueOf(extras.getString("serverId"));
-            numberOfMovements = movements.length;
+            numberOfMovements = movements.size();
             manageSecondMove(movements);
         }
 
@@ -336,15 +338,15 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         };
     }
 
-    private void manageSecondMove(@Nonnull String[] movements) {
+    private void manageSecondMove(@Nonnull List<AssignmentResponse.Movement> movements) {
 
-        if (movements.length == 2) {
-            mainMove.setBackgroundResource(deriveMoveSrc(movements[0]));
-            secondaryMove.setBackgroundResource(deriveMoveSrc(movements[1]));
-            movementsTextView.setText(movements[1] + "/" + movements[0]);
-        } else if (movements.length == 1) {
-            mainMove.setBackgroundResource(deriveMoveSrc(movements[0]));
-            movementsTextView.setText(movements[0]);
+        if (movements.size() == 2) {
+            mainMove.setBackgroundResource(deriveMoveSrc(movements.get(0)));
+            secondaryMove.setBackgroundResource(deriveMoveSrc(movements.get(1)));
+            movementsTextView.setText(movements.get(1).getMovement_name() + "/" + movements.get(0).getMovement_name());
+        } else if (movements.size() == 1) {
+            mainMove.setBackgroundResource(deriveMoveSrc(movements.get(0)));
+            movementsTextView.setText(movements.get(0).getMovement_name());
             disableSecondMoveButtons();
         }
     }
@@ -366,7 +368,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         truckCounterBtn2.setBackgroundResource(R.color.colorBackground);
     }
 
-    private int deriveMoveSrc(@Nonnull String move) {
+    private int deriveMoveSrc(@Nonnull AssignmentResponse.Movement movement) {
+        String move = movement.getMovement_name().toLowerCase();
         switch (move) {
             case "derecho":
                 return R.drawable.straight_no_background;
@@ -423,7 +426,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
             VehicularCapacityRecord vehicularCapacityRecord = VehicularCapacityRecord.builder()
                     .backedUpRemotely(0)
                     .deviceId(android_device_id)
-                    .movement(movements[0])
                     .beginTimeInterval(DATE_FORMAT.format(beginTimeInterval))
                     .endTimeInterval(DATE_FORMAT.format(endTimeInterval))
                     .numberOfCars(carCounter)
@@ -431,7 +433,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     .numberOfBusses(busCounter)
                     .numberOfMotorcycles(motorcycleCounter)
                     .numberOfTrucks(truckCounter)
-                    .assignmentId(assignmentId)
+                    .movementId(movements.get(0).getId())
                     .lat(currentLocation.getLat())
                     .lon(currentLocation.getLon())
                     .build();
@@ -445,7 +447,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 VehicularCapacityRecord vehicularCapacityRecord2 = VehicularCapacityRecord.builder()
                         .backedUpRemotely(0)
                         .deviceId(android_device_id)
-                        .movement(movements[1])
                         .beginTimeInterval(DATE_FORMAT.format(beginTimeInterval))
                         .endTimeInterval(DATE_FORMAT.format(endTimeInterval))
                         .numberOfCars(carCounter2)
@@ -453,7 +454,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         .numberOfBusses(busCounter2)
                         .numberOfMotorcycles(motorcycleCounter2)
                         .numberOfTrucks(truckCounter2)
-                        .assignmentId(assignmentId)
+                        .movementId(movements.get(1).getId())
                         .lat(currentLocation.getLat())
                         .lon(currentLocation.getLon())
                         .build();

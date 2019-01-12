@@ -30,7 +30,9 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
+import com.example.josuerey.helloworld.network.AssignmentResponse;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.example.josuerey.helloworld.utilities.StudyDuration;
 
 import java.text.SimpleDateFormat;
@@ -98,7 +100,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     private Date beginningOfTheStudy;
     private String remainingTime;
     private String spentTime;
-    private String[] movements;
+    private List<AssignmentResponse.Movement> movements;
     private int assignmentId;
     private int serverId;
     private int numberOfMovements;
@@ -200,10 +202,10 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             assignmentId = Integer.valueOf(extras.getString("assignmentId"));
-            movements = extras.getString("movements").split(" ");
+            movements = new MovementConverter().toMovementList(extras.getString("movements"));
             remainingTime = extras.getString("remainingTime");
             serverId = Integer.valueOf(extras.getString("serverId"));
-            numberOfMovements = movements.length;
+            numberOfMovements = movements.size();
             setMovementsImages(movements);
         }
 
@@ -259,7 +261,6 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         return VehicularCapacityRecord.builder()
                 .backedUpRemotely(0)
                 .deviceId(android_device_id)
-                .movement(movements[moveNumber - 1])
                 .beginTimeInterval(DATE_FORMAT.format(beginTimeInterval))
                 .endTimeInterval(DATE_FORMAT.format(endTimeInterval))
                 .numberOfCars(countersList.get(String.format("carCounter%d", moveNumber)))
@@ -267,7 +268,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
                 .numberOfBusses(countersList.get(String.format("busCounter%d", moveNumber)))
                 .numberOfMotorcycles(countersList.get(String.format("motorcycleCounter%d", moveNumber)))
                 .numberOfTrucks(countersList.get(String.format("truckCounter%d", moveNumber)))
-                .assignmentId(assignmentId)
+                .movementId(movements.get(moveNumber - 1).getId())
                 .lat(currentLocation.getLat())
                 .lon(currentLocation.getLon())
                 .build();
@@ -331,16 +332,17 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
      * Set movements images to ImageViews given the current movements.
      * @param movements
      */
-    private void setMovementsImages(String[] movements) {
+    private void setMovementsImages(List<AssignmentResponse.Movement> movements) {
 
-        String movementsFormatted = String.format("%s %s %s", movements[2], movements[1], movements[0]);
-        directionImageView1.setBackgroundResource(deriveMoveSrc(movements[0]));
-        directionImageView2.setBackgroundResource(deriveMoveSrc(movements[1]));
-        directionImageView3.setBackgroundResource(deriveMoveSrc(movements[2]));
+        String movementsFormatted = String.format("%s %s %s", movements.get(2).getMovement_name(),
+                movements.get(1).getMovement_name(), movements.get(0).getMovement_name());
+        directionImageView1.setBackgroundResource(deriveMoveSrc(movements.get(0)));
+        directionImageView2.setBackgroundResource(deriveMoveSrc(movements.get(1)));
+        directionImageView3.setBackgroundResource(deriveMoveSrc(movements.get(2)));
 
-        if (movements.length > 3) {
-            directionImageView4.setBackgroundResource(deriveMoveSrc(movements[3]));
-            movementsFormatted = String.format("%s %s", movements[3], movementsFormatted);
+        if (movements.size() > 3) {
+            directionImageView4.setBackgroundResource(deriveMoveSrc(movements.get(3)));
+            movementsFormatted = String.format("%s %s", movements.get(3).getMovement_name(), movementsFormatted);
         } else {
             disableUnneededMoveButtons();
         }
@@ -684,7 +686,8 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         truckCounterBtn4.setBackgroundResource(R.color.colorBackground);
     }
 
-    private int deriveMoveSrc(@Nonnull String move) {
+    private int deriveMoveSrc(@Nonnull AssignmentResponse.Movement movement) {
+        String move = movement.getMovement_name().toLowerCase();
         switch (move) {
             case "derecho":
                 return R.drawable.straight_no_background;

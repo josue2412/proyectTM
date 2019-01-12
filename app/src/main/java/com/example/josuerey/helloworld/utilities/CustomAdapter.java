@@ -1,6 +1,7 @@
 package com.example.josuerey.helloworld.utilities;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
+import com.example.josuerey.helloworld.network.AssignmentResponse;
 
 import java.util.List;
 
@@ -23,8 +25,7 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
 
     // View lookup cache
     private static class ViewHolder {
-        TextView origin;
-        TextView destiny;
+        TextView crosses;
         TextView begin_date;
         TextView numberOfMovements;
         TextView remainingTime;
@@ -46,14 +47,15 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
 
         switch (v.getId())
         {
-            case R.id.origin_value:
-                Log.i(TAG, dataModel.getMovement());
+            case R.id.crosses_value:
+                Log.i(TAG, String.format("AssignmentId: %i", dataModel.getId()));
                 break;
         }
     }
 
     private int lastPosition = -1;
 
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
@@ -68,11 +70,10 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.assginment_view, parent, false);
-            viewHolder.origin = (TextView) convertView.findViewById(R.id.origin_value);
-            viewHolder.destiny = (TextView) convertView.findViewById(R.id.destiny_value);
-            viewHolder.begin_date = (TextView) convertView.findViewById(R.id.begin_date_value);
-            viewHolder.numberOfMovements = (TextView) convertView.findViewById(R.id.number_of_movements_value);
-            viewHolder.remainingTime = (TextView) convertView.findViewById(R.id.remainingTime_value);
+            viewHolder.crosses = convertView.findViewById(R.id.crosses_value);
+            viewHolder.begin_date = convertView.findViewById(R.id.begin_date_value);
+            viewHolder.numberOfMovements = convertView.findViewById(R.id.number_of_movements_value);
+            viewHolder.remainingTime = convertView.findViewById(R.id.remainingTime_value);
 
             result=convertView;
 
@@ -86,12 +87,21 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.origin.setText(dataModel.getStreetFrom());
-        viewHolder.destiny.setText(dataModel.getStreetTo());
+        viewHolder.crosses.setText(movementsSerialize(dataModel.getMovements()));
         viewHolder.begin_date.setText(dataModel.getBeginAt());
-        viewHolder.numberOfMovements.setText(String.valueOf(dataModel.getNumberOfMovements()));
+        viewHolder.numberOfMovements.setText(String.valueOf(dataModel.getMovements().size()));
         viewHolder.remainingTime.setText(String.valueOf(dataModel.getTimeOfStudy()));
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    private String movementsSerialize(List<AssignmentResponse.Movement> movements) {
+        StringBuilder movementsSerialized = new StringBuilder();
+        for(AssignmentResponse.Movement movement: movements) {
+            movementsSerialized.append(String.format("%s %s -> %s %s\n",
+                    movement.getStreet_from(), movement.getStreet_from_direction(),
+                    movement.getStreet_to(), movement.getStreet_to_direction()));
+        }
+        return movementsSerialized.toString();
     }
 }

@@ -4,6 +4,10 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.example.josuerey.helloworld.network.AssignmentResponse;
+
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,32 +50,8 @@ public class Assignment {
     @ColumnInfo(name = "durationInHours")
     private int durationInHours;
 
-    @ColumnInfo(name = "streetFrom")
-    private String streetFrom;
-
-    @ColumnInfo(name = "streetTo")
-    private String streetTo;
-
-    @ColumnInfo(name = "streetFromDirection")
-    private String streetFromDirection;
-
-    @ColumnInfo(name = "streetToDirection")
-    private String streetToDirection;
-
-    @ColumnInfo(name = "streetFromCode")
-    private String streetFromCode;
-
-    @ColumnInfo(name = "streetToCode")
-    private String streetToCode;
-
-    @ColumnInfo(name = "movement")
-    private String movement;
-
-    @ColumnInfo(name = "movementCode")
-    private int movementCode;
-
-    @ColumnInfo(name = "numberOfMovements")
-    private int numberOfMovements;
+    @ColumnInfo(name = "movements")
+    private List<AssignmentResponse.Movement> movements;
 
     @ColumnInfo(name = "enabled")
     private int enabled;

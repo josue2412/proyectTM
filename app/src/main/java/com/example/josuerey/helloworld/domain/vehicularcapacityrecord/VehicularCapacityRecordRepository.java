@@ -19,8 +19,8 @@ public class VehicularCapacityRecordRepository {
         long generatedId = vehicularCapacityRecordDao.save(vehicularCapacityRecord);
 
         vehicularCapacityRecord.setId((int)generatedId);
-        ExportData.createFile(String.format("%s-%d.txt", vehicularCapacityRecord.getMovement(),
-                vehicularCapacityRecord.getAssignmentId()),
+        ExportData.createFile(String.format("%s-%d.txt", vehicularCapacityRecord.getDeviceId(),
+                vehicularCapacityRecord.getMovementId()),
                 vehicularCapacityRecord.toString());
         return generatedId;
     }
