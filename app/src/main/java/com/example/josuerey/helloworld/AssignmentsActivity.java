@@ -179,7 +179,6 @@ public class AssignmentsActivity extends AppCompatActivity {
         myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
         myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDurationInHours()));
         AssignmentsActivity.this.startActivity(myIntent);
-        finish();
     }
 
 

@@ -312,9 +312,6 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     public void interruptStudy(View target) {
         Log.d(TAG, String.format("Study interrupted at: %s", DATE_FORMAT.format(Calendar.getInstance().getTime())));
         assignmentRepository.updateAssignmentRemainingTime(spentTime, serverId);
-
-        Intent myIntent = new Intent(VehicularCapacityExtendedActivity.this, AssignmentsActivity.class);
-        VehicularCapacityExtendedActivity.this.startActivity(myIntent);
         finish();
     }
 
@@ -714,8 +711,10 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
                     .deviceId(android_device_id)
                     .build();
 
-            Log.d(TAG, String.format("Location change: Lat = %s, Lon= %s", String.valueOf(currentLocation.getLat()),
-                    String.valueOf(currentLocation.getLon())));
+            Log.d(TAG, String.format("Location change: Lat = %s, Lon= %s, Ts = %s",
+                    String.valueOf(currentLocation.getLat()),
+                    String.valueOf(currentLocation.getLon()),
+                    currentLocation.getTimeStamp()));
         }
         @Override
         public void onProviderDisabled(String provider) {
@@ -743,25 +742,24 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         }
     }
 
-    private void requestPermissions() {
-        // Request external file write permission
-        String[] PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        ActivityCompat.requestPermissions(this, PERMISSIONS, 112);
+    private boolean requestPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
+            return false;
+        }
 
-        // Check for GPS usage permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
-
-        } else {
-            locationStart();
+            return false;
         }
+        return true;
     }
 
     private void locationStart() {
-
+        Log.d(TAG, "Starting location updates");
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
 
@@ -778,8 +776,6 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
             return;
         }
 
-        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 20,
-                (LocationListener) mlocListener);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
                 (LocationListener) mlocListener);
     }
@@ -795,13 +791,15 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        locationStop();
+        if (requestPermissions())
+            locationStop();
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        locationStart();
+        if (requestPermissions())
+            locationStart();
     }
 
     @Override

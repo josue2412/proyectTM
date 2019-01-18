@@ -140,7 +140,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.help:
-                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "No disponible", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
                 Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
@@ -231,7 +231,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         movementsTextView = (TextView) findViewById(R.id.movementsValueTextView);
 
         emergencyBtn = (Button) findViewById(R.id.emergencyBtn);
-
 
 
     }
@@ -332,7 +331,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         vehicle = "bicicleta";
                         break;
                 }
-                Toast.makeText(getApplicationContext(), String.format("-1 %s", vehicle),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), String.format("-1 %s", vehicle), Toast.LENGTH_SHORT).show();
                 return true;
             }
         };
@@ -397,18 +396,23 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        locationStop();
+        if (requestPermissions())
+            locationStop();
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        locationStart();
+        if (requestPermissions())
+            locationStart();
     }
 
     private void stopTimerTask() {
         if (timer != null) {
             Log.d(TAG, String.format("Stopping timer task %s", timer.toString()));
+            if (timerTask != null) {
+                timerTask.cancel();
+            }
             timer.cancel();
             timer = null;
         }
@@ -443,7 +447,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
 
             records.add(vehicularCapacityRecord);
 
-            if (numberOfMovements > 1){
+            if (numberOfMovements > 1) {
                 VehicularCapacityRecord vehicularCapacityRecord2 = VehicularCapacityRecord.builder()
                         .backedUpRemotely(0)
                         .deviceId(android_device_id)
@@ -597,8 +601,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         Log.d(TAG, String.format("Study interrupted at: %s", DATE_FORMAT.format(Calendar.getInstance().getTime())));
         assignmentRepository.updateAssignmentRemainingTime(spentTime, serverId);
 
-        Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
-        VehicularCapacityActivity.this.startActivity(myIntent);
         finish();
     }
 
@@ -613,21 +615,20 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     }
 
     // Location services methods
-    private void requestPermissions() {
-        // Request external file write permission
-        String[] PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        ActivityCompat.requestPermissions(this, PERMISSIONS, 112);
+    private boolean requestPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
+            return false;
+        }
 
-        // Check for GPS usage permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
-
-        } else {
-            locationStart();
+            return false;
         }
+        return true;
     }
 
     @Setter
@@ -647,19 +648,24 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     .deviceId(android_device_id)
                     .build();
 
-            Log.d(TAG, String.format("Location change: Lat = %s, Lon= %s", String.valueOf(currentLocation.getLat()),
-                    String.valueOf(currentLocation.getLon())));
+            Log.d(TAG, String.format("Location change: Lat = %s, Lon= %s, Ts = %s",
+                    String.valueOf(currentLocation.getLat()),
+                    String.valueOf(currentLocation.getLon()),
+                    currentLocation.getTimeStamp()));
         }
+
         @Override
         public void onProviderDisabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es desactivado
-            Toast.makeText(getApplicationContext(), "GPS desactivado",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS desactivado", Toast.LENGTH_SHORT).show();
         }
+
         @Override
         public void onProviderEnabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es activado
-            Toast.makeText(getApplicationContext(), "GPS activado",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS activado", Toast.LENGTH_SHORT).show();
         }
+
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             switch (status) {
@@ -677,7 +683,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     }
 
     private void locationStart() {
-
+        Log.d(TAG, "Starting location updates");
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
         mlocListener.setVehicularCapacityActivity(this);
@@ -692,12 +698,12 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
                     1000);
-            Log.d(TAG,"Going back, no permission :(");
+            Log.d(TAG, "Going back, no permission :(");
             return;
         }
 
-        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 20,
-                (LocationListener) mlocListener);
+//        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 20,
+//                (LocationListener) mlocListener);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
                 (LocationListener) mlocListener);
     }
@@ -706,7 +712,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         if (mlocManager != null) {
             mlocManager.removeUpdates(mlocListener);
             Log.d(TAG, String.format("Stopping location updates %s", mlocManager.toString()));
-            mlocManager=null;
+            mlocManager = null;
         }
     }
 
