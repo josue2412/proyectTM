@@ -36,6 +36,7 @@ import com.example.josuerey.helloworld.infrastructure.network.APIClient;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.example.josuerey.helloworld.utilities.StudyDuration;
+import com.example.josuerey.helloworld.utilities.UiUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,6 +50,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 
+import static com.example.josuerey.helloworld.utilities.UiUtils.canDecreaseBadge;
+
 public class VehicularCapacityExtendedActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -56,22 +59,47 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     private ImageButton carCounterBtn2;
     private ImageButton carCounterBtn3;
     private ImageButton carCounterBtn4;
+    private TextView badgeCar1;
+    private TextView badgeCar2;
+    private TextView badgeCar3;
+    private TextView badgeCar4;
+
     private ImageButton busCounterBtn1;
     private ImageButton busCounterBtn2;
     private ImageButton busCounterBtn3;
     private ImageButton busCounterBtn4;
+    private TextView badgeBus1;
+    private TextView badgeBus2;
+    private TextView badgeBus3;
+    private TextView badgeBus4;
+
     private ImageButton motorcycleCounterBtn1;
     private ImageButton motorcycleCounterBtn2;
     private ImageButton motorcycleCounterBtn3;
     private ImageButton motorcycleCounterBtn4;
+    private TextView badgeMotorcycle1;
+    private TextView badgeMotorcycle2;
+    private TextView badgeMotorcycle3;
+    private TextView badgeMotorcycle4;
+
     private ImageButton truckCounterBtn1;
     private ImageButton truckCounterBtn2;
     private ImageButton truckCounterBtn3;
     private ImageButton truckCounterBtn4;
+    private TextView badgeTruck1;
+    private TextView badgeTruck2;
+    private TextView badgeTruck3;
+    private TextView badgeTruck4;
+
     private ImageButton bikeCounterBtn1;
     private ImageButton bikeCounterBtn2;
     private ImageButton bikeCounterBtn3;
     private ImageButton bikeCounterBtn4;
+    private TextView badgeBike1;
+    private TextView badgeBike2;
+    private TextView badgeBike3;
+    private TextView badgeBike4;
+
     private EditText globalCarCounterEditText;
     private EditText globalBusCounterEditText;
     private EditText globalMotorcycleCounterEditText;
@@ -141,6 +169,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
 
     /**
      * Defines the behavior of the app menu on this activity.
+     *
      * @param item clicked item
      * @return true if the event was consumed and handled.
      */
@@ -148,7 +177,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.help:
-                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "No disponible", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
                 Intent myIntent = new Intent(VehicularCapacityExtendedActivity.this, AssignmentsActivity.class);
@@ -167,7 +196,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vehicular_capacity_extended);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -254,11 +283,10 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param moveNumber
      * @return new instance of VehicularCapacityRecord
      */
-    private VehicularCapacityRecord buildVehicularCapacityRecord(int moveNumber){
+    private VehicularCapacityRecord buildVehicularCapacityRecord(int moveNumber) {
 
         return VehicularCapacityRecord.builder()
                 .backedUpRemotely(0)
@@ -329,6 +357,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
 
     /**
      * Set movements images to ImageViews given the current movements.
+     *
      * @param movements
      */
     private void setMovementsImages(List<Movement> movements) {
@@ -415,6 +444,32 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
 
         beginningTimeTextView = (TextView) findViewById(R.id.beginningTimeValueTextView);
         movementsTextView = (TextView) findViewById(R.id.movementsValueTextView);
+
+        badgeCar1 = findViewById(R.id.badge_car_1);
+        badgeCar2 = findViewById(R.id.badge_car_2);
+        badgeCar3 = findViewById(R.id.badge_car_3);
+        badgeCar4 = findViewById(R.id.badge_car_4);
+
+        badgeBus1 = findViewById(R.id.badge_bus_1);
+        badgeBus2 = findViewById(R.id.badge_bus_2);
+        badgeBus3 = findViewById(R.id.badge_bus_3);
+        badgeBus4 = findViewById(R.id.badge_bus_4);
+
+        badgeMotorcycle1 = findViewById(R.id.badge_motorcycle_1);
+        badgeMotorcycle2 = findViewById(R.id.badge_motorcycle_2);
+        badgeMotorcycle3 = findViewById(R.id.badge_motorcycle_3);
+        badgeMotorcycle4 = findViewById(R.id.badge_motorcycle_4);
+
+        badgeTruck1 = findViewById(R.id.badge_truck_1);
+        badgeTruck2 = findViewById(R.id.badge_truck_2);
+        badgeTruck3 = findViewById(R.id.badge_truck_3);
+        badgeTruck4 = findViewById(R.id.badge_truck_4);
+
+        badgeBike1 = findViewById(R.id.badge_bike_1);
+        badgeBike2 = findViewById(R.id.badge_bike_2);
+        badgeBike3 = findViewById(R.id.badge_bike_3);
+        badgeBike4 = findViewById(R.id.badge_bike_4);
+
     }
 
     /**
@@ -442,9 +497,16 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         countersList.put("bikeCounter3", 0);
         countersList.put("bikeCounter4", 0);
     }
+
+    private void updateBadgeCount(TextView badge, int value) {
+        int currentCount = Integer.parseInt(badge.getText().toString());
+        badge.setText(String.valueOf(currentCount + value));
+    }
+
     /**
      * This method either increments or decrements the counter associated to the given view.
-     * @param view view.
+     *
+     * @param view      view.
      * @param increment if true, increments the counter, otherwise decrements.
      */
     public void updateCounters(View view, boolean increment) {
@@ -452,191 +514,313 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         String vehicle = "";
         switch (view.getId()) {
             case R.id.carCounterBtn1:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeCar1)) {
+                        return;
+                    }
+                }
                 countersList.put("carCounter1", countersList.get("carCounter1") + incrementValue);
                 globalCarCounter = globalCarCounter + incrementValue;
                 globalCarCounterEditText.setText(String.valueOf(globalCarCounter));
                 movementCounter1 = movementCounter1 + incrementValue;
                 movementCounterEditText1.setText(String.valueOf(movementCounter1));
                 vehicle = "carro";
+                updateBadgeCount(badgeCar1, incrementValue);
                 break;
 
             case R.id.carCounterBtn2:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeCar2)) {
+                        return;
+                    }
+                }
                 countersList.put("carCounter2", countersList.get("carCounter2") + incrementValue);
                 globalCarCounter = globalCarCounter + incrementValue;
                 globalCarCounterEditText.setText(String.valueOf(globalCarCounter));
                 movementCounter2 = movementCounter2 + incrementValue;
                 movementCounterEditText2.setText(String.valueOf(movementCounter2));
                 vehicle = "carro";
+                updateBadgeCount(badgeCar2, incrementValue);
                 break;
 
             case R.id.carCounterBtn3:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeCar3)) {
+                        return;
+                    }
+                }
                 countersList.put("carCounter3", countersList.get("carCounter3") + incrementValue);
                 globalCarCounter = globalCarCounter + incrementValue;
                 globalCarCounterEditText.setText(String.valueOf(globalCarCounter));
                 movementCounter3 = movementCounter3 + incrementValue;
                 movementCounterEditText3.setText(String.valueOf(movementCounter3));
                 vehicle = "carro";
+                updateBadgeCount(badgeCar3, incrementValue);
                 break;
 
             case R.id.carCounterBtn4:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeCar4)) {
+                        return;
+                    }
+                }
                 countersList.put("carCounter4", countersList.get("carCounter4") + incrementValue);
                 globalCarCounter = globalCarCounter + incrementValue;
                 globalCarCounterEditText.setText(String.valueOf(globalCarCounter));
                 movementCounter4 = movementCounter4 + incrementValue;
                 movementCounterEditText4.setText(String.valueOf(movementCounter4));
                 vehicle = "carro";
+                updateBadgeCount(badgeCar4, incrementValue);
                 break;
 
             case R.id.busCounterBtn1:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBus1)) {
+                        return;
+                    }
+                }
                 countersList.put("busCounter1", countersList.get("busCounter1") + incrementValue);
                 globalBusCounter = globalBusCounter + incrementValue;
                 globalBusCounterEditText.setText(String.valueOf(globalBusCounter));
                 movementCounter1 = movementCounter1 + incrementValue;
                 movementCounterEditText1.setText(String.valueOf(movementCounter1));
                 vehicle = "autobus";
+                updateBadgeCount(badgeBus1, incrementValue);
                 break;
 
             case R.id.busCounterBtn2:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBus2)) {
+                        return;
+                    }
+                }
                 countersList.put("busCounter2", countersList.get("busCounter2") + incrementValue);
                 globalBusCounter = globalBusCounter + incrementValue;
                 globalBusCounterEditText.setText(String.valueOf(globalBusCounter));
                 movementCounter2 = movementCounter2 + incrementValue;
                 movementCounterEditText2.setText(String.valueOf(movementCounter2));
                 vehicle = "autobus";
+                updateBadgeCount(badgeBus2, incrementValue);
                 break;
 
             case R.id.busCounterBtn3:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBus3)) {
+                        return;
+                    }
+                }
                 countersList.put("busCounter3", countersList.get("busCounter3") + incrementValue);
                 globalBusCounter = globalBusCounter + incrementValue;
                 globalBusCounterEditText.setText(String.valueOf(globalBusCounter));
                 movementCounter3 = movementCounter3 + incrementValue;
                 movementCounterEditText3.setText(String.valueOf(movementCounter3));
                 vehicle = "autobus";
+                updateBadgeCount(badgeBus3, incrementValue);
                 break;
 
             case R.id.busCounterBtn4:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBus4)) {
+                        return;
+                    }
+                }
                 countersList.put("busCounter4", countersList.get("busCounter4") + incrementValue);
                 globalBusCounter = globalBusCounter + incrementValue;
                 globalBusCounterEditText.setText(String.valueOf(globalBusCounter));
                 movementCounter4 = movementCounter4 + incrementValue;
                 movementCounterEditText4.setText(String.valueOf(movementCounter4));
                 vehicle = "autobus";
+                updateBadgeCount(badgeBus4, incrementValue);
                 break;
 
             case R.id.motorcycleCounterBtn1:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeMotorcycle1)) {
+                        return;
+                    }
+                }
                 countersList.put("motorcycleCounter1", countersList.get("motorcycleCounter1") + incrementValue);
                 globalMotorcycleCounter = globalMotorcycleCounter + incrementValue;
                 globalMotorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                 movementCounter1 = movementCounter1 + incrementValue;
                 movementCounterEditText1.setText(String.valueOf(movementCounter1));
                 vehicle = "motocicleta";
+                updateBadgeCount(badgeMotorcycle1, incrementValue);
                 break;
 
             case R.id.motorcycleCounterBtn2:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeMotorcycle2)) {
+                        return;
+                    }
+                }
                 countersList.put("motorcycleCounter2", countersList.get("motorcycleCounter2") + incrementValue);
                 globalMotorcycleCounter = globalMotorcycleCounter + incrementValue;
                 globalMotorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                 movementCounter2 = movementCounter2 + incrementValue;
                 movementCounterEditText2.setText(String.valueOf(movementCounter2));
                 vehicle = "motocicleta";
+                updateBadgeCount(badgeMotorcycle2, incrementValue);
                 break;
 
             case R.id.motorcycleCounterBtn3:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeMotorcycle3)) {
+                        return;
+                    }
+                }
                 countersList.put("motorcycleCounter3", countersList.get("motorcycleCounter3") + incrementValue);
                 globalMotorcycleCounter = globalMotorcycleCounter + incrementValue;
                 globalMotorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                 movementCounter3 = movementCounter3 + incrementValue;
                 movementCounterEditText3.setText(String.valueOf(movementCounter3));
                 vehicle = "motocicleta";
+                updateBadgeCount(badgeMotorcycle3, incrementValue);
                 break;
 
             case R.id.motorcycleCounterBtn4:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeMotorcycle4)) {
+                        return;
+                    }
+                }
                 countersList.put("motorcycleCounter4", countersList.get("motorcycleCounter4") + incrementValue);
                 globalMotorcycleCounter = globalMotorcycleCounter + incrementValue;
                 globalMotorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                 movementCounter4 = movementCounter4 + incrementValue;
                 movementCounterEditText4.setText(String.valueOf(movementCounter4));
                 vehicle = "motocicleta";
+                updateBadgeCount(badgeMotorcycle4, incrementValue);
                 break;
 
             case R.id.truckCounterBtn1:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeTruck1)) {
+                        return;
+                    }
+                }
                 countersList.put("truckCounter1", countersList.get("truckCounter1") + incrementValue);
                 globalTruckCounter = globalTruckCounter + incrementValue;
                 globalTruckCounterEditText.setText(String.valueOf(globalTruckCounter));
                 movementCounter1 = movementCounter1 + incrementValue;
                 movementCounterEditText1.setText(String.valueOf(movementCounter1));
                 vehicle = "camion";
+                updateBadgeCount(badgeTruck1, incrementValue);
                 break;
 
             case R.id.truckCounterBtn2:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeTruck2)) {
+                        return;
+                    }
+                }
                 countersList.put("truckCounter2", countersList.get("truckCounter2") + incrementValue);
                 globalTruckCounter = globalTruckCounter + incrementValue;
                 globalTruckCounterEditText.setText(String.valueOf(globalTruckCounter));
                 movementCounter2 = movementCounter2 + incrementValue;
                 movementCounterEditText2.setText(String.valueOf(movementCounter2));
                 vehicle = "camion";
+                updateBadgeCount(badgeTruck2, incrementValue);
                 break;
 
             case R.id.truckCounterBtn3:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeTruck3)) {
+                        return;
+                    }
+                }
                 countersList.put("truckCounter3", countersList.get("truckCounter3") + incrementValue);
                 globalTruckCounter = globalTruckCounter + incrementValue;
                 globalTruckCounterEditText.setText(String.valueOf(globalTruckCounter));
                 movementCounter3 = movementCounter3 + incrementValue;
                 movementCounterEditText3.setText(String.valueOf(movementCounter3));
                 vehicle = "camion";
+                updateBadgeCount(badgeTruck3, incrementValue);
                 break;
 
             case R.id.truckCounterBtn4:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeTruck4)) {
+                        return;
+                    }
+                }
                 countersList.put("truckCounter4", countersList.get("truckCounter4") + incrementValue);
                 globalTruckCounter = globalTruckCounter + incrementValue;
                 globalTruckCounterEditText.setText(String.valueOf(globalTruckCounter));
                 movementCounter4 = movementCounter4 + incrementValue;
                 movementCounterEditText4.setText(String.valueOf(movementCounter4));
                 vehicle = "camion";
+                updateBadgeCount(badgeTruck4, incrementValue);
                 break;
 
             case R.id.bikeCounterBtn1:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBike1)) {
+                        return;
+                    }
+                }
                 countersList.put("bikeCounter1", countersList.get("bikeCounter1") + incrementValue);
                 globalBikeCounter = globalBikeCounter + incrementValue;
                 globalBikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                 movementCounter1 = movementCounter1 + incrementValue;
                 movementCounterEditText1.setText(String.valueOf(movementCounter1));
                 vehicle = "bicicleta";
+                updateBadgeCount(badgeBike1, incrementValue);
                 break;
 
             case R.id.bikeCounterBtn2:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBike2)) {
+                        return;
+                    }
+                }
                 countersList.put("bikeCounter2", countersList.get("bikeCounter2") + incrementValue);
                 globalBikeCounter = globalBikeCounter + incrementValue;
                 globalBikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                 movementCounter2 = movementCounter2 + incrementValue;
                 movementCounterEditText2.setText(String.valueOf(movementCounter2));
                 vehicle = "bicicleta";
+                updateBadgeCount(badgeBike2, incrementValue);
                 break;
 
             case R.id.bikeCounterBtn3:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBike3)) {
+                        return;
+                    }
+                }
                 countersList.put("bikeCounter3", countersList.get("bikeCounter3") + incrementValue);
                 globalBikeCounter = globalBikeCounter + incrementValue;
                 globalBikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                 movementCounter3 = movementCounter3 + incrementValue;
                 movementCounterEditText3.setText(String.valueOf(movementCounter3));
                 vehicle = "bicicleta";
+                updateBadgeCount(badgeBike3, incrementValue);
                 break;
 
             case R.id.bikeCounterBtn4:
+                if (!increment) {
+                    if (!canDecreaseBadge(badgeBike4)) {
+                        return;
+                    }
+                }
                 countersList.put("bikeCounter4", countersList.get("bikeCounter4") + incrementValue);
                 globalBikeCounter = globalBikeCounter + incrementValue;
                 globalBikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                 movementCounter4 = movementCounter4 + incrementValue;
                 movementCounterEditText4.setText(String.valueOf(movementCounter4));
                 vehicle = "bicicleta";
+                updateBadgeCount(badgeBike4, incrementValue);
                 break;
         }
         if (!increment) {
-            Toast.makeText(getApplicationContext(), String.format("-1 %s", vehicle),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), String.format("-1 %s", vehicle), Toast.LENGTH_SHORT).show();
         }
     }
+
     /**
      * Increments counter of the view that was clicked.
+     *
      * @param view associated with click event
      */
     public void onClick(View view) {
@@ -648,6 +832,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
 
     /**
      * Defines the OnLongClick event.
+     *
      * @return true if the OnLongClick event is consumed.
      */
     private View.OnLongClickListener longClickListener() {
@@ -718,16 +903,19 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
                     String.valueOf(currentLocation.getLon()),
                     currentLocation.getTimeStamp()));
         }
+
         @Override
         public void onProviderDisabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es desactivado
-            Toast.makeText(getApplicationContext(), "GPS desactivado",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS desactivado", Toast.LENGTH_SHORT).show();
         }
+
         @Override
         public void onProviderEnabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es activado
-            Toast.makeText(getApplicationContext(), "GPS activado",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "GPS activado", Toast.LENGTH_SHORT).show();
         }
+
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             switch (status) {
@@ -774,7 +962,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
                     1000);
-            Log.d(TAG,"Going back, no permission :(");
+            Log.d(TAG, "Going back, no permission :(");
             return;
         }
 

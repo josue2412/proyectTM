@@ -26,11 +26,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.LoginActivity;
+import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+<<<<<<< HEAD:app/src/main/java/com/example/josuerey/helloworld/application/vehicularcap/VehicularCapacityActivity.java
 import com.example.josuerey.helloworld.domain.movement.Movement;
+=======
+>>>>>>> 70f7f67... Addition of badges (counter) to buttons:app/src/main/java/com/example/josuerey/helloworld/VehicularCapacityActivity.java
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.infrastructure.network.APIClient;
@@ -379,7 +382,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), String.format("-1 %s", vehicle), Toast.LENGTH_SHORT).show();
                 return true;
             }
-        };
+        }
+                ;
     }
 
     private void manageSecondMove(@Nonnull List<Movement> movements) {
@@ -744,6 +748,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     break;
             }
         }
+
     }
 
     private void locationStart() {
@@ -766,8 +771,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
             return;
         }
 
-//        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 20,
-//                (LocationListener) mlocListener);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
                 (LocationListener) mlocListener);
     }
