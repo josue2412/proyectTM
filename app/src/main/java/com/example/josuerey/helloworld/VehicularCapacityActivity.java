@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
-import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
@@ -50,42 +49,55 @@ import javax.annotation.Nonnull;
 
 import lombok.Setter;
 
+import static com.example.josuerey.helloworld.utilities.UiUtils.canDecreaseBadge;
+
 public class VehicularCapacityActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
-    private int carCounter;
+    private int carCounter1;
     private int carCounter2;
     private int globalCarCounter;
     private EditText carCounterEditText;
-    private ImageButton carCounterBtn;
+    private ImageButton carCounterBtn1;
     private ImageButton carCounterBtn2;
+    private TextView badgeCar1;
+    private TextView badgeCar2;
 
-    private int busCounter;
+    private int busCounter1;
     private int busCounter2;
     private int globalBusCounter;
     private EditText busCounterEditText;
-    private ImageButton busCounterBtn;
+    private ImageButton busCounterBtn1;
     private ImageButton busCounterBtn2;
+    private TextView badgeBus1;
+    private TextView badgeBus2;
 
-    private int bikeCounter;
+    private int bikeCounter1;
     private int bikeCounter2;
     private int globalBikeCounter;
     private EditText bikeCounterEditText;
-    private ImageButton bikeCounterBtn;
+    private ImageButton bikeCounterBtn1;
     private ImageButton bikeCounterBtn2;
+    private TextView badgeBike1;
+    private TextView badgeBike2;
 
-    private int motorcycleCounter;
+    private int motorcycleCounter1;
     private int motorcycleCounter2;
     private int globalMotorcycleCounter;
     private EditText motorcycleCounterEditText;
-    private ImageButton motorcycleCounterBtn;
+    private ImageButton motorcycleCounterBtn1;
     private ImageButton motorcycleCounterBtn2;
+    private TextView badgeMotorcycle1;
+    private TextView badgeMotorcycle2;
 
-    private int truckCounter;
+    private int truckCounter1;
     private int truckCounter2;
     private int globalTruckCounter;
     private EditText truckCounterEditText;
-    private ImageButton truckCounterBtn;
+    private ImageButton truckCounterBtn1;
     private ImageButton truckCounterBtn2;
+    private TextView badgeTruck1;
+    private TextView badgeTruck2;
+
 
     private Timer timer;
     private TimerTask timerTask;
@@ -194,16 +206,16 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private void bindViews() {
         View.OnLongClickListener onLongClickListener = longClickListener();
 
-        carCounterBtn = (ImageButton) findViewById(R.id.carCounterBtn);
-        carCounterBtn.setOnLongClickListener(onLongClickListener);
-        busCounterBtn = (ImageButton) findViewById(R.id.busCounterBtn);
-        busCounterBtn.setOnLongClickListener(onLongClickListener);
-        bikeCounterBtn = (ImageButton) findViewById(R.id.bikeCounterBtn);
-        bikeCounterBtn.setOnLongClickListener(onLongClickListener);
-        motorcycleCounterBtn = (ImageButton) findViewById(R.id.motorcycleCounterBtn);
-        motorcycleCounterBtn.setOnLongClickListener(onLongClickListener);
-        truckCounterBtn = (ImageButton) findViewById(R.id.truckCounterBtn);
-        truckCounterBtn.setOnLongClickListener(onLongClickListener);
+        carCounterBtn1 = (ImageButton) findViewById(R.id.carCounterBtn);
+        carCounterBtn1.setOnLongClickListener(onLongClickListener);
+        busCounterBtn1 = (ImageButton) findViewById(R.id.busCounterBtn);
+        busCounterBtn1.setOnLongClickListener(onLongClickListener);
+        bikeCounterBtn1 = (ImageButton) findViewById(R.id.bikeCounterBtn);
+        bikeCounterBtn1.setOnLongClickListener(onLongClickListener);
+        motorcycleCounterBtn1 = (ImageButton) findViewById(R.id.motorcycleCounterBtn);
+        motorcycleCounterBtn1.setOnLongClickListener(onLongClickListener);
+        truckCounterBtn1 = (ImageButton) findViewById(R.id.truckCounterBtn);
+        truckCounterBtn1.setOnLongClickListener(onLongClickListener);
 
         carCounterBtn2 = (ImageButton) findViewById(R.id.carCounterBtn2);
         carCounterBtn2.setOnLongClickListener(onLongClickListener);
@@ -233,6 +245,16 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         emergencyBtn = (Button) findViewById(R.id.emergencyBtn);
 
 
+        badgeCar1 = findViewById(R.id.badge_car_1);
+        badgeCar2 = findViewById(R.id.badge_car_2);
+        badgeBus1 = findViewById(R.id.badge_bus_1);
+        badgeBus2 = findViewById(R.id.badge_bus_2);
+        badgeMotorcycle1 = findViewById(R.id.badge_motorcycle_1);
+        badgeMotorcycle2 = findViewById(R.id.badge_motorcycle_2);
+        badgeTruck1 = findViewById(R.id.badge_truck_1);
+        badgeTruck2 = findViewById(R.id.badge_truck_2);
+        badgeBike1 = findViewById(R.id.badge_bike_1);
+        badgeBike2 = findViewById(R.id.badge_bike_2);
     }
 
     private View.OnLongClickListener longClickListener() {
@@ -242,7 +264,10 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 String vehicle = "";
                 switch (v.getId()) {
                     case R.id.carCounterBtn:
-                        carCounter = carCounter - 1;
+                        if (!canDecreaseBadge(badgeCar1)) return true;
+
+                        carCounter1 = carCounter1 - 1;
+                        decreaseBadgeCounter(badgeCar1);
                         globalCarCounter = globalCarCounter - 1;
                         carCounterEditText.setText(String.valueOf(globalCarCounter));
                         mainMovementCounter = mainMovementCounter - 1;
@@ -251,7 +276,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.carCounterBtn2:
+                        if (!canDecreaseBadge(badgeCar2)) return true;
                         carCounter2 = carCounter2 - 1;
+                        decreaseBadgeCounter(badgeCar2);
                         globalCarCounter = globalCarCounter - 1;
                         carCounterEditText.setText(String.valueOf(globalCarCounter));
                         secondaryMovementCounter = secondaryMovementCounter - 1;
@@ -260,7 +287,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.busCounterBtn:
-                        busCounter = busCounter - 1;
+                        if (!canDecreaseBadge(badgeBus1)) return true;
+                        busCounter1 = busCounter1 - 1;
+                        decreaseBadgeCounter(badgeBus1);
                         globalBusCounter = globalBusCounter - 1;
                         busCounterEditText.setText(String.valueOf(globalBusCounter));
                         mainMovementCounter = mainMovementCounter - 1;
@@ -269,7 +298,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.busCounterBtn2:
+                        if (!canDecreaseBadge(badgeBus2)) return true;
                         busCounter2 = busCounter2 - 1;
+                        decreaseBadgeCounter(badgeBus2);
                         globalBusCounter = globalBusCounter - 1;
                         busCounterEditText.setText(String.valueOf(globalBusCounter));
                         secondaryMovementCounter = secondaryMovementCounter - 1;
@@ -278,7 +309,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.motorcycleCounterBtn:
-                        motorcycleCounter = motorcycleCounter - 1;
+                        if (!canDecreaseBadge(badgeMotorcycle1)) return true;
+                        motorcycleCounter1 = motorcycleCounter1 - 1;
+                        decreaseBadgeCounter(badgeMotorcycle1);
                         globalMotorcycleCounter = globalMotorcycleCounter - 1;
                         motorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                         mainMovementCounter = mainMovementCounter - 1;
@@ -287,7 +320,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.motorcycleCounterBtn2:
+                        if (!canDecreaseBadge(badgeMotorcycle2)) return true;
                         motorcycleCounter2 = motorcycleCounter2 - 1;
+                        decreaseBadgeCounter(badgeMotorcycle2);
                         globalMotorcycleCounter = globalMotorcycleCounter - 1;
                         motorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                         secondaryMovementCounter = secondaryMovementCounter - 1;
@@ -296,7 +331,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.truckCounterBtn:
-                        truckCounter = truckCounter - 1;
+                        if (!canDecreaseBadge(badgeTruck1)) return true;
+                        truckCounter1 = truckCounter1 - 1;
+                        decreaseBadgeCounter(badgeTruck1);
                         globalTruckCounter = globalTruckCounter - 1;
                         truckCounterEditText.setText(String.valueOf(globalTruckCounter));
                         mainMovementCounter = mainMovementCounter - 1;
@@ -305,7 +342,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.truckCounterBtn2:
+                        if (!canDecreaseBadge(badgeTruck2)) return true;
                         truckCounter2 = truckCounter2 - 1;
+                        decreaseBadgeCounter(badgeTruck2);
                         globalTruckCounter = globalTruckCounter - 1;
                         truckCounterEditText.setText(String.valueOf(globalTruckCounter));
                         secondaryMovementCounter = secondaryMovementCounter - 1;
@@ -314,7 +353,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.bikeCounterBtn:
-                        bikeCounter = bikeCounter - 1;
+                        if (!canDecreaseBadge(badgeBike1)) return true;
+                        bikeCounter1 = bikeCounter1 - 1;
+                        decreaseBadgeCounter(badgeBike1);
                         globalBikeCounter = globalBikeCounter - 1;
                         bikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                         mainMovementCounter = mainMovementCounter - 1;
@@ -323,7 +364,9 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         break;
 
                     case R.id.bikeCounterBtn2:
+                        if (!canDecreaseBadge(badgeBike2)) return true;
                         bikeCounter2 = bikeCounter2 - 1;
+                        decreaseBadgeCounter(badgeBike2);
                         globalBikeCounter = globalBikeCounter - 1;
                         bikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                         secondaryMovementCounter = secondaryMovementCounter - 1;
@@ -334,7 +377,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), String.format("-1 %s", vehicle), Toast.LENGTH_SHORT).show();
                 return true;
             }
-        };
+        }
+                ;
     }
 
     private void manageSecondMove(@Nonnull List<AssignmentResponse.Movement> movements) {
@@ -432,11 +476,11 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     .deviceId(android_device_id)
                     .beginTimeInterval(DATE_FORMAT.format(beginTimeInterval))
                     .endTimeInterval(DATE_FORMAT.format(endTimeInterval))
-                    .numberOfCars(carCounter)
-                    .numberOfBikes(bikeCounter)
-                    .numberOfBusses(busCounter)
-                    .numberOfMotorcycles(motorcycleCounter)
-                    .numberOfTrucks(truckCounter)
+                    .numberOfCars(carCounter1)
+                    .numberOfBikes(bikeCounter1)
+                    .numberOfBusses(busCounter1)
+                    .numberOfMotorcycles(motorcycleCounter1)
+                    .numberOfTrucks(truckCounter1)
                     .movementId(movements.get(0).getId())
                     .lat(currentLocation.getLat())
                     .lon(currentLocation.getLon())
@@ -482,19 +526,28 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         spentTime = localRemainingTime;
     }
 
+    private void increaseBadgeCounter(TextView badge) {
+        int badgeCounter = Integer.parseInt(badge.getText().toString());
+        badge.setText(String.valueOf(badgeCounter + 1));
+    }
+
+    private void decreaseBadgeCounter(TextView badge) {
+        int badgeCounter = Integer.parseInt(badge.getText().toString());
+        badge.setText(String.valueOf(badgeCounter - 1));
+    }
+
     private void resetCounters() {
         beginTimeInterval = endTimeInterval;
-        this.bikeCounter = 0;
+        this.bikeCounter1 = 0;
         this.bikeCounter2 = 0;
-        this.busCounter = 0;
+        this.busCounter1 = 0;
         this.busCounter2 = 0;
-        this.motorcycleCounter = 0;
+        this.motorcycleCounter1 = 0;
         this.motorcycleCounter2 = 0;
-        this.truckCounter = 0;
+        this.truckCounter1 = 0;
         this.truckCounter2 = 0;
-        this.carCounter = 0;
+        this.carCounter1 = 0;
         this.carCounter2 = 0;
-
     }
 
     private void initializeTimerTask() {
@@ -515,11 +568,12 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.carCounterBtn:
-                carCounter = carCounter + 1;
+                carCounter1 = carCounter1 + 1;
                 globalCarCounter = globalCarCounter + 1;
                 carCounterEditText.setText(String.valueOf(globalCarCounter));
                 mainMovementCounter = mainMovementCounter + 1;
                 mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                increaseBadgeCounter(badgeCar1);
                 break;
 
             case R.id.carCounterBtn2:
@@ -528,14 +582,16 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 carCounterEditText.setText(String.valueOf(globalCarCounter));
                 secondaryMovementCounter = secondaryMovementCounter + 1;
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                increaseBadgeCounter(badgeCar2);
                 break;
 
             case R.id.busCounterBtn:
-                busCounter = busCounter + 1;
+                busCounter1 = busCounter1 + 1;
                 globalBusCounter = globalBusCounter + 1;
                 busCounterEditText.setText(String.valueOf(globalBusCounter));
                 mainMovementCounter = mainMovementCounter + 1;
                 mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                increaseBadgeCounter(badgeBus1);
                 break;
 
             case R.id.busCounterBtn2:
@@ -544,14 +600,16 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 busCounterEditText.setText(String.valueOf(globalBusCounter));
                 secondaryMovementCounter = secondaryMovementCounter + 1;
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                increaseBadgeCounter(badgeBus2);
                 break;
 
             case R.id.motorcycleCounterBtn:
-                motorcycleCounter = motorcycleCounter + 1;
+                motorcycleCounter1 = motorcycleCounter1 + 1;
                 globalMotorcycleCounter = globalMotorcycleCounter + 1;
                 motorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                 mainMovementCounter = mainMovementCounter + 1;
                 mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                increaseBadgeCounter(badgeMotorcycle1);
                 break;
 
             case R.id.motorcycleCounterBtn2:
@@ -560,14 +618,16 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 motorcycleCounterEditText.setText(String.valueOf(globalMotorcycleCounter));
                 secondaryMovementCounter = secondaryMovementCounter + 1;
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                increaseBadgeCounter(badgeMotorcycle2);
                 break;
 
             case R.id.truckCounterBtn:
-                truckCounter = truckCounter + 1;
+                truckCounter1 = truckCounter1 + 1;
                 globalTruckCounter = globalTruckCounter + 1;
                 truckCounterEditText.setText(String.valueOf(globalTruckCounter));
                 mainMovementCounter = mainMovementCounter + 1;
                 mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                increaseBadgeCounter(badgeTruck1);
                 break;
 
             case R.id.truckCounterBtn2:
@@ -576,14 +636,16 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 truckCounterEditText.setText(String.valueOf(globalTruckCounter));
                 secondaryMovementCounter = secondaryMovementCounter + 1;
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                increaseBadgeCounter(badgeTruck2);
                 break;
 
             case R.id.bikeCounterBtn:
-                bikeCounter = bikeCounter + 1;
+                bikeCounter1 = bikeCounter1 + 1;
                 globalBikeCounter = globalBikeCounter + 1;
                 bikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                 mainMovementCounter = mainMovementCounter + 1;
                 mainMoveEditText.setText(String.valueOf(mainMovementCounter));
+                increaseBadgeCounter(badgeBike1);
                 break;
 
             case R.id.bikeCounterBtn2:
@@ -592,6 +654,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 bikeCounterEditText.setText(String.valueOf(globalBikeCounter));
                 secondaryMovementCounter = secondaryMovementCounter + 1;
                 secondaryMoveEditText.setText(String.valueOf(secondaryMovementCounter));
+                increaseBadgeCounter(badgeBike2);
                 break;
         }
         countingChanged = true;
@@ -680,6 +743,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     break;
             }
         }
+
     }
 
     private void locationStart() {
