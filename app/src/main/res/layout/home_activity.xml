@@ -47,16 +47,6 @@
                 android:onClick="onClick"
                 android:text="Ocupación visual de pasajeros" />
 
-            <Button style="@style/Widget.AppCompat.Button.Colored"
-                android:id="@+id/btnVehicularCap"
-                android:layout_width="150dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="15dp"
-                android:layout_height="160dp"
-                android:layout_below="@id/btnAscDescPassengers"
-                android:layout_alignParentLeft="true"
-                android:onClick="onClick"
-                android:text="Ocupación vehicular" />
         </RelativeLayout>
     </LinearLayout>
 

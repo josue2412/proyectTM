@@ -70,79 +70,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.home_activity);
         requestPermissions();
 
-        try {
-            getAuthorization();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        passengersAscDes = (Button) findViewById(R.id.btnAscDescPassengers);
-        visualOcStudy = (Button) findViewById(R.id.btnVisualOccupation);
-        capturistLogged = (TextView) findViewById(R.id.logged_capturist);
+        passengersAscDes = findViewById(R.id.btnAscDescPassengers);
+        visualOcStudy = findViewById(R.id.btnVisualOccupation);
+        capturistLogged = findViewById(R.id.logged_capturist);
 
         capturistLogged.setText("Usuario: " + SaveSharedPreference.getUserName(getApplicationContext()));
-    }
-
-    private void getAuthorization() throws JSONException {
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String userToken= "1234";
-        String url ="http://u856955919.hostingerapp.com/api/user?api_token="+userToken;
-        final ProgressDialog pdLoading = new ProgressDialog(this);
-        pdLoading.setMessage("\tLoading...");
-        pdLoading.show();
-
-        // Request a string response from the provided URL.
-        JsonRequest<JSONObject> stringRequest = new JsonObjectRequest(Request.Method.GET, url,
-                null,new Response.Listener<JSONObject >() {
-            @Override
-            public void onResponse(JSONObject  response) {
-                // Display the first 500 characters of the response string.
-                Log.d(TAG, response.toString());
-                try {
-
-                    evalResponse(response);
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-                pdLoading.dismiss();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Did not worked");
-                pdLoading.dismiss();
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
-    private void blockApp() {
-        passengersAscDes.setEnabled(false);
-        visualOcStudy.setEnabled(false);
-    }
-
-    private void evalResponse(JSONObject response) throws JSONException {
-        String msg = "Hola";
-        if (response != null) {
-            String isActive = response.getString("activo");
-
-            if (!isActive.equals("1")) {
-
-                msg = "You are not allowed to use this app anymore, please contact the owners.";
-                blockApp();
-            }
-        } else {
-            msg = "Unable to connect to remote server.";
-            blockApp();
-            Log.d(TAG, msg);
-        }
-        Log.d(TAG, "Auth:" + msg);
-        Toast.makeText(this, msg,
-                Toast.LENGTH_SHORT).show();
     }
 
     public void onClick(View view) {
@@ -154,9 +86,6 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.btnVisualOccupation:
                 studyIntent = new Intent(HomeActivity.this, VisualOccupationFormActivity.class);
-                break;
-            case R.id.btnVehicularCap:
-                studyIntent = new Intent(HomeActivity.this, VehicularCapacityForm.class);
                 break;
         }
 

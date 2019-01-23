@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if UserResponse is Already Logged In
         if(SaveSharedPreference.getLoggedStatus(getApplicationContext())) {
-            Intent intent = new Intent(getApplicationContext(), AssignmentsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
             startActivity(intent);
             finish();
         } else {
@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         SaveSharedPreference.setUserNameKey(getApplicationContext(), usernameKey);
 
         Log.d(TAG, String.format("User logged as %s and key %s", username, usernameKey));
-        Intent intent = new Intent(getApplicationContext(), AssignmentsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         startActivity(intent);
         finish();
     }
