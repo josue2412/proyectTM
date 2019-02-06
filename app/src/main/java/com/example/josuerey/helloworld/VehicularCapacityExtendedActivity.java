@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.movement.Movement;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.network.APIClient;
@@ -100,7 +101,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     private Date beginningOfTheStudy;
     private String remainingTime;
     private String spentTime;
-    private List<AssignmentResponse.Movement> movements;
+    private List<Movement> movements;
     private int assignmentId;
     private int serverId;
     private int numberOfMovements;
@@ -329,7 +330,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
      * Set movements images to ImageViews given the current movements.
      * @param movements
      */
-    private void setMovementsImages(List<AssignmentResponse.Movement> movements) {
+    private void setMovementsImages(List<Movement> movements) {
 
         String movementsFormatted = String.format("%s %s %s", movements.get(2).getMovement_name(),
                 movements.get(1).getMovement_name(), movements.get(0).getMovement_name());
@@ -353,19 +354,19 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     private void bindViews() {
         View.OnLongClickListener decrementCounterOnLongClickListener = longClickListener();
 
-        carCounterBtn1 = (ImageButton) findViewById(R.id.carCounterBtn1);
-        carCounterBtn2 = (ImageButton) findViewById(R.id.carCounterBtn2);
-        carCounterBtn3 = (ImageButton) findViewById(R.id.carCounterBtn3);
-        carCounterBtn4 = (ImageButton) findViewById(R.id.carCounterBtn4);
-        busCounterBtn1 = (ImageButton) findViewById(R.id.busCounterBtn1);
-        busCounterBtn2 = (ImageButton) findViewById(R.id.busCounterBtn2);
-        busCounterBtn3 = (ImageButton) findViewById(R.id.busCounterBtn3);
-        busCounterBtn4 = (ImageButton) findViewById(R.id.busCounterBtn4);
-        motorcycleCounterBtn1 = (ImageButton) findViewById(R.id.motorcycleCounterBtn1);
-        motorcycleCounterBtn2 = (ImageButton) findViewById(R.id.motorcycleCounterBtn2);
-        motorcycleCounterBtn3 = (ImageButton) findViewById(R.id.motorcycleCounterBtn3);
-        motorcycleCounterBtn4 = (ImageButton) findViewById(R.id.motorcycleCounterBtn4);
-        truckCounterBtn1 = (ImageButton) findViewById(R.id.truckCounterBtn1);
+        carCounterBtn1 = findViewById(R.id.carCounterBtn1);
+        carCounterBtn2 = findViewById(R.id.carCounterBtn2);
+        carCounterBtn3 = findViewById(R.id.carCounterBtn3);
+        carCounterBtn4 = findViewById(R.id.carCounterBtn4);
+        busCounterBtn1 = findViewById(R.id.busCounterBtn1);
+        busCounterBtn2 = findViewById(R.id.busCounterBtn2);
+        busCounterBtn3 = findViewById(R.id.busCounterBtn3);
+        busCounterBtn4 = findViewById(R.id.busCounterBtn4);
+        motorcycleCounterBtn1 = findViewById(R.id.motorcycleCounterBtn1);
+        motorcycleCounterBtn2 = findViewById(R.id.motorcycleCounterBtn2);
+        motorcycleCounterBtn3 = findViewById(R.id.motorcycleCounterBtn3);
+        motorcycleCounterBtn4 = findViewById(R.id.motorcycleCounterBtn4);
+        truckCounterBtn1 = findViewById(R.id.truckCounterBtn1);
         truckCounterBtn2 = (ImageButton) findViewById(R.id.truckCounterBtn2);
         truckCounterBtn3 = (ImageButton) findViewById(R.id.truckCounterBtn3);
         truckCounterBtn4 = (ImageButton) findViewById(R.id.truckCounterBtn4);
@@ -683,7 +684,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         truckCounterBtn4.setBackgroundResource(R.color.colorBackground);
     }
 
-    private int deriveMoveSrc(@Nonnull AssignmentResponse.Movement movement) {
+    private int deriveMoveSrc(@Nonnull Movement movement) {
         String move = movement.getMovement_name().toLowerCase();
         switch (move) {
             case "derecho":

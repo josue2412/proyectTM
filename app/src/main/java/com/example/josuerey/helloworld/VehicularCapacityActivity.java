@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.movement.Movement;
 import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
@@ -102,7 +103,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private APIClient apiClient;
 
     private int numberOfMovements;
-    private List<AssignmentResponse.Movement> movements;
+    private List<Movement> movements;
 
     private ImageView mainMove;
     private ImageView secondaryMove;
@@ -337,7 +338,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         };
     }
 
-    private void manageSecondMove(@Nonnull List<AssignmentResponse.Movement> movements) {
+    private void manageSecondMove(@Nonnull List<Movement> movements) {
 
         if (movements.size() == 2) {
             mainMove.setBackgroundResource(deriveMoveSrc(movements.get(0)));
@@ -367,7 +368,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         truckCounterBtn2.setBackgroundResource(R.color.colorBackground);
     }
 
-    private int deriveMoveSrc(@Nonnull AssignmentResponse.Movement movement) {
+    private int deriveMoveSrc(@Nonnull Movement movement) {
         String move = movement.getMovement_name().toLowerCase();
         switch (move) {
             case "derecho":

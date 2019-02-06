@@ -82,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
         Intent studyIntent = null;
         switch (view.getId()) {
             case R.id.btnAscDescPassengers:
-                studyIntent = new Intent(HomeActivity.this, TrackerFormActivity.class);
+                studyIntent = new Intent(HomeActivity.this, AscDescAssignmentsActivity.class);
                 break;
             case R.id.btnVisualOccupation:
                 studyIntent = new Intent(HomeActivity.this, VisualOccupationFormActivity.class);

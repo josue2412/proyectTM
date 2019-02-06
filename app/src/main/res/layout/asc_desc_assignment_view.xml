@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/routeLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Ruta: "
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/route_value"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:layout_alignParentTop="true"
+            android:text="Route"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/begin_at_place_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/via_LinearLayout"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/begin_at_place_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/destiny"
+            android:text="Lugar de inicio: "
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/begin_at_place_value"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/destiny"
+            android:text="begin_at"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/begin_at_date_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/begin_at_place_LinearLayout"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/begin_at_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/destiny"
+            android:text="Fecha de inicio: "
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/begin_at_date_value"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/destiny"
+            android:text="begin_at"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/via_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/routeLinearLayout"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/via_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/begin_date_label"
+            android:text="Vía: "
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/via_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_below="@+id/begin_date_label"
+            android:text="Via"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+</RelativeLayout>
+

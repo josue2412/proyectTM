@@ -52,11 +52,11 @@ public class TrackerFormActivity extends AppCompatActivity {
 
         Log.d(TAG, "Unique id: " + androidDeviceId);
 
-        campoNoRuta = (EditText) findViewById(R.id.editTextRuta);
-        campoVia = (EditText) findViewById(R.id.editTextVia);
-        campoNumEcon = (EditText) findViewById(R.id.editTextNumEcon);
-        campoEncuestador = (EditText) findViewById(R.id.editTextEnc);
-        initialPassengers = (EditText) findViewById(R.id.editTextInitialPassengers);
+        campoNoRuta = findViewById(R.id.editTextRuta);
+        campoVia = findViewById(R.id.editTextVia);
+        campoNumEcon = findViewById(R.id.editTextNumEcon);
+        campoEncuestador = findViewById(R.id.editTextEnc);
+        initialPassengers = findViewById(R.id.editTextInitialPassengers);
 
         metadataRepository = new MetadataRepository(getApplication());
         gpsLocationRepository = new GPSLocationRepository(getApplication());
