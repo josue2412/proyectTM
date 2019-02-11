@@ -9,9 +9,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_eps_logo"
+        android:icon="@mipmap/ic_gat_systems_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_eps_logo"
+        android:roundIcon="@mipmap/ic_gat_systems_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">
