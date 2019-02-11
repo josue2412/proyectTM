@@ -1,12 +1,14 @@
 package com.example.josuerey.helloworld.utilities;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class ExportData {
+    private static final String TAG = "ExportData";
 
     public static void createFile(String sFileName, String payload) {
         try {
@@ -21,8 +23,10 @@ public class ExportData {
 
             writer.flush();
             writer.close();
+            Log.d(TAG, "File successfully created/updated" + sFileName);
 
         } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
             e.printStackTrace();
         }
     }

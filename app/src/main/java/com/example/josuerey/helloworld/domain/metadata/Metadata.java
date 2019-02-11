@@ -32,8 +32,8 @@ public class Metadata {
     @ColumnInfo(name = "id")
     private int id;
 
-    @ColumnInfo(name = "composedId")
-    private String composedId;
+    @ColumnInfo(name = "assignmentId")
+    private int assignmentId;
 
     @ColumnInfo(name = "route")
     private String route;
@@ -44,11 +44,17 @@ public class Metadata {
     @ColumnInfo(name = "economicNumber")
     private String economicNumber;
 
-    @ColumnInfo(name = "capturist")
-    private String capturist;
+    @ColumnInfo(name = "durationInHours")
+    private int durationInHours;
 
     @ColumnInfo(name = "initialPassengers")
     private int initialPassengers;
+
+    @ColumnInfo(name = "beginAtPlace")
+    private String beginAtPlace;
+
+    @ColumnInfo(name = "beginAtDate")
+    private String beginAtDate;
 
     @ColumnInfo(name = "deviceId")
     private String deviceId;

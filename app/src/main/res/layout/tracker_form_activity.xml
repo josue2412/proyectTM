@@ -8,51 +8,132 @@
     android:background="@drawable/background_color"
     tools:context=".TrackerFormActivity">
 
-    <EditText
-        android:id="@+id/editTextRuta"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Ruta" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Ruta: "/>
+        <EditText
+            android:id="@+id/route_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:inputType="textVisiblePassword"
+            android:hint="Ruta" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/editTextVia"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Via" />
 
-    <EditText
-        android:id="@+id/editTextNumEcon"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Numero economico" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Vía:"/>
+        <EditText
+            android:id="@+id/via_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:inputType="textVisiblePassword"
+            android:hint="Via" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/editTextInitialPassengers"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="number"
-        android:hint="Pasajeros iniciales" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="No. económico: "/>
+        <EditText
+            android:id="@+id/econNum_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:inputType="textVisiblePassword"
+            android:hint="No. económico" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/editTextEnc"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="text"
-        android:hint="Encuestador" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Pasajeros iniciales: "/>
+        <EditText
+            android:id="@+id/initial_passengers_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:inputType="number"
+            android:hint="0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Lugar de inicio: "/>
+        <EditText
+            android:id="@+id/begin_at_place_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:inputType="text"
+            android:hint="Lugar de inicio" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Fecha de inicio: "/>
+        <EditText
+            android:id="@+id/begin_at_date_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:inputType="text"
+            android:hint="Fecha de inicio" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Duración (hrs): "/>
+        <EditText
+            android:id="@+id/duration_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:inputType="number"
+            android:hint="Duración" />
+    </LinearLayout>
 
     <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/btnStart"

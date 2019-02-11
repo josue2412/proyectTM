@@ -1,7 +1,6 @@
 package com.example.josuerey.helloworld.domain.metadata;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
 

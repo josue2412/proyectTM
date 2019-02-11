@@ -55,6 +55,7 @@ public interface AssignmentsDisplay<T> {
     }
 
     default void retrieveAssignments(final AssignmentRetrievedCallback callback){
+        Log.d(getTAG(), "Retrieving assignments...");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.GET, getRequestUrl(), new Response.Listener<String>() {
                     @Override

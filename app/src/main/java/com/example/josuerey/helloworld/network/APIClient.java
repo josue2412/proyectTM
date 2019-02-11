@@ -92,7 +92,7 @@ public class APIClient {
 
     public void postMetadataInBatch (final List<Metadata> metadata,
                                     final MetadataRepository repository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeMetadataV2";
+        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/updateAscDescAssignment";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override

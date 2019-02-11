@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -77,13 +78,6 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
         retryRetrieveAssignments = findViewById(R.id.retry_assignments);
 
         capturistTextView.setText(SaveSharedPreference.getUserName(getApplicationContext()));
-
-//        vehicularCapacityRecordRepository = new VehicularCapacityRecordRepository(getApplication());
-//        assignmentRepository = new AssignmentRepository(getApplication());
-//        apiClient = APIClient.builder().app(getApplication()).build();
-//
-//        availableAssignments = new ArrayList<>();
-//        checkForRecordsPendingToBackup();
     }
 
     @Override
@@ -104,14 +98,16 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
         getAssignmentsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //handleClickedAssignment(availableAssignments.get(position));
+                handleClickedAssignment((AscDescAssignmentResponse)parent.getAdapter().getItem(position));
             }
         });
     }
 
     @Override
     public void handleClickedAssignment(AscDescAssignmentResponse assignmentResponse) {
-
+        Intent fillFormIntent = new Intent(AscDescAssignmentsActivity.this, TrackerFormActivity.class);
+        fillFormIntent.putExtra("ascDescAssignment", gson.toJson(assignmentResponse));
+        Log.d(TAG, "Handling ascDescAssignment: " + assignmentResponse.getId());
+        AscDescAssignmentsActivity.this.startActivity(fillFormIntent);
     }
 }

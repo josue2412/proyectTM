@@ -703,8 +703,6 @@ public class VehicularCapacityActivity extends AppCompatActivity {
             return;
         }
 
-//        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 20,
-//                (LocationListener) mlocListener);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
                 (LocationListener) mlocListener);
     }

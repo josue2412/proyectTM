@@ -29,11 +29,11 @@ public interface MetadataDao {
      * @return al Metadata records.
      */
     @Query("Select * from Metadata")
-    public Metadata[] loadAllMetadata();
+    Metadata[] loadAllMetadata();
 
 
     @Query("Select * from Metadata where backedUpRemotely = :value")
-    public Metadata[] findMetadataByBackedUpRemotely(int value);
+    Metadata[] findMetadataByBackedUpRemotely(int value);
 
     /**
      * This method is called once the record is successfully backed up in the

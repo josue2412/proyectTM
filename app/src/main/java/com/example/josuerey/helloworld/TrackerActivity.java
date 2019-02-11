@@ -36,9 +36,11 @@ import com.example.josuerey.helloworld.domain.busstop.BusStopViewModel;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
+import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.io.IOException;
@@ -67,30 +69,21 @@ public class TrackerActivity extends AppCompatActivity {
     private GPSLocationViewModel gpsLocationViewModel;
     private List<BusStop> busStopsList;
     private List<GPSLocation> gpsLocationList;
-    private int currentMetadataId;
     private Date beginStopInstant;
-
-    private int totalNumberOfPassengers;
     private GPSLocation currentLocation;
-    private String composedId;
-
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     private GPSLocationRepository gpsLocationRepository;
     private BusStopRepository busStopRepository;
-
     private APIClient apiClient;
-
-    private String route;
-    private String econNumber;
     private String android_device_id;
+    private Metadata currentMetadata;
+    private int totalNumberOfPassengers;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tracker_activity_menu, menu);
         return true;
-
     }
 
     @Override
@@ -104,7 +97,6 @@ public class TrackerActivity extends AppCompatActivity {
                 apiClient.postGpsLocationInBatch(gpsLocationList, gpsLocationRepository);
                 Intent myIntent = new Intent(TrackerActivity.this, HomeActivity.class);
                 TrackerActivity.this.startActivity(myIntent);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -121,12 +113,9 @@ public class TrackerActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            currentMetadataId = Integer.valueOf(extras
-                    .getString(TrackerFormActivity.METADATA_ID_PROPERTY));
-            route = extras.getString("Route");
-            econNumber = extras.getString("econNumber");
-            totalNumberOfPassengers = Integer.valueOf(extras.getString("initialPassengers"));
-            composedId = extras.getString("composedId");
+            currentMetadata = new Gson().fromJson(
+                    extras.getString(TrackerFormActivity.METADATA_PROPERTY), Metadata.class);
+            totalNumberOfPassengers = currentMetadata.getInitialPassengers();
         }
 
         android_device_id = Settings.Secure.getString(this.getContentResolver(),
@@ -142,33 +131,36 @@ public class TrackerActivity extends AppCompatActivity {
         totalPassengersTextView = findViewById(R.id.totalPassengers);
         saveButton = findViewById(R.id.btnSave);
         beginStopButton = findViewById(R.id.btnStopBegin);
-        rgStopType = (RadioGroup) findViewById(R.id.rgStopType);
-        rbStopType = (RadioButton) findViewById(rgStopType.getCheckedRadioButtonId());
+        rgStopType = findViewById(R.id.rgStopType);
+        rbStopType = findViewById(rgStopType.getCheckedRadioButtonId());
         rgStopType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                rbStopType = (RadioButton) findViewById(rgStopType.getCheckedRadioButtonId());
+                rbStopType = findViewById(rgStopType.getCheckedRadioButtonId());
             }
         });
 
         totalPassengersTextView.setText(" Total pasajeros: " + totalNumberOfPassengers + " ");
 
-        numberPickerUp = (NumberPicker) findViewById(R.id.number_pickerUP);
-        numberPickerDown = (NumberPicker) findViewById(R.id.number_pickerDown);
+        numberPickerUp = findViewById(R.id.number_pickerUP);
+        numberPickerDown = findViewById(R.id.number_pickerDown);
 
         busStopViewModel = ViewModelProviders.of(this).get(BusStopViewModel.class);
         gpsLocationViewModel = ViewModelProviders.of(this).get(GPSLocationViewModel.class);
 
-        busStopsList = new LinkedList<BusStop>();
-        busStopViewModel.findBusStopsByMetadata(currentMetadataId).observe(this, new Observer<List<BusStop>>() {
+        busStopsList = new LinkedList<>();
+        busStopViewModel.findBusStopsByMetadata(
+                currentMetadata.getAssignmentId()).observe(this, new Observer<List<BusStop>>() {
             @Override
             public void onChanged(@Nullable List<BusStop> busStops) {
                 busStopsList = busStops;
+                Log.d(TAG, "Number of bus stops: " + String.valueOf(busStopsList.size()));
             }
         });
 
-        gpsLocationList = new LinkedList<GPSLocation>();
-        gpsLocationViewModel.findGPSLocationsByMetadataId(currentMetadataId).observe(this, new Observer<List<GPSLocation>>() {
+        gpsLocationList = new LinkedList<>();
+        gpsLocationViewModel.findGPSLocationsByMetadataId(
+                currentMetadata.getAssignmentId()).observe(this, new Observer<List<GPSLocation>>() {
             @Override
             public void onChanged(@Nullable List<GPSLocation> gpsLocations) {
                 gpsLocationList = gpsLocations;
@@ -195,8 +187,6 @@ public class TrackerActivity extends AppCompatActivity {
             }
         });
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
         disableControls();
         requestPermissions();
     }
@@ -208,7 +198,7 @@ public class TrackerActivity extends AppCompatActivity {
         saveButton.setEnabled(false);
 
         for(int i = 0; i < rgStopType.getChildCount(); i++){
-            ((RadioButton)rgStopType.getChildAt(i)).setEnabled(false);
+            (rgStopType.getChildAt(i)).setEnabled(false);
         }
     }
 
@@ -219,26 +209,32 @@ public class TrackerActivity extends AppCompatActivity {
         saveButton.setEnabled(true);
 
         for(int i = 0; i < rgStopType.getChildCount(); i++){
-            ((RadioButton)rgStopType.getChildAt(i)).setEnabled(true);
+            (rgStopType.getChildAt(i)).setEnabled(true);
         }
     }
 
-    private void requestPermissions() {
-        // Request external file write permission
-        String[] PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        ActivityCompat.requestPermissions(this, PERMISSIONS, 112);
+    // Location services methods
+    private boolean requestPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
+            return false;
+        }
 
-        // Check for GPS usage permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+            return false;
+        }
+        return true;
+    }
 
-        } else {
-            locationStart();
+    private void locationStop() {
+        if (mlocManager != null) {
+            mlocManager.removeUpdates(mlocListener);
+            Log.d(TAG, String.format("Stopping location updates %s", mlocManager.toString()));
+            mlocManager = null;
         }
     }
 
@@ -262,10 +258,8 @@ public class TrackerActivity extends AppCompatActivity {
             return;
         }
 
-        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 20,
-                (LocationListener) mlocListener);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
-                (LocationListener) mlocListener);
+                mlocListener);
         latLongTextView.setText("Localizacion agregada");
         directionsTextView.setText("");
     }
@@ -278,8 +272,7 @@ public class TrackerActivity extends AppCompatActivity {
                 List<Address> list = geocoder.getFromLocation(
                         loc.getLatitude(), loc.getLongitude(), 1);
                 if (!list.isEmpty()) {
-                    Address DirCalle = list.get(0);
-                    directionsTextView.setText(DirCalle.getAddressLine(0));
+                    directionsTextView.setText(list.get(0).getAddressLine(0));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -301,13 +294,12 @@ public class TrackerActivity extends AppCompatActivity {
             // debido a la deteccion de un cambio de ubicacion
 
             currentLocation = GPSLocation.builder()
-                    .idMetadata(currentMetadataId)
+                    .idMetadata(currentMetadata.getAssignmentId())
                     .lat(loc.getLatitude())
                     .lon(loc.getLongitude())
                     .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
                     .deviceId(android_device_id)
                     .backedUpRemotely(0)
-                    .composedId(composedId)
                     .build();
 
             String Text = "Lat = "+ currentLocation.getLat() + "\n Long = " + currentLocation.getLon();
@@ -349,12 +341,12 @@ public class TrackerActivity extends AppCompatActivity {
         long gpsLocationId = gpsLocationRepository.insert(currentLocation);
         currentLocation.setId((int)gpsLocationId);
 
-        ExportData.createFile(route + "-" + econNumber + "-PuntosGPS-"
-                        + String.valueOf(currentMetadataId) + ".txt", currentLocation.toString());
-
+        ExportData.createFile(String.format("%s-%s-PuntosGPS-%d.txt", currentMetadata.getRoute(),
+                currentMetadata.getEconomicNumber(), currentMetadata.getAssignmentId()),
+                currentLocation.toString());
     }
 
-    private void persistBusStop(){
+    private void persistBusStop() {
 
         totalNumberOfPassengers += numberPickerUp.getValue();
         totalNumberOfPassengers -= numberPickerDown.getValue();
@@ -363,7 +355,7 @@ public class TrackerActivity extends AppCompatActivity {
 
         BusStop newBusStop = BusStop.builder()
                 .stopType(stopType)
-                .idMetadata(currentMetadataId)
+                .idMetadata(currentMetadata.getAssignmentId())
                 .deviceId(android_device_id)
                 .isOfficial(isOfficial)
                 .lat(currentLocation.getLat())
@@ -373,7 +365,6 @@ public class TrackerActivity extends AppCompatActivity {
                 .totalPassengers(totalNumberOfPassengers)
                 .stopBegin(DATE_FORMAT.format(beginStopInstant))
                 .stopEnd(DATE_FORMAT.format(new Date()))
-                .composedId(composedId)
                 .backedUpRemotely(0)
                 .build();
 
@@ -382,8 +373,9 @@ public class TrackerActivity extends AppCompatActivity {
         apiClient.postBusStopInBatch(Lists.newArrayList(newBusStop), busStopRepository);
 
         // Create BusStop file
-        ExportData.createFile(route + "-" + econNumber + "-Paradas-"
-                + String.valueOf(currentMetadataId) + ".txt", newBusStop.toString());
+        ExportData.createFile(String.format("%s-%s-Paradas-%d.txt",currentMetadata.getRoute(),
+                currentMetadata.getEconomicNumber(), currentMetadata.getAssignmentId()),
+                newBusStop.toString());
 
         Toast.makeText(getApplicationContext(), "Guardado",Toast.LENGTH_SHORT).show();
         clearAfterSave();
@@ -400,15 +392,17 @@ public class TrackerActivity extends AppCompatActivity {
 
     @Override
     public void onPause(){
-
-        mlocManager.removeUpdates(mlocListener);
         super.onPause();
+        if (requestPermissions()) {
+            locationStop();
+        }
     }
 
     @Override
     protected void onResume() {
-
-        locationStart();
         super.onResume();
+        if (requestPermissions()) {
+            locationStart();
+        }
     }
 }

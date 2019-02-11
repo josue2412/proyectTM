@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
-import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        Assignment dataModel = (Assignment)object;
+        AscDescAssignmentResponse dataModel = (AscDescAssignmentResponse)object;
 
         switch (v.getId())
         {

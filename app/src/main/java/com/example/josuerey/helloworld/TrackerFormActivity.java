@@ -1,6 +1,5 @@
 package com.example.josuerey.helloworld;
 
-
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -17,21 +16,21 @@ import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
 import com.example.josuerey.helloworld.network.APIClient;
+import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
 import com.example.josuerey.helloworld.utilities.ExportData;
-import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 
 import java.util.Arrays;
-import java.util.Calendar;
-
 
 public class TrackerFormActivity extends AppCompatActivity {
 
-    public final static String METADATA_ID_PROPERTY = "metadataId";
     public final static String METADATA_PROPERTY = "metadata";
-    private EditText campoNoRuta;
-    private EditText campoVia;
-    private EditText campoNumEcon;
-    private EditText campoEncuestador;
+    private EditText routeEditText;
+    private EditText viaEditText;
+    private EditText ecoNumberEditText;
+    private EditText durationEditText;
+    private EditText beginAtDateEditText;
+    private EditText beginAtPlaceEditText;
     private EditText initialPassengers;
     private MetadataRepository metadataRepository;
     private GPSLocationRepository gpsLocationRepository;
@@ -40,7 +39,7 @@ public class TrackerFormActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     private APIClient apiClient;
     private String androidDeviceId;
-    private String composedId;
+    private AscDescAssignmentResponse assignment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +49,21 @@ public class TrackerFormActivity extends AppCompatActivity {
         androidDeviceId = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            assignment = new Gson().fromJson(
+                    extras.getString("ascDescAssignment"), AscDescAssignmentResponse.class);
+        }
+
         Log.d(TAG, "Unique id: " + androidDeviceId);
 
-        campoNoRuta = findViewById(R.id.editTextRuta);
-        campoVia = findViewById(R.id.editTextVia);
-        campoNumEcon = findViewById(R.id.editTextNumEcon);
-        campoEncuestador = findViewById(R.id.editTextEnc);
-        initialPassengers = findViewById(R.id.editTextInitialPassengers);
+        routeEditText = findViewById(R.id.route_edit_text);
+        viaEditText = findViewById(R.id.via_edit_text);
+        ecoNumberEditText = findViewById(R.id.econNum_edit_text);
+        beginAtDateEditText = findViewById(R.id.begin_at_date_edit_text);
+        beginAtPlaceEditText = findViewById(R.id.begin_at_place_edit_text);
+        durationEditText = findViewById(R.id.duration_edit_text);
+        initialPassengers = findViewById(R.id.initial_passengers_edit_text);
 
         metadataRepository = new MetadataRepository(getApplication());
         gpsLocationRepository = new GPSLocationRepository(getApplication());
@@ -65,6 +72,16 @@ public class TrackerFormActivity extends AppCompatActivity {
         apiClient = APIClient.builder().app(getApplication()).build();
 
         checkForDataPendingToBackUp();
+    }
+
+    private void setFieldsValues() {
+
+        routeEditText.setText(this.assignment.getRoute());
+        viaEditText.setText(this.assignment.getVia());
+        ecoNumberEditText.setText(this.assignment.getEconomicNumber());
+        beginAtDateEditText.setText(this.assignment.getBeginAtDate());
+        beginAtPlaceEditText.setText(this.assignment.getBeginAtPlace());
+        durationEditText.setText(String.valueOf(this.assignment.getDurationInHours()));
     }
 
     private void checkForDataPendingToBackUp() {
@@ -88,23 +105,16 @@ public class TrackerFormActivity extends AppCompatActivity {
         }
     }
 
-    public void onClick(View view){
-
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.btnStart:
                     if (fieldsValidateSuccess()) {
                         Metadata metadata = saveMetadata();
-                        Log.d(TAG, metadata.toString());
+                        Log.d(TAG, "New metadata created: " + metadata.toString());
                         apiClient.postMetadataInBatch(Arrays.asList(metadata), metadataRepository);
 
                         Intent myIntent = new Intent(TrackerFormActivity.this, TrackerActivity.class);
-                        myIntent.putExtra(METADATA_ID_PROPERTY, String.valueOf(metadataId));
-                        myIntent.putExtra(METADATA_PROPERTY, metadata.toString());
-                        myIntent.putExtra("Route", metadata.getRoute());
-                        myIntent.putExtra("econNumber", metadata.getEconomicNumber());
-                        myIntent.putExtra("initialPassengers",
-                                String.valueOf(metadata.getInitialPassengers()));
-                        myIntent.putExtra("composedId", metadata.getComposedId());
+                        myIntent.putExtra(METADATA_PROPERTY, new Gson().toJson(metadata));
                         TrackerFormActivity.this.startActivity(myIntent);
                         finish();
                     }
@@ -114,14 +124,14 @@ public class TrackerFormActivity extends AppCompatActivity {
 
     private boolean fieldsValidateSuccess() {
 
-        if (TextUtils.isEmpty(campoNoRuta.getText().toString())) {
-            campoNoRuta.setError("Favor de ingresar una ruta");
-            campoNoRuta.requestFocus();
+        if (TextUtils.isEmpty(routeEditText.getText().toString())) {
+            routeEditText.setError("Favor de ingresar una ruta");
+            routeEditText.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(campoEncuestador.getText().toString())) {
-            campoEncuestador.setError("Favor de ingresar un nombre");
-            campoEncuestador.requestFocus();
+        if (TextUtils.isEmpty(viaEditText.getText().toString())) {
+            durationEditText.setError("Favor de ingresar una via");
+            durationEditText.requestFocus();
             return false;
         }
         return true;
@@ -139,37 +149,32 @@ public class TrackerFormActivity extends AppCompatActivity {
         }
 
         Metadata metadata = Metadata.builder()
-                .capturist(campoEncuestador.getText().toString())
-                .economicNumber(campoNumEcon.getText().toString())
-                .via(campoVia.getText().toString())
+                .durationInHours(Integer.valueOf(durationEditText.getText().toString()))
+                .assignmentId(this.assignment.getId())
+                .beginAtDate(beginAtDateEditText.getText().toString())
+                .beginAtPlace(beginAtPlaceEditText.getText().toString())
+                .economicNumber(ecoNumberEditText.getText().toString())
+                .via(viaEditText.getText().toString())
                 .deviceId(androidDeviceId)
                 .initialPassengers(defaultInitialPassengers)
                 .backedUpRemotely(0)
-                .route(campoNoRuta.getText().toString()).build();
+                .route(routeEditText.getText().toString()).build();
 
         metadataId = (int) metadataRepository.insert(metadata);
         metadata.setId(metadataId);
 
-        composedId = String.format("%s-%d%n-%d%n",
-                androidDeviceId,
-                metadataId,
-                Calendar.getInstance().getTimeInMillis());
-        metadata.setComposedId(composedId);
-
-        metadataRepository.updateMetadataInBatch(Lists.newArrayList(metadata).toArray(new Metadata[1]));
-
-        StringBuilder fileName = new StringBuilder();
-        fileName.append(campoNoRuta.getText().toString());
-        fileName.append("-");
-        fileName.append(campoNumEcon.getText().toString());
-        fileName.append("-Recorrido-");
-        fileName.append(String.valueOf(metadataId));
-        fileName.append(".txt");
-
         // Create Metadata file
-        ExportData.createFile(fileName.toString(), metadata.toString());
+        ExportData.createFile(String.format("%s-%s-Recorrido-%d.txt",
+                routeEditText.getText().toString(),
+                ecoNumberEditText.getText().toString(),
+                metadataId), metadata.toString());
 
         return metadata;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setFieldsValues();
+    }
 }
