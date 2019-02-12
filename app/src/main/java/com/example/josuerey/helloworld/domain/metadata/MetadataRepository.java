@@ -3,6 +3,7 @@ package com.example.josuerey.helloworld.domain.metadata;
 import android.app.Application;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
+import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
 
 public class MetadataRepository {
     private MetadataDao metadataDao;
@@ -30,8 +31,28 @@ public class MetadataRepository {
         return metadataDao.findMetadataByBackedUpRemotely(value);
     }
 
+    public Metadata findMetadataByAssignmentId(final int assignmentId) {
+        return metadataDao.findMetadataByAssignmentId(assignmentId);
+    }
+
     public void updateMetadataInBatch(Metadata[] metadata) {
 
         metadataDao.updateMetadata(metadata);
+    }
+
+    public Metadata updateMetadataFromAssignment(final AscDescAssignmentResponse assignmentResponse,
+                                                 final int metadataId) {
+        Metadata updatedMetadata =  Metadata.builder()
+                .id(metadataId)
+                .durationInHours(assignmentResponse.getDurationInHours())
+                .assignmentId(assignmentResponse.getId())
+                .beginAtDate(assignmentResponse.getBeginAtDate())
+                .beginAtPlace(assignmentResponse.getBeginAtPlace())
+                .economicNumber(assignmentResponse.getEconomicNumber())
+                .via(assignmentResponse.getVia())
+                .route(assignmentResponse.getRoute()).build();
+
+        metadataDao.updateMetadata(updatedMetadata);
+        return updatedMetadata;
     }
 }

@@ -95,6 +95,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
+            android:enabled="false"
             android:inputType="text"
             android:hint="Lugar de inicio" />
     </LinearLayout>
@@ -113,6 +114,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
+            android:enabled="false"
             android:inputType="text"
             android:hint="Fecha de inicio" />
     </LinearLayout>
@@ -130,6 +132,7 @@
             android:id="@+id/duration_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:layout_marginRight="15dp"
             android:inputType="number"
             android:hint="Duración" />

@@ -83,10 +83,14 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        callRetrieveAssignments();
+    }
 
+    @Override
+    public void callRetrieveAssignments() {
         retrieveAssignments((List assignments) -> {
             List<AscDescAssignmentResponse> castedAssignments =
-                        gson.fromJson(gson.toJson(assignments), new TypeToken<List<AscDescAssignmentResponse>>() {}.getType());
+                    gson.fromJson(gson.toJson(assignments), new TypeToken<List<AscDescAssignmentResponse>>() {}.getType());
 
             setAssignmentsAdapter(new AssignmentListAdapter(castedAssignments, this.getContext()));
         });

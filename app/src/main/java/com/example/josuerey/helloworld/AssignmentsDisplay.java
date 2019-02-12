@@ -37,6 +37,8 @@ public interface AssignmentsDisplay<T> {
 
     void handleClickedAssignment(T assignment);
 
+    void callRetrieveAssignments();
+
     /**
      * Tells the user the status of the assignments request.
      *
@@ -44,6 +46,7 @@ public interface AssignmentsDisplay<T> {
      * @param succeed true if assignments were found
      */
     default void setStatusMsg(String msg, boolean succeed) {
+        addOnclickListenerToRetryRetrieveAssignments();
         if (succeed) {
             getRetrieveAssignmentsStatus().setVisibility(View.INVISIBLE);
             getRetryRetrieveAssignments().setVisibility(View.INVISIBLE);
@@ -52,6 +55,16 @@ public interface AssignmentsDisplay<T> {
             getRetrieveAssignmentsStatus().setVisibility(View.VISIBLE);
             getRetrieveAssignmentsStatus().setText(msg);
         }
+    }
+
+    default void addOnclickListenerToRetryRetrieveAssignments() {
+        getRetryRetrieveAssignments().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(getTAG(), "Retry retrieving assignments...");
+                callRetrieveAssignments();
+            }
+        });
     }
 
     default void retrieveAssignments(final AssignmentRetrievedCallback callback){

@@ -1,6 +1,5 @@
 package com.example.josuerey.helloworld.domain.metadata;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -46,4 +45,7 @@ public interface MetadataDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateMetadata(Metadata ... metadata);
+
+    @Query("SELECT * FROM Metadata where assignmentId = :assignmentId")
+    Metadata findMetadataByAssignmentId(final int assignmentId);
 }
