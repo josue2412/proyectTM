@@ -297,8 +297,8 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
                 .numberOfMotorcycles(countersList.get(String.format("motorcycleCounter%d", moveNumber)))
                 .numberOfTrucks(countersList.get(String.format("truckCounter%d", moveNumber)))
                 .movementId(movements.get(moveNumber - 1).getId())
-                .lat(currentLocation.getLat())
-                .lon(currentLocation.getLon())
+                .lat(currentLocation != null ? currentLocation.getLat() : 0.0)
+                .lon(currentLocation != null ? currentLocation.getLon(): 0.0)
                 .build();
     }
 

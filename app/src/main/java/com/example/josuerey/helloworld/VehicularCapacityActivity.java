@@ -482,8 +482,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                     .numberOfMotorcycles(motorcycleCounter1)
                     .numberOfTrucks(truckCounter1)
                     .movementId(movements.get(0).getId())
-                    .lat(currentLocation.getLat())
-                    .lon(currentLocation.getLon())
+                    .lat(currentLocation != null ? currentLocation.getLat() : 0.0)
+                    .lon(currentLocation != null ? currentLocation.getLon(): 0.0)
                     .build();
 
             long generatedId = vehicularCapacityRecordRepository.save(vehicularCapacityRecord);
@@ -503,8 +503,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                         .numberOfMotorcycles(motorcycleCounter2)
                         .numberOfTrucks(truckCounter2)
                         .movementId(movements.get(1).getId())
-                        .lat(currentLocation.getLat())
-                        .lon(currentLocation.getLon())
+                        .lat(currentLocation != null ? currentLocation.getLat() : 0.0)
+                        .lon(currentLocation != null ? currentLocation.getLon(): 0.0)
                         .build();
 
                 long generatedId2 = vehicularCapacityRecordRepository.save(vehicularCapacityRecord2);
