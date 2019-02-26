@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/via_of_study_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/via_of_study_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Vía de estudio: "
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/via_of_study_value"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:layout_alignParentTop="true"
+            android:text="via under study"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lane_direction_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/via_of_study_LinearLayout"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/lane_direction_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dirección del carril: "
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/lane_direction_value"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:text="direction"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/begin_at_date_LinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/crossroad_under_study_Layout"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/begin_at_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha de inicio: "
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/begin_at_date_value"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:text="begin_at"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/crossroad_under_study_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lane_direction_LinearLayout"
+        android:gravity="left">
+
+        <TextView
+            android:id="@+id/crossroad_under_study_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cruce: "
+            android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/crossroad_under_study_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="crossroad under study"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+</RelativeLayout>

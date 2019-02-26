@@ -10,14 +10,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
+import com.example.josuerey.helloworld.network.VisualOccupationAssignmentResponse;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
-import com.example.josuerey.helloworld.utilities.AssignmentListAdapter;
+import com.example.josuerey.helloworld.utilities.VisualOccAssignmentListAdapter;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
@@ -25,16 +24,16 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class AscDescAssignmentsActivity extends AppCompatActivity
-        implements AssignmentsDisplay<AscDescAssignmentResponse> {
+public class VisualOccupationAssignmentsActivity extends AppCompatActivity
+        implements AssignmentsDisplay<VisualOccupationAssignmentResponse>{
 
     private final String TAG = this.getClass().getSimpleName();
-    private ListView assignmentsListView;
-    private TextView capturistTextView;
-    private TextView retrieveAssignmentsStatus;
-    private Button retryRetrieveAssignments;
     private Context context;
     private String requestUrl;
+    private TextView retrieveAssignmentsStatus;
+    private TextView retryRetrieveAssignments;
+    private ListView assignmentsListView;
+    private TextView capturistTextView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,8 +53,8 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
                 return true;
             case R.id.changeUser:
                 SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
-                Intent myIntent = new Intent(AscDescAssignmentsActivity.this, LoginActivity.class);
-                AscDescAssignmentsActivity.this.startActivity(myIntent);
+                Intent myIntent = new Intent(VisualOccupationAssignmentsActivity.this, LoginActivity.class);
+                VisualOccupationAssignmentsActivity.this.startActivity(myIntent);
                 finish();
                 return true;
             default:
@@ -68,7 +67,7 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
         requestUrl =
-                "http://u856955919.hostingerapp.com/api/capturistAscDescAssignments?capturist_id=" +
+                "http://u856955919.hostingerapp.com/api/capturistVisualOccupationAssignments?capturist_id=" +
                         SaveSharedPreference.getUserNameKey(getApplicationContext());
 
         context = getApplicationContext();
@@ -89,29 +88,29 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
     @Override
     public void callRetrieveAssignments() {
         retrieveAssignments((List assignments) -> {
-            List<AscDescAssignmentResponse> castedAssignments =
-                    gson.fromJson(gson.toJson(assignments), new TypeToken<List<AscDescAssignmentResponse>>() {}.getType());
+            List<VisualOccupationAssignmentResponse> castedAssignments =
+                    gson.fromJson(gson.toJson(assignments), new TypeToken<List<VisualOccupationAssignmentResponse>>() {}.getType());
 
-            setAssignmentsAdapter(new AssignmentListAdapter(castedAssignments, this.getContext()));
+            setAssignmentsAdapter(new VisualOccAssignmentListAdapter(castedAssignments, this.getContext()));
         });
     }
 
-
-    public void setAssignmentsAdapter(AssignmentListAdapter customAdapter) {
+    public void setAssignmentsAdapter(VisualOccAssignmentListAdapter customAdapter) {
         getAssignmentsListView().setAdapter(customAdapter);
         getAssignmentsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                handleClickedAssignment((AscDescAssignmentResponse)parent.getAdapter().getItem(position));
+                handleClickedAssignment((VisualOccupationAssignmentResponse)parent.getAdapter().getItem(position));
             }
         });
     }
 
     @Override
-    public void handleClickedAssignment(AscDescAssignmentResponse assignmentResponse) {
-        Intent fillFormIntent = new Intent(AscDescAssignmentsActivity.this, TrackerFormActivity.class);
-        fillFormIntent.putExtra("ascDescAssignment", gson.toJson(assignmentResponse));
-        Log.d(TAG, "Handling ascDescAssignment: " + assignmentResponse.getId());
-        AscDescAssignmentsActivity.this.startActivity(fillFormIntent);
+    public void handleClickedAssignment(VisualOccupationAssignmentResponse assignmentResponse) {
+        Intent fillFormIntent = new Intent(VisualOccupationAssignmentsActivity.this,
+                VisualOccupationFormActivity.class);
+        fillFormIntent.putExtra("visOccAssignment", gson.toJson(assignmentResponse));
+        Log.d(TAG, "Handling VisualOccupationAssignment: " + assignmentResponse.getId());
+        VisualOccupationAssignmentsActivity.this.startActivity(fillFormIntent);
     }
 }

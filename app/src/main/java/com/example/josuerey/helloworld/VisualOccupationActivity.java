@@ -28,9 +28,11 @@ import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationReposit
 import com.example.josuerey.helloworld.domain.busroute.BusRoute;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationshipRepository;
+import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
 import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,10 +46,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
     private List<String> busRoutes;
     private RouteViaRelationshipRepository routeViaRelationshipRepository;
-
-    private int viaOfStudyId;
-    private int studyMetadataId;
-    private String viaOfStudy;
+    private VisualOccupationMetadata visualOccupationMetadata;
 
     private Spinner spinnerRoute;
     private Spinner spinnerRoute2;
@@ -70,7 +69,6 @@ public class VisualOccupationActivity extends AppCompatActivity {
     private GPSLocation currentLocation;
     private MyLocationListener mlocListener;
     private LocationManager mlocManager;
-    private String composeId;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,11 +105,8 @@ public class VisualOccupationActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            viaOfStudyId = Integer.valueOf(extras
-                    .getString("ViaOfStudyId"));
-            studyMetadataId = Integer.valueOf(extras.getString("studyMetadataId"));
-            viaOfStudy = extras.getString("ViaOfStudy");
-            composeId = extras.getString("composedId");
+            visualOccupationMetadata = new Gson().fromJson(
+                    extras.getString("visualOccMetadata"), VisualOccupationMetadata.class);
         }
 
         routeViaRelationshipRepository = new RouteViaRelationshipRepository(getApplication());
@@ -119,10 +114,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
         apiClient = APIClient.builder().app(getApplication()).build();
 
         // Autocomplete bus routes with database information
-        BusRoute[] existingBusRoutes = routeViaRelationshipRepository.findRoutesByViaOfStudyId(viaOfStudyId);
-        busRoutes = new ArrayList<>();
-        Log.d(TAG, "Existing bus routes: " + existingBusRoutes.length + " associated with " +
-                "via of study id:" + viaOfStudyId);
+        BusRoute[] existingBusRoutes = null;
 
         busRoutes.add("Ruta");
         for (BusRoute existingBusRoute : existingBusRoutes) {
@@ -133,25 +125,25 @@ public class VisualOccupationActivity extends AppCompatActivity {
         // Populate route spinner with routes associated to point of study
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, busRoutes.toArray(new String[busRoutes.size()]));
-        spinnerRoute = (Spinner) findViewById(R.id.routeSpinner);
-        spinnerRoute2 = (Spinner) findViewById(R.id.routeSpinner2);
-        spinnerRoute3 = (Spinner) findViewById(R.id.routeSpinner3);
+        spinnerRoute = findViewById(R.id.routeSpinner);
+        spinnerRoute2 = findViewById(R.id.routeSpinner2);
+        spinnerRoute3 = findViewById(R.id.routeSpinner3);
 
         spinnerRoute.setAdapter(adapter);
         spinnerRoute2.setAdapter(adapter);
         spinnerRoute3.setAdapter(adapter);
 
-        spinnerOccupationLevel = (Spinner) findViewById(R.id.occupation_level_spinner);
-        spinnerOccupationLevel2 = (Spinner) findViewById(R.id.occupation_level_spinner2);
-        spinnerOccupationLevel3 = (Spinner) findViewById(R.id.occupation_level_spinner3);
+        spinnerOccupationLevel = findViewById(R.id.occupation_level_spinner);
+        spinnerOccupationLevel2 = findViewById(R.id.occupation_level_spinner2);
+        spinnerOccupationLevel3 = findViewById(R.id.occupation_level_spinner3);
 
-        spinnerVehicleType = (Spinner) findViewById(R.id.vehicleTypeSpinner);
-        spinnerVehicleType2 = (Spinner) findViewById(R.id.vehicleTypeSpinner2);
-        spinnerVehicleType3 = (Spinner) findViewById(R.id.vehicleTypeSpinner3);
+        spinnerVehicleType = findViewById(R.id.vehicleTypeSpinner);
+        spinnerVehicleType2 = findViewById(R.id.vehicleTypeSpinner2);
+        spinnerVehicleType3 = findViewById(R.id.vehicleTypeSpinner3);
 
-        econNumEditText = (EditText) findViewById(R.id.econNum_edit_text);
-        econNumEditText2 = (EditText) findViewById(R.id.econNum_edit_text2);
-        econNumEditText3 = (EditText) findViewById(R.id.econNum_edit_text3);
+        econNumEditText = findViewById(R.id.econNum_edit_text);
+        econNumEditText2 = findViewById(R.id.econNum_edit_text2);
+        econNumEditText3 = findViewById(R.id.econNum_edit_text3);
 
         requestPermissions();
     }
@@ -218,14 +210,14 @@ public class VisualOccupationActivity extends AppCompatActivity {
         if (formNumberSaved > 0) {
             busOccupationBuilder.backedUpRemotely(0)
                     .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()))
-                    .studyMetadataId(studyMetadataId);
+                    .studyMetadataId(visualOccupationMetadata.getId());
 
             if (currentLocation != null){
                 busOccupationBuilder.lat(currentLocation.getLat());
                 busOccupationBuilder.lon(currentLocation.getLon());
             }
 
-            busOccupationBuilder.composedId(composeId);
+            //busOccupationBuilder.composedId(composeId);
             BusOccupation busOccupation = busOccupationBuilder.build();
             backUpRecord(busOccupation);
             cleanForm(formNumberSaved);
@@ -238,7 +230,9 @@ public class VisualOccupationActivity extends AppCompatActivity {
 
         Log.d(TAG, "Saving new busOccupation with id: " + busOccupationId);
 
-        ExportData.createFile(String.format("Ocupacion-visual-%s-%d.txt", viaOfStudy, studyMetadataId),
+        ExportData.createFile(String.format("Ocupacion-visual-%s-%d.txt",
+                visualOccupationMetadata.getViaOfStudy(),
+                visualOccupationMetadata.getAssignmentId()),
                 busOccupationRecord.toString());
 
         apiClient.postBusOccupation(Lists.newArrayList(busOccupationRecord), busOccupationRepository);
@@ -270,17 +264,11 @@ public class VisualOccupationActivity extends AppCompatActivity {
 
     public class MyLocationListener implements LocationListener {
         VisualOccupationActivity mainActivity;
-        public VisualOccupationActivity getMainActivity() {
-            return mainActivity;
-        }
         public void setMainActivity(VisualOccupationActivity mainActivity) {
             this.mainActivity = mainActivity;
         }
         @Override
         public void onLocationChanged(Location loc) {
-            // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
-            // debido a la deteccion de un cambio de ubicacion
-
             currentLocation = GPSLocation.builder()
                     .lat(loc.getLatitude())
                     .lon(loc.getLongitude())
@@ -338,9 +326,9 @@ public class VisualOccupationActivity extends AppCompatActivity {
         }
 
         mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 20,
-                (LocationListener) mlocListener);
+                mlocListener);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 20,
-                (LocationListener) mlocListener);
+                mlocListener);
     }
 
     private void requestPermissions() {

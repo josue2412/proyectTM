@@ -13,7 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.network.AssignmentRetrievedCallback;
-import com.example.josuerey.helloworld.utilities.AssignmentListAdapter;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -29,11 +29,6 @@ public interface AssignmentsDisplay<T> {
     TextView getRetryRetrieveAssignments();
     ListView getAssignmentsListView();
 
-    /**
-     * Fills the input ArrayAdapter with the retrieved assignments.
-     * @param customAdapter
-     */
-    void setAssignmentsAdapter(AssignmentListAdapter customAdapter);
 
     void handleClickedAssignment(T assignment);
 

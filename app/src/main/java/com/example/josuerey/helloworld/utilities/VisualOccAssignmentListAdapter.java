@@ -12,26 +12,26 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
-import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
+import com.example.josuerey.helloworld.network.VisualOccupationAssignmentResponse;
 
 import java.util.List;
 
-public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentResponse>
+public class VisualOccAssignmentListAdapter extends ArrayAdapter<VisualOccupationAssignmentResponse>
         implements View.OnClickListener{
 
-    private List<AscDescAssignmentResponse> dataSet;
+    private List<VisualOccupationAssignmentResponse> dataSet;
     private final String TAG = this.getClass().getSimpleName();
     Context mContext;
 
     // View lookup cache
     private static class ViewHolder {
-        TextView route;
-        TextView via;
+        TextView viaOfStudy;
+        TextView directionLane;
         TextView beginAtDate;
-        TextView beginAtPlace;
+        TextView crossroadUnderStudy;
     }
 
-    public AssignmentListAdapter(List<AscDescAssignmentResponse> data, Context context) {
+    public VisualOccAssignmentListAdapter(List<VisualOccupationAssignmentResponse> data, Context context) {
         super(context, R.layout.asc_desc_assignment_view, data);
         this.dataSet = data;
         this.mContext=context;
@@ -42,7 +42,7 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        AscDescAssignmentResponse dataModel = (AscDescAssignmentResponse)object;
+        VisualOccupationAssignmentResponse dataModel = (VisualOccupationAssignmentResponse)object;
 
         switch (v.getId())
         {
@@ -58,7 +58,7 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        AscDescAssignmentResponse dataModel = getItem(position);
+        VisualOccupationAssignmentResponse dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -68,11 +68,11 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.asc_desc_assignment_view, parent, false);
-            viewHolder.route = convertView.findViewById(R.id.route_value);
-            viewHolder.via = convertView.findViewById(R.id.via_value);
+            convertView = inflater.inflate(R.layout.visual_occupation_assignment_view, parent, false);
+            viewHolder.viaOfStudy = convertView.findViewById(R.id.via_of_study_value);
+            viewHolder.directionLane = convertView.findViewById(R.id.lane_direction_value);
             viewHolder.beginAtDate = convertView.findViewById(R.id.begin_at_date_value);
-            viewHolder.beginAtPlace = convertView.findViewById(R.id.begin_at_place_value);
+            viewHolder.crossroadUnderStudy = convertView.findViewById(R.id.crossroad_under_study_value);
 
             result=convertView;
 
@@ -82,16 +82,15 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ?
+                R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.route.setText(dataModel.getRoute());
-        viewHolder.via.setText(dataModel.getVia());
+        viewHolder.viaOfStudy.setText(dataModel.getViaOfStudy());
+        viewHolder.directionLane.setText(dataModel.getDirectionLane());
         viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
-        viewHolder.beginAtPlace.setText(dataModel.getBeginAtPlace());
-        // Return the completed view to render on screen
+        viewHolder.crossroadUnderStudy.setText(dataModel.getBeginAtPlace());
         return convertView;
     }
-
 }

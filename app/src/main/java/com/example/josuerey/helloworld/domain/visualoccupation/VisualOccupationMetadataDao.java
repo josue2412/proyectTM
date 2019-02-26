@@ -25,4 +25,7 @@ public interface VisualOccupationMetadataDao {
 
     @Query("SELECT * FROM VisualOccupationMetadata WHERE backedUpRemotely = :value")
     VisualOccupationMetadata[] findRecordsPendingToBackup(int value);
+
+    @Query("SELECT * FROM VisualOccupationMetadata WHERE assignmentId = :value")
+    VisualOccupationMetadata findByAssignmentId(int value);
 }

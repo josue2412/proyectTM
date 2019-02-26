@@ -8,41 +8,111 @@
     android:background="@drawable/background_color"
     tools:context=".TrackerFormActivity">
 
-    <TextView
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
-        android:text="Vía de estudio"
-        />
-    <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-        android:id="@+id/spinnerStudyVia"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/spinner_style"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Vía de estudio: " />
+        <EditText
+            android:id="@+id/via_of_study_value"
+            android:layout_width="fill_parent"
+            android:enabled="false"
+            android:layout_height="wrap_content"
+            android:inputType="textVisiblePassword"
+            android:layout_marginRight="15dp" />
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
-        android:text="Sentido"
-        />
-    <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-        android:id="@+id/spinnerWayDirection"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="15dp"
-        android:background="@drawable/spinner_style"
-        android:entries="@array/orientation_options"
-        android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
-        android:hint="Sentido / Carril" />
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Sentido: " />
+        <EditText
+            android:id="@+id/lane_direction_value"
+            android:layout_width="fill_parent"
+            android:enabled="false"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Cruce de estudio: " />
+        <EditText
+            android:id="@+id/crossroad_under_study_value"
+            android:layout_width="fill_parent"
+            android:enabled="false"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Lugar de inicio: "/>
+        <EditText
+            android:id="@+id/begin_at_place_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:enabled="false"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Fecha de inicio: "/>
+        <EditText
+            android:id="@+id/begin_at_date_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:enabled="false"
+            android:inputType="text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Duración (hrs): "/>
+        <EditText
+            android:id="@+id/duration_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_marginRight="15dp"
+            android:inputType="number"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/editTextWaterConditions"
@@ -52,24 +122,6 @@
         android:layout_marginRight="15dp"
         android:inputType="textVisiblePassword"
         android:hint="Estado del tiempo" />
-
-    <EditText
-        android:id="@+id/editTextCross"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="text"
-        android:hint="Cruce" />
-
-    <EditText
-        android:id="@+id/editTextEnc"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="text"
-        android:hint="Encuestador" />
 
     <EditText
         android:id="@+id/editTextObservations"

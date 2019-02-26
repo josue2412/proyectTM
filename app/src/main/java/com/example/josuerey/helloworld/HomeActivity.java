@@ -1,13 +1,11 @@
 package com.example.josuerey.helloworld;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,18 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -85,7 +72,7 @@ public class HomeActivity extends AppCompatActivity {
                 studyIntent = new Intent(HomeActivity.this, AscDescAssignmentsActivity.class);
                 break;
             case R.id.btnVisualOccupation:
-                studyIntent = new Intent(HomeActivity.this, VisualOccupationFormActivity.class);
+                studyIntent = new Intent(HomeActivity.this, VisualOccupationAssignmentsActivity.class);
                 break;
         }
 

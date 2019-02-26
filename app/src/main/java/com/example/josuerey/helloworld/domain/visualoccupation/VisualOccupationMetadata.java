@@ -26,6 +26,9 @@ public class VisualOccupationMetadata {
     @ColumnInfo(name = "id")
     private int id;
 
+    @ColumnInfo(name = "assignmentId")
+    private int assignmentId;
+
     @ColumnInfo(name = "viaOfStudy")
     private String viaOfStudy;
 
@@ -35,17 +38,11 @@ public class VisualOccupationMetadata {
     @ColumnInfo(name = "crossroads")
     private String crossroads;
 
-    @ColumnInfo(name = "composedId")
-    private String composedId;
-
     @ColumnInfo(name = "observations")
     private String observations;
 
     @ColumnInfo(name = "waterConditions")
     private String waterConditions;
-
-    @ColumnInfo(name = "capturist")
-    private String capturist;
 
     @ColumnInfo(name = "deviceId")
     private String deviceId;
@@ -55,6 +52,15 @@ public class VisualOccupationMetadata {
 
     @ColumnInfo(name = "timeStamp")
     private String timeStamp;
+
+    @ColumnInfo(name = "durationInHours")
+    private int durationInHours;
+
+    @ColumnInfo(name = "beginAtPlace")
+    private String beginAtPlace;
+
+    @ColumnInfo(name = "beginAtDate")
+    private String beginAtDate;
 
     public void remotelyBackedUpSuccessfully() {
 
