@@ -54,6 +54,7 @@ public class AssignmentResponse {
         private String begin_at;
         private String end_at;
         private int enabled;
+        private int idprojects;
         private String created_at;
         private String updated_at;
     }

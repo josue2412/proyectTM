@@ -76,9 +76,9 @@ public class HomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        passengersAscDes = (Button) findViewById(R.id.btnAscDescPassengers);
-        visualOcStudy = (Button) findViewById(R.id.btnVisualOccupation);
-        capturistLogged = (TextView) findViewById(R.id.logged_capturist);
+        passengersAscDes = findViewById(R.id.btnAscDescPassengers);
+        visualOcStudy = findViewById(R.id.btnVisualOccupation);
+        capturistLogged = findViewById(R.id.logged_capturist);
 
         capturistLogged.setText("Usuario: " + SaveSharedPreference.getUserName(getApplicationContext()));
     }
@@ -141,8 +141,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, msg);
         }
         Log.d(TAG, "Auth:" + msg);
-        Toast.makeText(this, msg,
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     public void onClick(View view) {
