@@ -164,6 +164,7 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
             Intent studyIntent = new Intent(VisualOccupationFormActivity.this,
                     VisualOccupationActivity.class);
             studyIntent.putExtra("visualOccMetadata", new Gson().toJson(visualOccMetadata));
+            studyIntent.putExtra("visualOccAssignment", new Gson().toJson(assignment));
             this.startActivity(studyIntent);
         }
     }

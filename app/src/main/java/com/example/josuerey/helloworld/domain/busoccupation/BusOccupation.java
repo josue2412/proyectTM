@@ -26,17 +26,14 @@ public class BusOccupation {
     @ColumnInfo(name = "id")
     private int id;
 
-    @ColumnInfo(name = "studyMetadataId")
-    private int studyMetadataId;
+    @ColumnInfo(name = "visOccAssignmentId")
+    private int visOccAssignmentId;
+
+    @ColumnInfo(name = "routeId")
+    private int routeId;
 
     @ColumnInfo(name = "economicNumber")
-    private String economicNumber = "Desconocido";
-
-    @ColumnInfo(name = "composedId")
-    private String composedId;
-
-    @ColumnInfo(name = "route")
-    private String route;
+    private String economicNumber;
 
     @ColumnInfo(name = "occupationLevel")
     private String occupationLevel;

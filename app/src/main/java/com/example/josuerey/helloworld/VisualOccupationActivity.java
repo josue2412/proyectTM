@@ -25,19 +25,21 @@ import android.widget.Toast;
 
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
-import com.example.josuerey.helloworld.domain.busroute.BusRoute;
+import com.example.josuerey.helloworld.domain.busroute.RouteBusPayload;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationshipRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
 import com.example.josuerey.helloworld.network.APIClient;
+import com.example.josuerey.helloworld.network.VisualOccupationAssignmentResponse;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class VisualOccupationActivity extends AppCompatActivity {
@@ -45,8 +47,9 @@ public class VisualOccupationActivity extends AppCompatActivity {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final String TAG = this.getClass().getSimpleName();
     private List<String> busRoutes;
-    private RouteViaRelationshipRepository routeViaRelationshipRepository;
+    private HashMap<String, Integer> busRoutesMap;
     private VisualOccupationMetadata visualOccupationMetadata;
+    private VisualOccupationAssignmentResponse assignment;
 
     private Spinner spinnerRoute;
     private Spinner spinnerRoute2;
@@ -107,20 +110,23 @@ public class VisualOccupationActivity extends AppCompatActivity {
         if (extras != null) {
             visualOccupationMetadata = new Gson().fromJson(
                     extras.getString("visualOccMetadata"), VisualOccupationMetadata.class);
+            assignment = new Gson().fromJson(
+                    extras.getString("visualOccAssignment"), VisualOccupationAssignmentResponse.class);
         }
 
-        routeViaRelationshipRepository = new RouteViaRelationshipRepository(getApplication());
         busOccupationRepository = new BusOccupationRepository(getApplication());
         apiClient = APIClient.builder().app(getApplication()).build();
 
-        // Autocomplete bus routes with database information
-        BusRoute[] existingBusRoutes = null;
-
+        busRoutes = new LinkedList<>();
+        busRoutesMap = new HashMap<>();
         busRoutes.add("Ruta");
-        for (BusRoute existingBusRoute : existingBusRoutes) {
-            busRoutes.add(existingBusRoute.toString());
-            Log.d(TAG, existingBusRoute.toString());
+
+        for (RouteBusPayload availableBusRoute : assignment.getRoutes()) {
+            String routeName = String.format("%s %s", availableBusRoute.getRoute(), availableBusRoute.getVia());
+            busRoutes.add(routeName);
+            busRoutesMap.put(routeName, availableBusRoute.getId());
         }
+        Log.d(TAG, assignment.getRoutes().toString());
 
         // Populate route spinner with routes associated to point of study
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -176,7 +182,8 @@ public class VisualOccupationActivity extends AppCompatActivity {
                         spinnerOccupationLevel.getSelectedItemPosition(),
                         spinnerVehicleType.getSelectedItemPosition())) {
 
-                    busOccupationBuilder.route(spinnerRoute.getSelectedItem().toString())
+                    busOccupationBuilder.routeId(busRoutesMap.get(spinnerRoute.getSelectedItem().toString()))
+                            .visOccAssignmentId(assignment.getId())
                             .occupationLevel(spinnerOccupationLevel.getSelectedItem().toString())
                             .economicNumber(econNumEditText.getText().toString())
                             .busType(spinnerVehicleType.getSelectedItem().toString());
@@ -187,8 +194,9 @@ public class VisualOccupationActivity extends AppCompatActivity {
                 if (validateSpinners(spinnerRoute2.getSelectedItemPosition(),
                         spinnerOccupationLevel2.getSelectedItemPosition(),
                         spinnerVehicleType2.getSelectedItemPosition())) {
-                    busOccupationBuilder.route(spinnerRoute2.getSelectedItem().toString())
+                    busOccupationBuilder.routeId(busRoutesMap.get(spinnerRoute2.getSelectedItem().toString()))
                             .occupationLevel(spinnerOccupationLevel2.getSelectedItem().toString())
+                            .visOccAssignmentId(assignment.getId())
                             .economicNumber(econNumEditText2.getText().toString())
                             .busType(spinnerVehicleType2.getSelectedItem().toString());
                     formNumberSaved = 2;
@@ -198,8 +206,9 @@ public class VisualOccupationActivity extends AppCompatActivity {
                 if (validateSpinners(spinnerRoute3.getSelectedItemPosition(),
                         spinnerOccupationLevel3.getSelectedItemPosition(),
                         spinnerVehicleType3.getSelectedItemPosition())) {
-                    busOccupationBuilder.route(spinnerRoute3.getSelectedItem().toString())
+                    busOccupationBuilder.routeId(busRoutesMap.get(spinnerRoute3.getSelectedItem().toString()))
                             .occupationLevel(spinnerOccupationLevel3.getSelectedItem().toString())
+                            .visOccAssignmentId(assignment.getId())
                             .economicNumber(econNumEditText3.getText().toString())
                             .busType(spinnerVehicleType3.getSelectedItem().toString());
                     formNumberSaved = 3;
@@ -208,16 +217,15 @@ public class VisualOccupationActivity extends AppCompatActivity {
         }
 
         if (formNumberSaved > 0) {
-            busOccupationBuilder.backedUpRemotely(0)
-                    .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()))
-                    .studyMetadataId(visualOccupationMetadata.getId());
+            busOccupationBuilder
+                    .backedUpRemotely(0)
+                    .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()));
 
             if (currentLocation != null){
                 busOccupationBuilder.lat(currentLocation.getLat());
                 busOccupationBuilder.lon(currentLocation.getLon());
             }
 
-            //busOccupationBuilder.composedId(composeId);
             BusOccupation busOccupation = busOccupationBuilder.build();
             backUpRecord(busOccupation);
             cleanForm(formNumberSaved);

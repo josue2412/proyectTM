@@ -1,8 +1,11 @@
 package com.example.josuerey.helloworld.network;
 
+import com.example.josuerey.helloworld.domain.busroute.RouteBusPayload;
 import com.example.josuerey.helloworld.domain.capturist.Capturist;
 import com.example.josuerey.helloworld.domain.project.Project;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -67,5 +70,8 @@ public class VisualOccupationAssignmentResponse implements ServerAssignmentRespo
 
     @SerializedName("project")
     private Project project;
+
+    @SerializedName("routes")
+    private List<RouteBusPayload> routes;
 }
 
