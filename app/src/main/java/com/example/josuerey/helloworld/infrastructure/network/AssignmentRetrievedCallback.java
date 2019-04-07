@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.network;
+package com.example.josuerey.helloworld.infrastructure.network;
 
 import java.util.List;
 

@@ -1,8 +1,11 @@
-package com.example.josuerey.helloworld.network;
+package com.example.josuerey.helloworld.infrastructure.network;
 
+import com.example.josuerey.helloworld.domain.busroute.RouteBusPayload;
 import com.example.josuerey.helloworld.domain.capturist.Capturist;
 import com.example.josuerey.helloworld.domain.project.Project;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +19,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AscDescAssignmentResponse implements ServerAssignmentResponse {
+public class VisualOccupationAssignmentResponse implements ServerAssignmentResponse {
     @SerializedName("id")
     private int id;
 
@@ -26,20 +29,23 @@ public class AscDescAssignmentResponse implements ServerAssignmentResponse {
     @SerializedName("project_id")
     private int projectId;
 
-    @SerializedName("route")
-    private String route;
+    @SerializedName("via_of_study")
+    private String viaOfStudy;
 
-    @SerializedName("via")
-    private String via;
+    @SerializedName("direction_lane")
+    private String directionLane;
 
-    @SerializedName("economic_number")
-    private String economicNumber;
+    @SerializedName("crossroads")
+    private String crossroads;
+
+    @SerializedName("observations")
+    private String observations;
+
+    @SerializedName("waterConditions")
+    private String waterConditions;
 
     @SerializedName("is_editable")
     private int isEditable;
-
-    @SerializedName("initial_passengers")
-    private int initialPassengers;
 
     @SerializedName("begin_at_date")
     private String beginAtDate;
@@ -64,4 +70,8 @@ public class AscDescAssignmentResponse implements ServerAssignmentResponse {
 
     @SerializedName("project")
     private Project project;
+
+    @SerializedName("routes")
+    private List<RouteBusPayload> routes;
 }
+

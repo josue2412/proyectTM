@@ -3,7 +3,7 @@ package com.example.josuerey.helloworld.domain.visualoccupation;
 import android.app.Application;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
-import com.example.josuerey.helloworld.network.VisualOccupationAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAssignmentResponse;
 
 public class VisualOccupationMetadataRepository {
 

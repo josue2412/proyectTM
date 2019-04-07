@@ -3,7 +3,7 @@ package com.example.josuerey.helloworld.domain.metadata;
 import android.app.Application;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
-import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.AscDescAssignmentResponse;
 
 public class MetadataRepository {
     private MetadataDao metadataDao;

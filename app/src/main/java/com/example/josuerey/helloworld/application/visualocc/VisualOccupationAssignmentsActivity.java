@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.visualocc;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.network.VisualOccupationAssignmentResponse;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.application.LoginActivity;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
+import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.VisualOccAssignmentListAdapter;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,7 +28,7 @@ import lombok.Getter;
 
 @Getter
 public class VisualOccupationAssignmentsActivity extends AppCompatActivity
-        implements AssignmentsDisplay<VisualOccupationAssignmentResponse>{
+        implements AssignmentsDisplay<VisualOccupationAssignmentResponse> {
 
     private final String TAG = this.getClass().getSimpleName();
     private Context context;

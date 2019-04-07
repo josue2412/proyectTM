@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.domain.movement.Movement;
-import com.example.josuerey.helloworld.network.AssignmentResponse;
 
 import java.util.List;
 

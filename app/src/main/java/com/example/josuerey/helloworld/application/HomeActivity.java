@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application;
 
 import android.Manifest;
 import android.content.Intent;
@@ -14,7 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.ascdesc.AscDescAssignmentsActivity;
+import com.example.josuerey.helloworld.application.visualocc.VisualOccupationAssignmentsActivity;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 
 public class HomeActivity extends AppCompatActivity {
 

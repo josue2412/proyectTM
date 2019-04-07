@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.shared;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,7 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.josuerey.helloworld.network.AssignmentRetrievedCallback;
+import com.example.josuerey.helloworld.infrastructure.network.AssignmentRetrievedCallback;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

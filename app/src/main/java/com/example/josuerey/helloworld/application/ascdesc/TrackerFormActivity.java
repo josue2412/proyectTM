@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.ascdesc;
 
 import android.content.Intent;
 import android.provider.Settings;
@@ -9,14 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
 import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataRepository;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.AscDescAssignmentResponse;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.gson.Gson;
 

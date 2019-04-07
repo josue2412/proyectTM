@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.network;
+package com.example.josuerey.helloworld.infrastructure.network;
 
 import com.example.josuerey.helloworld.domain.capturist.Capturist;
 import com.example.josuerey.helloworld.domain.movement.Movement;

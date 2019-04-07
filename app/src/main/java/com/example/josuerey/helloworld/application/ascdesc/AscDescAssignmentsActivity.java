@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.ascdesc;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +15,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
+import com.example.josuerey.helloworld.application.LoginActivity;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.infrastructure.network.AscDescAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.AssignmentListAdapter;
 import com.google.gson.reflect.TypeToken;
 

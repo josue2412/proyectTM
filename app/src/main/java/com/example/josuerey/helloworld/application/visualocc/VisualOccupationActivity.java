@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.visualocc;
 
 import android.Manifest;
 import android.content.Context;
@@ -23,14 +23,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.josuerey.helloworld.application.HomeActivity;
+import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.busroute.RouteBusPayload;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
-import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationshipRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.network.VisualOccupationAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAssignmentResponse;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;

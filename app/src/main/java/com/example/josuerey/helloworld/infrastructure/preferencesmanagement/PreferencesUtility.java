@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.sessionmangementsharedpref.utils;
+package com.example.josuerey.helloworld.infrastructure.preferencesmanagement;
 
 public class PreferencesUtility {
     // Values for Shared Prefrences

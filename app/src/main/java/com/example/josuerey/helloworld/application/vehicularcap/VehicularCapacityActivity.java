@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.vehicularcap;
 
 import android.Manifest;
 import android.content.Context;
@@ -26,15 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.josuerey.helloworld.application.LoginActivity;
+import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.movement.Movement;
-import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.network.AssignmentResponse;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.example.josuerey.helloworld.utilities.StudyDuration;
 

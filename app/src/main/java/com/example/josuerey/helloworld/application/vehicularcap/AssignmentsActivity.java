@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.vehicularcap;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,13 +21,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.josuerey.helloworld.application.LoginActivity;
+import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.network.AssignmentResponse;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.AssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.CustomAdapter;
 import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;

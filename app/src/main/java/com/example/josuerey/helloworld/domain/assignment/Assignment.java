@@ -5,7 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.example.josuerey.helloworld.domain.movement.Movement;
-import com.example.josuerey.helloworld.network.AssignmentResponse;
 
 import java.util.List;
 

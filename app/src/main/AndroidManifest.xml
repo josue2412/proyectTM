@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_gat_systems_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".application.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,54 +22,54 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TrackerActivity"
+            android:name=".application.ascdesc.TrackerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".TrackerFormActivity"
+            android:name=".application.ascdesc.TrackerFormActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VisualOccupationFormActivity"
+            android:name=".application.visualocc.VisualOccupationFormActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VisualOccupationActivity"
+            android:name=".application.visualocc.VisualOccupationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".HomeActivity"
+            android:name=".application.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VehicularCapacityActivity"
+            android:name=".application.vehicularcap.VehicularCapacityActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VehicularCapacityForm"
+            android:name=".application.vehicularcap.VehicularCapacityForm"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".AssignmentsActivity"
+            android:name=".application.vehicularcap.AssignmentsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".VehicularCapacityExtendedActivity"
+            android:name=".application.vehicularcap.VehicularCapacityExtendedActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"/>
 
         <activity
-            android:name=".EmergencyNotificationActivity"
+            android:name=".application.vehicularcap.EmergencyNotificationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".AscDescAssignmentsActivity"
+            android:name=".application.ascdesc.AscDescAssignmentsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VisualOccupationAssignmentsActivity"
+            android:name=".application.visualocc.VisualOccupationAssignmentsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
     </application>

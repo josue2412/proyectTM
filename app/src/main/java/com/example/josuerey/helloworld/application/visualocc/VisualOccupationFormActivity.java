@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.visualocc;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadataRepository;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.network.VisualOccupationAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAssignmentResponse;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
@@ -82,20 +83,6 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
 
             Log.d(TAG, "There are no busOccupation records to update");
         }
-
-        VisualOccupationMetadata[] metaRecordsPendingToBackup =
-                visualOccupationMetadataRepository.findPendingToBackup();
-
-        if (metaRecordsPendingToBackup.length > 0) {
-
-            Log.d(TAG, String.format("Retrying to backup %d busOccupation records",
-                    metaRecordsPendingToBackup.length));
-            apiClient.postBusOccupationMeta(Arrays.asList(metaRecordsPendingToBackup),
-                    visualOccupationMetadataRepository);
-        } else {
-            Log.d(TAG, "There are no busOccupationMeta records to update");
-        }
-
     }
 
     private VisualOccupationMetadata getProperVisualOccupationMetadata() {

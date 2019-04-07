@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
-import com.example.josuerey.helloworld.network.AscDescAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.AscDescAssignmentResponse;
 
 import java.util.List;
 

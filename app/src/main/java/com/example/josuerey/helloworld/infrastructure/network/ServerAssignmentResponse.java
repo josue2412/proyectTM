@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.network;
+package com.example.josuerey.helloworld.infrastructure.network;
 
 public interface ServerAssignmentResponse {
 
