@@ -17,8 +17,8 @@ public interface GPSLocationDao {
     @Insert(onConflict = REPLACE)
     long insert(GPSLocation metadata);
 
-    @Query("SELECT * from GPSLocation where idMetadata = :id")
-    LiveData<List<GPSLocation>> findGPSLocationsById(int id);
+    @Query("SELECT * from GPSLocation where assignmentId = :assignmentId")
+    LiveData<List<GPSLocation>> findGPSLocationsById(int assignmentId);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateGPSLocation(GPSLocation... gpsLocations);

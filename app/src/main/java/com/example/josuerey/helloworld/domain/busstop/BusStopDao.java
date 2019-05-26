@@ -20,8 +20,8 @@ public interface BusStopDao {
     @Query("SELECT * from BusStop")
     LiveData<List<BusStop>> findAllBusStops();
 
-    @Query("SELECT * from BusStop where idMetadata = :idMetadata")
-    LiveData<List<BusStop>> findBusStopsByMetadataId(int idMetadata);
+    @Query("SELECT * from BusStop where assignmentId = :assignmentId")
+    LiveData<List<BusStop>> findBusStopsByMetadataId(int assignmentId);
 
     @Query("UPDATE BusStop SET backedUpRemotely = 1 where id = :id")
     void updateBusStopBackupRemotelyById(int id);

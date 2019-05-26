@@ -70,9 +70,9 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
-        requestUrl =
-                "http://u856955919.hostingerapp.com/api/capturistAscDescAssignments?capturist_id=" +
-                        SaveSharedPreference.getUserNameKey(getApplicationContext());
+        requestUrl = String.format("%s%s%s", this.serverIp,
+                "api/capturistAscDescAssignments?capturist_id=",
+                SaveSharedPreference.getUserNameKey(getApplicationContext()));
 
         context = getApplicationContext();
         assignmentsListView = findViewById(R.id.listOfAssignments);

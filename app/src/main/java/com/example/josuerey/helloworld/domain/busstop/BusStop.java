@@ -26,14 +26,11 @@ public class BusStop {
     @ColumnInfo(name = "id")
     private int id;
 
-    @ColumnInfo(name = "idMetadata")
-    private int idMetadata;
+    @ColumnInfo(name = "assignmentId")
+    private int assignmentId;
 
     @ColumnInfo(name = "deviceId")
     private String deviceId;
-
-    @ColumnInfo(name = "composedId")
-    private String composedId;
 
     @ColumnInfo(name = "stopType")
     private String stopType;

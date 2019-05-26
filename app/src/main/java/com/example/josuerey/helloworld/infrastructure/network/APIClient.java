@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
@@ -44,7 +45,7 @@ public class APIClient {
 
     public void postBusStopInBatch(final List<BusStop> busStop,
                                   final BusStopRepository busStopRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeBusStopV2";
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/routeBusStop");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -87,7 +88,7 @@ public class APIClient {
 
     public void postMetadataInBatch (final List<Metadata> metadata,
                                     final MetadataRepository repository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/updateAscDescAssignment";
+        String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/updateAscDescAssignment");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -130,7 +131,7 @@ public class APIClient {
 
     public void postGpsLocationInBatch(final List<GPSLocation> route,
                                        final GPSLocationRepository gpsLocationRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeV2";
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/route");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -175,7 +176,7 @@ public class APIClient {
 
     public void postBusOccupationMeta(final List<VisualOccupationMetadata> visOccMeta,
                                       final VisualOccupationMetadataRepository visualOccMetaRepo) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccMetadataV2";
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/updateBusOccAssignment");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -217,7 +218,7 @@ public class APIClient {
 
     public void postBusOccupation(final List<BusOccupation> busOcc,
                                   final BusOccupationRepository busOccupationRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccRecordV2";
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/busOccRecord");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -260,7 +261,7 @@ public class APIClient {
 
     public void postVehicularCapMeta(final List<VehicularCapacity> VehicularCap,
                                      final VehicularCapacityRepository vehicularCapRepo) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/vehicCapMetadata";
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/vehicCapMetadata");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -302,7 +303,7 @@ public class APIClient {
 
     public void postVehicularCapRecord(final List<VehicularCapacityRecord> VehicularCap,
                                        final VehicularCapacityRecordRepository vehicularCapRepo) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/vehicCapRecord";
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/vehicCapRecord");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override

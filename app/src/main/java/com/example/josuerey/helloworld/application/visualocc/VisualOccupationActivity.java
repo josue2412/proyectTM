@@ -315,10 +315,9 @@ public class VisualOccupationActivity extends AppCompatActivity {
     }
 
     private void locationStart() {
-
+        Log.d(TAG, "Starting location updates");
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mlocListener = new VisualOccupationActivity.MyLocationListener();
-        mlocListener.setMainActivity(this);
+        mlocListener = new MyLocationListener();
         final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!gpsEnabled) {
             Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -330,30 +329,50 @@ public class VisualOccupationActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
                     1000);
-            Log.d(TAG,"Going back, no permission :(");
+            Log.d(TAG, "Going back, no permission :(");
             return;
         }
 
-        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 20,
-                mlocListener);
-        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 20,
-                mlocListener);
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
+                (LocationListener) mlocListener);
     }
 
-    private void requestPermissions() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (requestPermissions())
+            locationStop();
+    }
 
-        // Check for GPS usage permission
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (requestPermissions())
+            locationStart();
+    }
+
+    private void locationStop() {
+        if (mlocManager != null) {
+            mlocManager.removeUpdates(mlocListener);
+            Log.d(TAG, String.format("Stopping location updates %s", mlocManager.toString()));
+            mlocManager = null;
+        }
+    }
+
+    private boolean requestPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
+            return false;
+        }
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
-
-        } else {
-            locationStart();
+            return false;
         }
+        return true;
     }
 
 }

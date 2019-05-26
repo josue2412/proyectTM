@@ -14,9 +14,10 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public final class Capturist {
     private int id;
+    private int employer_id;
     private String name;
     private String telephone_number;
-    private String birthdate;
+    private String birthday;
     private int enabled;
     private String created_at;
     private String updated_at;

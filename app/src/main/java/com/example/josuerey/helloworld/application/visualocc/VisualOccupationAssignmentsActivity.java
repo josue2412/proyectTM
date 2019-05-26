@@ -69,9 +69,9 @@ public class VisualOccupationAssignmentsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
-        requestUrl =
-                "http://u856955919.hostingerapp.com/api/capturistVisualOccupationAssignments?capturist_id=" +
-                        SaveSharedPreference.getUserNameKey(getApplicationContext());
+        requestUrl = String.format("%s%s%s", this.serverIp,
+                "api/capturistVisualOccupationAssignments?capturist_id=",
+                SaveSharedPreference.getUserNameKey(getApplicationContext()));
 
         context = getApplicationContext();
         assignmentsListView = findViewById(R.id.listOfAssignments);

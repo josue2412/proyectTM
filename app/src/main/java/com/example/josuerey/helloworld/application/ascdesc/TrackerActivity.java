@@ -188,6 +188,15 @@ public class TrackerActivity extends AppCompatActivity {
             }
         });
 
+        currentLocation = GPSLocation.builder()
+                .assignmentId(currentMetadata.getAssignmentId())
+                .lat(0.0)
+                .lon(0.0)
+                .timeStamp(DATE_FORMAT.format(new Date()))
+                .deviceId(android_device_id)
+                .backedUpRemotely(0)
+                .build();
+
         disableControls();
         requestPermissions();
     }
@@ -295,7 +304,7 @@ public class TrackerActivity extends AppCompatActivity {
             // debido a la deteccion de un cambio de ubicacion
 
             currentLocation = GPSLocation.builder()
-                    .idMetadata(currentMetadata.getAssignmentId())
+                    .assignmentId(currentMetadata.getAssignmentId())
                     .lat(loc.getLatitude())
                     .lon(loc.getLongitude())
                     .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
@@ -356,7 +365,7 @@ public class TrackerActivity extends AppCompatActivity {
 
         BusStop newBusStop = BusStop.builder()
                 .stopType(stopType)
-                .idMetadata(currentMetadata.getAssignmentId())
+                .assignmentId(currentMetadata.getAssignmentId())
                 .deviceId(android_device_id)
                 .isOfficial(isOfficial)
                 .lat(currentLocation.getLat())

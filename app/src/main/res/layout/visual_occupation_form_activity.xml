@@ -120,14 +120,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:inputType="textVisiblePassword"
+        android:inputType="textNoSuggestions"
         android:hint="Estado del tiempo" />
 
     <EditText
         android:id="@+id/editTextObservations"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
+        android:inputType="textNoSuggestions"
         android:overScrollMode="always"
         android:scrollbarStyle="insideInset"
         android:layout_marginLeft="15dp"

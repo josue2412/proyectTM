@@ -2,6 +2,7 @@ package com.example.josuerey.helloworld.infrastructure.network;
 
 import com.example.josuerey.helloworld.domain.busroute.RouteBusPayload;
 import com.example.josuerey.helloworld.domain.capturist.Capturist;
+import com.example.josuerey.helloworld.domain.pointOfStudy.PointOfStudy;
 import com.example.josuerey.helloworld.domain.project.Project;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,8 +27,8 @@ public class VisualOccupationAssignmentResponse implements ServerAssignmentRespo
     @SerializedName("capturist_id")
     private int capturistId;
 
-    @SerializedName("project_id")
-    private int projectId;
+    @SerializedName("point_of_study_id")
+    private int pointOfStudyId;
 
     @SerializedName("via_of_study")
     private String viaOfStudy;
@@ -41,7 +42,7 @@ public class VisualOccupationAssignmentResponse implements ServerAssignmentRespo
     @SerializedName("observations")
     private String observations;
 
-    @SerializedName("waterConditions")
+    @SerializedName("water_conditions")
     private String waterConditions;
 
     @SerializedName("is_editable")
@@ -68,8 +69,8 @@ public class VisualOccupationAssignmentResponse implements ServerAssignmentRespo
     @SerializedName("capturist")
     private Capturist capturist;
 
-    @SerializedName("project")
-    private Project project;
+    @SerializedName("point_of_study")
+    private PointOfStudy pointOfStudy;
 
     @SerializedName("routes")
     private List<RouteBusPayload> routes;

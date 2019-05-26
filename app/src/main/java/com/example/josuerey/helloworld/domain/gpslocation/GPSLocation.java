@@ -29,11 +29,8 @@ public class GPSLocation {
     @ColumnInfo(name = "id")
     private int id;
 
-    @ColumnInfo(name = "idMetadata")
-    private int idMetadata;
-
-    @ColumnInfo(name = "composedId")
-    private String composedId;
+    @ColumnInfo(name = "assignmentId")
+    private int assignmentId;
 
     @ColumnInfo(name = "timeStamp")
     private String timeStamp;

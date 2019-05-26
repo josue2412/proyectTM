@@ -4,7 +4,7 @@ public interface ServerAssignmentResponse {
 
     int getId();
     int getCapturistId();
-    int getProjectId();
+    int getPointOfStudyId();
     String getBeginAtDate();
     String getCreatedAt();
     String getUpdatedAt();

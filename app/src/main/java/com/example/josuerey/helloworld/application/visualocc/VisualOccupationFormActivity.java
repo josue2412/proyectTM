@@ -140,6 +140,12 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
         beginAtDateEditText.setText(this.assignment.getBeginAtDate());
         beginAtPlaceEditText.setText(this.assignment.getBeginAtPlace());
         durationEditText.setText(String.valueOf(this.assignment.getDurationInHours()));
+        if (this.assignment.getIsEditable() == 0) {
+            editTextWaterConditions.setEnabled(false);
+            editTextObservations.setEnabled(false);
+        }
+        editTextObservations.setText(this.assignment.getObservations());
+        editTextWaterConditions.setText(this.assignment.getWaterConditions());
     }
 
     public void onClick(View v) {
