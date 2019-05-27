@@ -36,7 +36,6 @@ import com.example.josuerey.helloworld.infrastructure.network.APIClient;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.example.josuerey.helloworld.utilities.StudyDuration;
-import com.example.josuerey.helloworld.utilities.UiUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -180,7 +179,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
-                Intent myIntent = new Intent(VehicularCapacityExtendedActivity.this, AssignmentsActivity.class);
+                Intent myIntent = new Intent(VehicularCapacityExtendedActivity.this, VehicularCapAssignmentsActivity.class);
                 VehicularCapacityExtendedActivity.this.startActivity(myIntent);
                 finish();
                 return true;

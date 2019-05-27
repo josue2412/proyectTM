@@ -56,7 +56,7 @@ public class EmergencyNotificationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
-                Intent myIntent = new Intent(EmergencyNotificationActivity.this, AssignmentsActivity.class);
+                Intent myIntent = new Intent(EmergencyNotificationActivity.this, VehicularCapAssignmentsActivity.class);
                 EmergencyNotificationActivity.this.startActivity(myIntent);
                 finish();
                 return true;

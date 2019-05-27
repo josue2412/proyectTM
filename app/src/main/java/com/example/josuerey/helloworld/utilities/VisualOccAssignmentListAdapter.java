@@ -34,7 +34,7 @@ public class VisualOccAssignmentListAdapter extends ArrayAdapter<VisualOccupatio
     public VisualOccAssignmentListAdapter(List<VisualOccupationAssignmentResponse> data, Context context) {
         super(context, R.layout.asc_desc_assignment_view, data);
         this.dataSet = data;
-        this.mContext=context;
+        this.mContext = context;
     }
 
     @Override

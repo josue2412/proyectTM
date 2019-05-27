@@ -50,7 +50,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".application.vehicularcap.AssignmentsActivity"
+            android:name=".application.vehicularcap.VehicularCapAssignmentsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
 

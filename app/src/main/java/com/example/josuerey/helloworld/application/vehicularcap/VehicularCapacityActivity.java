@@ -157,7 +157,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
-                Intent myIntent = new Intent(VehicularCapacityActivity.this, AssignmentsActivity.class);
+                Intent myIntent = new Intent(VehicularCapacityActivity.this, VehicularCapAssignmentsActivity.class);
                 VehicularCapacityActivity.this.startActivity(myIntent);
                 finish();
                 return true;
