@@ -29,6 +29,9 @@ public class VehicularCapacityRecord {
     @ColumnInfo(name = "id")
     private int id;
 
+    @ColumnInfo(name = "assignment_id")
+    private int assignmentId;
+
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 

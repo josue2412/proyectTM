@@ -28,32 +28,30 @@ public class VehicularCapacity {
     @ColumnInfo(name = "id")
     private int id;
 
+    @ColumnInfo(name = "assignmentId")
+    private int assignmentId;
+
     @ColumnInfo(name = "viaOfStudy")
     private String viaOfStudy;
 
     @ColumnInfo(name = "directionLane")
     private String directionLane;
 
-    @ColumnInfo(name = "capturist")
-    private String capturist;
-
     @ColumnInfo(name = "vehicleMove")
     private String vehicleMove;
-
-    @ColumnInfo(name = "composedId")
-    private String composedId;
 
     @ColumnInfo(name = "deviceId")
     private String deviceId;
 
-    @ColumnInfo(name = "backedUpRemotely")
-    private int backedUpRemotely;
+    @ColumnInfo(name = "observations")
+    private String observations;
 
     @ColumnInfo(name = "timeStamp")
     private String timeStamp;
 
-    @ColumnInfo(name = "clientId")
-    private long clientId;
+    @ColumnInfo(name = "backedUpRemotely")
+    private int backedUpRemotely;
+
 
     public void remotelyBackedUpSuccessfully() {
 

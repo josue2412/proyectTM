@@ -261,7 +261,7 @@ public class APIClient {
 
     public void postVehicularCapMeta(final List<VehicularCapacity> VehicularCap,
                                      final VehicularCapacityRepository vehicularCapRepo) {
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/vehicCapMetadata");
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "api/persist/updateVehicCapAssignment");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override

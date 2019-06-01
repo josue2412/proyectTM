@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Selecciona los movimientos a estudiar:"/>
+            android:text="Movimientos a estudiar:"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,31 +60,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginRight="15dp"
-            android:text="Vía de estudio"
+            android:text="Vía de estudio:"
             />
-        <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-            android:id="@+id/spinnerStudyVia"
+
+        <TextView
+            android:id="@+id/via_of_study_value"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:entries="@array/orientation_options"
-            android:background="@drawable/spinner_style"
-            android:inputType="textVisiblePassword" />
+            android:layout_height="wrap_content"
+            android:text="Via of study" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginRight="15dp"
-            android:text="Sentido"
+            android:text="Sentido del carril:"
             />
-        <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-            android:id="@+id/spinnerWayDirection"
+
+        <TextView
+            android:id="@+id/lane_direction_value"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/spinner_style"
-            android:entries="@array/orientation_options"
-            android:inputType="textVisiblePassword"
-            android:hint="Sentido / Carril" />
+            android:layout_height="wrap_content"
+            android:text="Lane direction" />
 
         <Button style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/btnStartStudy"
