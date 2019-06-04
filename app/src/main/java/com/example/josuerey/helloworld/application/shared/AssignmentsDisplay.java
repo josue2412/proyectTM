@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -29,6 +30,7 @@ public interface AssignmentsDisplay<T> {
     TextView getRetrieveAssignmentsStatus();
     TextView getRetryRetrieveAssignments();
     ListView getAssignmentsListView();
+    ProgressBar getDownloadAssignmentsPB();
 
 
     void handleClickedAssignment(T assignment);
@@ -65,6 +67,7 @@ public interface AssignmentsDisplay<T> {
 
     default void retrieveAssignments(final AssignmentRetrievedCallback callback){
         Log.d(getTAG(), "Retrieving assignments...");
+        getDownloadAssignmentsPB().setVisibility(ProgressBar.VISIBLE);
         StringRequest stringRequest =
                 new StringRequest(Request.Method.GET, getRequestUrl(), new Response.Listener<String>() {
                     @Override
@@ -79,6 +82,7 @@ public interface AssignmentsDisplay<T> {
                         }
                         callback.onSuccess(assignmentResponse);
                         Log.d(getTAG(), String.format("Number of assignments retrieved: %d", assignmentResponse.size()));
+                        getDownloadAssignmentsPB().setVisibility(ProgressBar.INVISIBLE);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -86,6 +90,7 @@ public interface AssignmentsDisplay<T> {
                         Log.e(getTAG(), "Volley error response");
                         error.printStackTrace();
                         setStatusMsg("Falló la conexión a Internet", false);
+                        getDownloadAssignmentsPB().setVisibility(ProgressBar.INVISIBLE);
                     }
                 }){
                 };

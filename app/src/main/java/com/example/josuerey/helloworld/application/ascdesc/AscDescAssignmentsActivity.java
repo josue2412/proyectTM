@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
     private Button retryRetrieveAssignments;
     private Context context;
     private String requestUrl;
+    private ProgressBar downloadAssignmentsPB;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,6 +81,7 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
         capturistTextView = findViewById(R.id.capturist_name);
         retrieveAssignmentsStatus = findViewById(R.id.app_status);
         retryRetrieveAssignments = findViewById(R.id.retry_assignments);
+        downloadAssignmentsPB = findViewById(R.id.download_assignments_progress_bar);
 
         capturistTextView.setText(SaveSharedPreference.getUserName(getApplicationContext()));
     }
