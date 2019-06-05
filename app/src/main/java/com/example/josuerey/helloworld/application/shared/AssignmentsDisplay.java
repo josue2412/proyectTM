@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public interface AssignmentsDisplay<T> {
-    String serverIp = "https://sgcities.com/";
+    String serverIp = "https://sgcities.com/app/";
     Gson gson = new Gson();
     String getTAG();
     Context getContext();
