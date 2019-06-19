@@ -72,6 +72,9 @@
             android:name=".application.visualocc.VisualOccupationAssignmentsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
+        <activity android:name=".application.origindestiny.OriginDestinyPollAssignmentsActivity"
+            android:label="SG Cities App"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.ascdesc.AscDescAssignmentsActivity;
+import com.example.josuerey.helloworld.application.origindestiny.OriginDestinyPollAssignmentsActivity;
 import com.example.josuerey.helloworld.application.vehicularcap.VehicularCapAssignmentsActivity;
 import com.example.josuerey.helloworld.application.visualocc.VisualOccupationAssignmentsActivity;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
@@ -80,6 +81,9 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.btnVehicularCap:
                 studyIntent = new Intent(HomeActivity.this, VehicularCapAssignmentsActivity.class);
+                break;
+            case R.id.btnOriginDestinyStudy:
+                studyIntent = new Intent(HomeActivity.this, OriginDestinyPollAssignmentsActivity.class);
                 break;
         }
 

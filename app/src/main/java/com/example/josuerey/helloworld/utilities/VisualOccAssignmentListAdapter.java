@@ -17,7 +17,7 @@ import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAs
 import java.util.List;
 
 public class VisualOccAssignmentListAdapter extends ArrayAdapter<VisualOccupationAssignmentResponse>
-        implements View.OnClickListener{
+        implements View.OnClickListener {
 
     private List<VisualOccupationAssignmentResponse> dataSet;
     private final String TAG = this.getClass().getSimpleName();

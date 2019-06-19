@@ -57,6 +57,17 @@
                 android:onClick="onClick"
                 android:text="Ocupación vehicular" />
 
+            <Button style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/btnOriginDestinyStudy"
+                android:layout_width="150dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_height="160dp"
+                android:layout_below="@id/btnVisualOccupation"
+                android:layout_alignParentRight="true"
+                android:onClick="onClick"
+                android:text="Encuesta origen-destino" />
+
         </RelativeLayout>
     </LinearLayout>
 
