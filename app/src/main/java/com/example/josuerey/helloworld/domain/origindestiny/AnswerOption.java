@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.application.origindestiny;
+package com.example.josuerey.helloworld.domain.origindestiny;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -32,4 +33,9 @@ public class AnswerOption {
 
     @SerializedName("updated_at")
     private String updatedAt;
+
+    @Override
+    public String toString() {
+        return this.answer;
+    }
 }

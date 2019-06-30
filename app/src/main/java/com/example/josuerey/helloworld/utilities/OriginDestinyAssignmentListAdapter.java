@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
-import com.example.josuerey.helloworld.application.origindestiny.OriginDestinyAssignmentResponse;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyAssignmentResponse;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class OriginDestinyAssignmentListAdapter extends ArrayAdapter<OriginDesti
 
         viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
         viewHolder.beginAtPlace.setText(dataModel.getBeginAtPlace());
-        viewHolder.questionaryType.setText(dataModel.getOriginDestinyPoll().getName());
+        viewHolder.questionaryType.setText(dataModel.getOriginDestinyQuestionary().getName());
         viewHolder.numberOfPolls.setText(String.valueOf(dataModel.getNumberOfPolls()));
         return convertView;
     }

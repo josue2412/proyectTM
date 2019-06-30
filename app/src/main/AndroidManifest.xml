@@ -75,6 +75,10 @@
         <activity android:name=".application.origindestiny.OriginDestinyPollAssignmentsActivity"
             android:label="SG Cities App"
             android:screenOrientation="portrait"/>
+        android:screenOrientation="portrait"/>
+        <activity android:name=".application.origindestiny.OriginDestinyPollActivity"
+            android:label="SG Cities App"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

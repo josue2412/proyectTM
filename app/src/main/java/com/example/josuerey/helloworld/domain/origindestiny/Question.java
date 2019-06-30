@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.application.origindestiny;
+package com.example.josuerey.helloworld.domain.origindestiny;
 
 import com.google.gson.annotations.SerializedName;
 

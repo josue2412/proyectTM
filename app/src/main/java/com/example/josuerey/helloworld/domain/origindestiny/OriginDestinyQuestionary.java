@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.application.origindestiny;
+package com.example.josuerey.helloworld.domain.origindestiny;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OriginDestinyPoll {
+public class OriginDestinyQuestionary {
     @SerializedName("id")
     private int id;
 
@@ -36,6 +36,6 @@ public class OriginDestinyPoll {
     private String updatedAt;
 
     @SerializedName("questions")
-    private List<Question> question;
+    private List<Question> questions;
 
 }

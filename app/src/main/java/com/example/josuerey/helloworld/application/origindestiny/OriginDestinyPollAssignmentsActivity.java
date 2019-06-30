@@ -13,7 +13,7 @@ import android.util.Log;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
 import com.example.josuerey.helloworld.application.shared.BaseActivity;
-import com.example.josuerey.helloworld.application.visualocc.VisualOccupationFormActivity;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyAssignmentResponse;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.OriginDestinyAssignmentListAdapter;
 import com.google.gson.reflect.TypeToken;
@@ -79,10 +79,9 @@ public class OriginDestinyPollAssignmentsActivity extends BaseActivity
 
     @Override
     public void handleClickedAssignment(OriginDestinyAssignmentResponse assignmentResponse) {
-        Intent fillFormIntent = new Intent(this.getContext(),
-                VisualOccupationFormActivity.class);
-        fillFormIntent.putExtra("originDestinyAssignment", gson.toJson(assignmentResponse));
+        Intent startPollIntent = new Intent(this.getContext(), OriginDestinyPollActivity.class);
+        startPollIntent.putExtra("originDestinyAssignment", gson.toJson(assignmentResponse));
         Log.d(TAG, "Handling OriginDestinyAssignment: " + assignmentResponse.getId());
-        getContext().startActivity(fillFormIntent);
+        getContext().startActivity(startPollIntent);
     }
 }

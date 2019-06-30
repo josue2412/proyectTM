@@ -1,6 +1,7 @@
-package com.example.josuerey.helloworld.application.origindestiny;
+package com.example.josuerey.helloworld.domain.origindestiny;
 
 import com.example.josuerey.helloworld.domain.capturist.Capturist;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyQuestionary;
 import com.example.josuerey.helloworld.domain.pointOfStudy.PointOfStudy;
 import com.example.josuerey.helloworld.infrastructure.network.ServerAssignmentResponse;
 import com.google.gson.annotations.SerializedName;
@@ -62,7 +63,7 @@ public class OriginDestinyAssignmentResponse implements ServerAssignmentResponse
     private Capturist capturist;
 
     @SerializedName("questionary")
-    private OriginDestinyPoll originDestinyPoll;
+    private OriginDestinyQuestionary originDestinyQuestionary;
 
 
 }

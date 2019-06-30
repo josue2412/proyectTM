@@ -3,6 +3,7 @@
     <string name="buttonStart">Comenzar</string>
     <string name="menuItemAboutUs">Ayuda</string>
     <string name="menuItemEnd">Finalizar</string>
+    <string name="send_poll">Enviar encuesta</string>
     <string-array name="occupation_level">
         <item>Ocupación</item>
         <item>Vacio</item>
