@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class TrackableBaseActivity extends BaseActivity implements LocationListener {
-    protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     protected int updatesLocationDistance = 100;
     protected GPSLocation currentLocation;
     protected String deviceId;

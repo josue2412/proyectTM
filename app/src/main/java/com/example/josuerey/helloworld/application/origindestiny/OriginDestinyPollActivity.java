@@ -14,13 +14,15 @@ import android.widget.TextView;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.TrackableBaseActivity;
 import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyAssignmentResponse;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollAnswer;
 import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPoll;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollAnswer;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollRepository;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollWrapper;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollAnswerRepository;
 import com.example.josuerey.helloworld.domain.origindestiny.Question;
 import com.example.josuerey.helloworld.infrastructure.network.RemoteStorage;
 import com.google.gson.Gson;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,9 +34,11 @@ import lombok.Getter;
 
 @Getter
 public class OriginDestinyPollActivity extends TrackableBaseActivity
-        implements RemoteStorage<OriginDestinyPoll> {
+        implements RemoteStorage<OriginDestinyPollWrapper> {
 
     private OriginDestinyAssignmentResponse assignment;
+    private OriginDestinyPollAnswerRepository answerRepository;
+    private OriginDestinyPollRepository pollRepository;
     private LinearLayout questionaryParentLinearLayout;
     private HashMap<Integer, View> questionsMap;
     private List<OriginDestinyPollAnswer> answersGiven;
@@ -50,6 +54,8 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
         appContext = getApplication();
         endpointUrl = "api/persist/pollAnswers";
         postParamName = "pollAnswersData";
+        answerRepository = new OriginDestinyPollAnswerRepository(getApplication());
+        pollRepository = new OriginDestinyPollRepository(getApplication());
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -64,7 +70,7 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
     }
 
     /**
-     * Inflate the poll questions in the display.
+     * Dynamically inflate the poll questions in the display.
      *
      * @param questions list of questions to be displayed in the screen
      */
@@ -101,6 +107,26 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
      * @param view
      */
     public void onClickSendPoll(View view) {
+
+        OriginDestinyPoll poll =
+                pollRepository.createOriginDestinyPoll(currentLocation, this.assignment.getId());
+        pollRepository.save(poll);
+        List<OriginDestinyPollAnswer> answers = collectAnswers(poll.getId());
+        answerRepository.saveAll(answers);
+
+        postItemsInBatch(Collections.singletonList(OriginDestinyPollWrapper.builder()
+                .poll(poll)
+                .answers(answers)
+                .build()));
+    }
+
+    /**
+     * Iterates over the available answers and return them.
+     *
+     * @param pollId that is going to be assigned to the answers.
+     * @return List of {@link OriginDestinyPollAnswer}'s given by the user.
+     */
+    private List<OriginDestinyPollAnswer> collectAnswers(long pollId) {
         Spinner answerOptionsSpinner;
         EditText answerEditText;
         String finalAnswer = null;
@@ -115,19 +141,11 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
                 finalAnswer = answerEditText.getText().toString();
             }
             answersGiven.add(OriginDestinyPollAnswer.builder().answerGiven(finalAnswer)
-                    .questionId(entry.getValue().getId()).build());
+                    .questionId(entry.getValue().getId()).pollId(pollId).build());
         }
-
-
-        postItemsInBatch(Collections.singletonList(
-                OriginDestinyPoll.builder()
-                        .assignmentId(this.assignment.getId())
-                        .lat(currentLocation != null ? currentLocation.getLat() : 0.0)
-                        .lon((currentLocation != null ? currentLocation.getLon() : 0.0))
-                        .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()))
-                        .answers(answersGiven)
-                        .build()));
+        return answersGiven;
     }
+
 
     @Override
     protected void onPause() {

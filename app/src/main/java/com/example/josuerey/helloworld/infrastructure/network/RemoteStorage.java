@@ -20,7 +20,8 @@ import java.util.Map;
 
 /**
  *
- * @param <T> Type of the object that is going to be store remotely.
+ * @param <T> Type of the object that is going to be store remotely. It must implement the
+ * {@link Storable} interface.
  */
 public interface RemoteStorage<T extends Storable> {
 

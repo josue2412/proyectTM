@@ -2,6 +2,10 @@ package com.example.josuerey.helloworld.domain.shared;
 
 import android.util.Log;
 
+/**
+ * Interface that standardize the behaviour of the objects allowed by
+ * {@link com.example.josuerey.helloworld.infrastructure.network.RemoteStorage}
+ */
 public interface Storable {
 
     String TAG = Storable.class.getName();
@@ -12,7 +16,7 @@ public interface Storable {
     default void remotelyBackedUpSuccessfully() {
 
         setBackedUpRemotely(1);
-        Log.d(TAG, String.format("Object with id: {} successfully backed up in remote server.", getId()));
+        Log.d(TAG, String.format("Object with id: %d successfully backed up in remote server.", getId()));
     }
 
 }

@@ -4,10 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.example.josuerey.helloworld.domain.shared.Storable;
-
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,16 +11,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OriginDestinyPoll implements Storable {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Entity(tableName = "OriginDestinyPoll")
+public class OriginDestinyPoll {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int id;
+    private long id;
 
     @ColumnInfo(name = "assignment_id")
     private int assignmentId;
@@ -40,7 +38,4 @@ public class OriginDestinyPoll implements Storable {
 
     @ColumnInfo(name = "backedUpRemotely")
     private int backedUpRemotely;
-
-    @ColumnInfo(name = "answers_given")
-    private List<OriginDestinyPollAnswer> answers;
 }

@@ -22,6 +22,8 @@ import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.domain.metadata.MetadataDao;
 import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPoll;
 import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollAnswer;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollAnswerDao;
+import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollDao;
 import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationship;
 import com.example.josuerey.helloworld.domain.routeviarelationship.RouteViaRelationshipDao;
 import com.example.josuerey.helloworld.domain.vehicularcapacity.VehicularCapacity;
@@ -51,7 +53,8 @@ import java.util.concurrent.Executors;
         VehicularCapacity.class,
         VehicularCapacityRecord.class,
         Assignment.class,
-        OriginDestinyPollAnswer.class},
+        OriginDestinyPollAnswer.class,
+        OriginDestinyPoll.class},
         version = 1, exportSchema = false)
 @TypeConverters({MovementConverter.class})
 public abstract class uRoomDatabase extends RoomDatabase {
@@ -67,6 +70,8 @@ public abstract class uRoomDatabase extends RoomDatabase {
     public abstract VehicularCapacityDao vehicularCapacityDao();
     public abstract VehicularCapacityRecordDao vehicularCapacityRecordDao();
     public abstract AssignmentDao assignmentDao();
+    public abstract OriginDestinyPollAnswerDao pollAnswerDao();
+    public abstract OriginDestinyPollDao pollDao();
 
     private static uRoomDatabase INSTANCE;
 
