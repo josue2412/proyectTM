@@ -1,7 +1,9 @@
 package com.example.josuerey.helloworld.application.origindestiny;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,6 +120,44 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
                 .poll(poll)
                 .answers(answers)
                 .build()));
+        createAlertDialog();
+    }
+
+    /**
+     * Iterates over the question {@link View}'s and erase the previous answers.
+     */
+    private void cleanAnswers() {
+        answersGiven.clear();
+        for(int i = 0; i < questionaryParentLinearLayout.getChildCount(); i++) {
+            View currentView = questionaryParentLinearLayout.getChildAt(i);
+            EditText answerGiven = currentView.findViewById(R.id.answer_edit_text);
+            answerGiven.setText("");
+        }
+    }
+
+    /**
+     * Creates a new {@link AlertDialog} once the poll has been complete.
+     */
+    private void createAlertDialog() {
+        AlertDialog.Builder askForNewPollDialog = new AlertDialog.Builder(this);
+        askForNewPollDialog.setTitle("Encuesta enviada");
+        askForNewPollDialog.setMessage("¿Desea hacer una nueva encuesta?")
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cleanAnswers();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+        AlertDialog myDialog = askForNewPollDialog.create();
+        myDialog.show();
     }
 
     /**

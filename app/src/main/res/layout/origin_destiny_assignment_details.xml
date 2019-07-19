@@ -4,21 +4,30 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <LinearLayout
-        android:id="@+id/parent_questions_layout"
+    <TextView
+        android:id="@+id/history_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:textSize="24dp"
+        android:text="Historial"/>
+
+    <LinearLayout
+        android:id="@+id/polls_sent_layout"
+        android:layout_below="@id/history_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
         android:orientation="vertical">
 
     </LinearLayout>
 
     <Button style="@style/Widget.AppCompat.Button.Colored"
-        android:id="@+id/send_poll_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_below="@id/parent_questions_layout"
-        android:onClick="onClickSendPoll"
-        android:text="@string/send_poll"/>
+        android:onClick="createNewPoll"
+        android:layout_alignParentBottom="true"
+        android:text="Nueva encuesta"/>
+
 
 </RelativeLayout>

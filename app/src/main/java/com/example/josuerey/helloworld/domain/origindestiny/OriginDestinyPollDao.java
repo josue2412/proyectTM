@@ -21,4 +21,10 @@ public interface OriginDestinyPollDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long save(OriginDestinyPoll poll);
+
+    @Query("SELECT * FROM OriginDestinyPoll")
+    List<OriginDestinyPollWrapper> findAll();
+
+    @Query("SELECT * FROM OriginDestinyPoll where assignment_id = :id")
+    List<OriginDestinyPollWrapper> findByAssignmentId(long id);
 }

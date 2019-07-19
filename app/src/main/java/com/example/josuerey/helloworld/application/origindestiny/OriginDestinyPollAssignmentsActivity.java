@@ -79,7 +79,7 @@ public class OriginDestinyPollAssignmentsActivity extends BaseActivity
 
     @Override
     public void handleClickedAssignment(OriginDestinyAssignmentResponse assignmentResponse) {
-        Intent startPollIntent = new Intent(this.getContext(), OriginDestinyPollActivity.class);
+        Intent startPollIntent = new Intent(this.getContext(), OriginDestinyAssignmentDetailsActivity.class);
         startPollIntent.putExtra("originDestinyAssignment", gson.toJson(assignmentResponse));
         Log.d(TAG, "Handling OriginDestinyAssignment: " + assignmentResponse.getId());
         getContext().startActivity(startPollIntent);

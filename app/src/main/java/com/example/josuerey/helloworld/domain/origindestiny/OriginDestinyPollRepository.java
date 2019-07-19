@@ -41,6 +41,19 @@ public class OriginDestinyPollRepository {
         pollDao.saveAll(polls.toArray(new OriginDestinyPoll[polls.size()]));
     }
 
+    public List<OriginDestinyPollWrapper> findAll() {
+        return this.pollDao.findAll();
+    }
+
+    /**
+     * Retrieves the available polls related to the assignment.
+     * @param id of the assignment.
+     * @return {@link List} of {@link OriginDestinyPollWrapper}
+     */
+    public List<OriginDestinyPollWrapper> findByAssignmentId(long id) {
+        return this.pollDao.findByAssignmentId(id);
+    }
+
     public OriginDestinyPoll save(final OriginDestinyPoll poll) {
         Log.d(TAG, String.format("Saving poll from assignment: %d ...", poll.getAssignmentId()));
         long id = pollDao.save(poll);
