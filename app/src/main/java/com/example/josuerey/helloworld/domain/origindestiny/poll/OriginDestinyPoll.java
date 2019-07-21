@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.domain.origindestiny;
+package com.example.josuerey.helloworld.domain.origindestiny.poll;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

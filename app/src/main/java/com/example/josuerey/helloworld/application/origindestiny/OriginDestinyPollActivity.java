@@ -16,11 +16,11 @@ import android.widget.TextView;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.TrackableBaseActivity;
 import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyAssignmentResponse;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPoll;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollAnswer;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollRepository;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollWrapper;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollAnswerRepository;
+import com.example.josuerey.helloworld.domain.origindestiny.poll.OriginDestinyPoll;
+import com.example.josuerey.helloworld.domain.origindestiny.answer.OriginDestinyPollAnswer;
+import com.example.josuerey.helloworld.domain.origindestiny.poll.OriginDestinyPollRepository;
+import com.example.josuerey.helloworld.domain.origindestiny.poll.OriginDestinyPollWrapper;
+import com.example.josuerey.helloworld.domain.origindestiny.answer.OriginDestinyPollAnswerRepository;
 import com.example.josuerey.helloworld.domain.origindestiny.Question;
 import com.example.josuerey.helloworld.infrastructure.network.RemoteStorage;
 import com.google.gson.Gson;
@@ -36,11 +36,11 @@ import lombok.Getter;
 
 @Getter
 public class OriginDestinyPollActivity extends TrackableBaseActivity
-        implements RemoteStorage<OriginDestinyPollWrapper> {
+        implements RemoteStorage<OriginDestinyPollWrapper, OriginDestinyPollRepository> {
 
     private OriginDestinyAssignmentResponse assignment;
     private OriginDestinyPollAnswerRepository answerRepository;
-    private OriginDestinyPollRepository pollRepository;
+    private OriginDestinyPollRepository repository;
     private LinearLayout questionaryParentLinearLayout;
     private HashMap<Integer, View> questionsMap;
     private List<OriginDestinyPollAnswer> answersGiven;
@@ -57,7 +57,7 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
         endpointUrl = "api/persist/pollAnswers";
         postParamName = "pollAnswersData";
         answerRepository = new OriginDestinyPollAnswerRepository(getApplication());
-        pollRepository = new OriginDestinyPollRepository(getApplication());
+        repository = new OriginDestinyPollRepository(getApplication());
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -111,8 +111,8 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
     public void onClickSendPoll(View view) {
 
         OriginDestinyPoll poll =
-                pollRepository.createOriginDestinyPoll(currentLocation, this.assignment.getId());
-        pollRepository.save(poll);
+                repository.createOriginDestinyPoll(currentLocation, this.assignment.getId());
+        repository.save(poll);
         List<OriginDestinyPollAnswer> answers = collectAnswers(poll.getId());
         answerRepository.saveAll(answers);
 

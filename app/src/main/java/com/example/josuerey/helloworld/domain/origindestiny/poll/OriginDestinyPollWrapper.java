@@ -1,8 +1,9 @@
-package com.example.josuerey.helloworld.domain.origindestiny;
+package com.example.josuerey.helloworld.domain.origindestiny.poll;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Relation;
 
+import com.example.josuerey.helloworld.domain.origindestiny.answer.OriginDestinyPollAnswer;
 import com.example.josuerey.helloworld.domain.shared.Storable;
 
 import java.util.List;

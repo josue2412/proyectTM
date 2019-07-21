@@ -14,9 +14,7 @@ public interface Storable {
     void setBackedUpRemotely(int value);
 
     default void remotelyBackedUpSuccessfully() {
-
         setBackedUpRemotely(1);
-        Log.d(TAG, String.format("Object with id: %d successfully backed up in remote server.", getId()));
     }
 
 }

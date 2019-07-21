@@ -1,16 +1,19 @@
-package com.example.josuerey.helloworld.domain.origindestiny;
+package com.example.josuerey.helloworld.domain.origindestiny.poll;
 
 import android.app.Application;
 import android.util.Log;
 
 import com.example.josuerey.helloworld.application.shared.TrackableBaseActivity;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.origindestiny.answer.OriginDestinyPollAnswerRepository;
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
+import com.example.josuerey.helloworld.infrastructure.persistence.RemotelyStore;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
-public class OriginDestinyPollRepository {
+public class OriginDestinyPollRepository implements RemotelyStore<OriginDestinyPollWrapper> {
 
     private static final String TAG = OriginDestinyPollAnswerRepository.class.getName();
     private OriginDestinyPollDao pollDao;
@@ -18,6 +21,22 @@ public class OriginDestinyPollRepository {
     public OriginDestinyPollRepository(Application application) {
         uRoomDatabase db = uRoomDatabase.getDatabase(application);
         this.pollDao = db.pollDao();
+    }
+
+    @Override
+    public void backedUpRemotely(List<OriginDestinyPollWrapper> recordsToUpdate) {
+        Log.i(TAG, String.format(" %d records backed up remotely", recordsToUpdate.size()));
+        List<OriginDestinyPoll> pollsToUpdate = new LinkedList<>();
+        for (OriginDestinyPollWrapper wrapper : recordsToUpdate) {
+            pollsToUpdate.add(wrapper.getPoll());
+        }
+
+        this.pollDao.updateInBatch(pollsToUpdate.toArray(new OriginDestinyPoll[recordsToUpdate.size()]));
+    }
+
+    @Override
+    public List<OriginDestinyPollWrapper> findRecordsPendingToBackUp() {
+        return this.pollDao.findPendingToBackUp();
     }
 
     /**

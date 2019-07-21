@@ -1,5 +1,6 @@
 package com.example.josuerey.helloworld.application.origindestiny;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,25 +13,38 @@ import android.widget.TextView;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.BaseActivity;
 import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyAssignmentResponse;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollRepository;
-import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyPollWrapper;
+import com.example.josuerey.helloworld.domain.origindestiny.poll.OriginDestinyPollRepository;
+import com.example.josuerey.helloworld.domain.origindestiny.poll.OriginDestinyPollWrapper;
+import com.example.josuerey.helloworld.infrastructure.network.RemoteStorage;
 import com.google.gson.Gson;
 
+import java.util.LinkedList;
 import java.util.List;
 
-public class OriginDestinyAssignmentDetailsActivity extends BaseActivity {
+import lombok.Getter;
 
+@Getter
+public class OriginDestinyAssignmentDetailsActivity extends BaseActivity
+        implements RemoteStorage<OriginDestinyPollWrapper, OriginDestinyPollRepository> {
+
+    private String postParamName;
+    private Application appContext;
+    private String endpointUrl;
     private OriginDestinyAssignmentResponse assignment;
     private LinearLayout pollsRecordsLinearLayout;
     private final Gson gson = new Gson();
-    private OriginDestinyPollRepository pollRepository;
+    private OriginDestinyPollRepository repository;
+    private List<OriginDestinyPollWrapper> internalPolls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.origin_destiny_assignment_details);
         pollsRecordsLinearLayout = findViewById(R.id.polls_sent_layout);
-        pollRepository = new OriginDestinyPollRepository(getApplication());
+        repository = new OriginDestinyPollRepository(getApplication());
+        appContext = getApplication();
+        endpointUrl = "api/persist/pollAnswers";
+        postParamName = "pollAnswersData";
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -38,7 +52,28 @@ public class OriginDestinyAssignmentDetailsActivity extends BaseActivity {
                     OriginDestinyAssignmentResponse.class);
         }
 
+        internalPolls = repository.findByAssignmentId(this.assignment.getId());
         inflatePreviousPolls();
+        retryBackup();
+    }
+
+    /**
+     * Tries to backup polls pending to remotely backup.
+     */
+    private void retryBackup() {
+        List<OriginDestinyPollWrapper> recordsPendingToBackUp = new LinkedList<>();
+        for (OriginDestinyPollWrapper poll : internalPolls) {
+            if (poll.getBackedUpRemotely() == 0) {
+                recordsPendingToBackUp.add(poll);
+            }
+        }
+
+        if (recordsPendingToBackUp.isEmpty()) {
+            Log.d(TAG, "There are no records to back up");
+        } else {
+            Log.d(TAG, String.format("Retrying to backup %d polls", recordsPendingToBackUp.size()));
+            postItemsInBatch(recordsPendingToBackUp);
+        }
     }
 
     /**
@@ -46,10 +81,7 @@ public class OriginDestinyAssignmentDetailsActivity extends BaseActivity {
      * screen.
      */
     private void inflatePreviousPolls() {
-        List<OriginDestinyPollWrapper> internalPolls =
-                pollRepository.findByAssignmentId(this.assignment.getId());
-
-        LayoutInflater questionInflater =
+        final LayoutInflater questionInflater =
                 (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (!internalPolls.isEmpty()) {
