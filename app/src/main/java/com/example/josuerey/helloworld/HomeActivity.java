@@ -87,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
         String userToken= "1234";
-        String url ="http://u856955919.hostingerapp.com/api/user?api_token="+userToken;
+        String url ="http://u856955919.hostingerapp.com/app/api/user?api_token="+userToken;
         final ProgressDialog pdLoading = new ProgressDialog(this);
         pdLoading.setMessage("\tLoading...");
         pdLoading.show();

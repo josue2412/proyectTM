@@ -49,7 +49,7 @@ public class APIClient {
 
     public void postBusStopInBatch(final List<BusStop> busStop,
                                   final BusStopRepository busStopRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeBusStopV2";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/routeBusStopV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -92,7 +92,7 @@ public class APIClient {
 
     public void postMetadataInBatch (final List<Metadata> metadata,
                                     final MetadataRepository repository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeMetadataV2";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/routeMetadataV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -135,7 +135,7 @@ public class APIClient {
 
     public void postGpsLocationInBatch(final List<GPSLocation> route,
                                        final GPSLocationRepository gpsLocationRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/routeV2";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/routeV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -180,7 +180,7 @@ public class APIClient {
 
     public void postBusOccupationMeta(final List<VisualOccupationMetadata> visOccMeta,
                                       final VisualOccupationMetadataRepository visualOccMetaRepo) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccMetadataV2";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/busOccMetadataV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -222,7 +222,7 @@ public class APIClient {
 
     public void postBusOccupation(final List<BusOccupation> busOcc,
                                   final BusOccupationRepository busOccupationRepository) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/busOccRecordV2";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/busOccRecordV2";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -265,7 +265,7 @@ public class APIClient {
 
     public void postVehicularCapMeta(final List<VehicularCapacity> VehicularCap,
                                      final VehicularCapacityRepository vehicularCapRepo) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/vehicCapMetadata";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/vehicCapMetadata";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -307,7 +307,7 @@ public class APIClient {
 
     public void postVehicularCapRecord(final List<VehicularCapacityRecord> VehicularCap,
                                        final VehicularCapacityRecordRepository vehicularCapRepo) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/vehicCapRecord";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/vehicCapRecord";
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override

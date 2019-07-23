@@ -89,7 +89,7 @@ public class EmergencyNotificationActivity extends AppCompatActivity {
     }
 
     public void postEmergencyMessage(final String msg) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/capturistNotification";
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/persist/capturistNotification";
         final ProgressDialog pdLoading = new ProgressDialog(this);
         pdLoading.setMessage("\tEnviando...");
         pdLoading.show();

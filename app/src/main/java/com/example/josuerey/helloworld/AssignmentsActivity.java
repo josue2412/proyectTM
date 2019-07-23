@@ -213,7 +213,7 @@ public class AssignmentsActivity extends AppCompatActivity {
 
     public void retrieveAssignments(final String capturistId){
         final ObjectMapper mapper = new ObjectMapper();
-        String requestUrl = "http://u856955919.hostingerapp.com/api/capturistAssignments?capturist_id=" + capturistId;
+        String requestUrl = "http://u856955919.hostingerapp.com/app/api/capturistAssignments?capturist_id=" + capturistId;
         final ProgressDialog pdLoading = new ProgressDialog(this);
         pdLoading.setMessage("\tCargando asignaciones...");
         pdLoading.show();
