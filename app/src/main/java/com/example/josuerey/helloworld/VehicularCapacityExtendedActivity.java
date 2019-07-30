@@ -158,6 +158,8 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     private MyLocationListener mlocListener;
     private LocationManager mlocManager;
 
+    private TextView lastBackUpValueTextView;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -329,7 +331,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         calculateRemainingStudyTime();
         countingChanged = false;
         beginTimeInterval = endTimeInterval;
-
+        lastBackUpValueTextView.setText(DATE_FORMAT.format(endTimeInterval));
     }
 
     private void calculateRemainingStudyTime() {
@@ -382,6 +384,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     private void bindViews() {
         View.OnLongClickListener decrementCounterOnLongClickListener = longClickListener();
 
+        lastBackUpValueTextView = findViewById(R.id.lastBackUpValueTextView);
         carCounterBtn1 = (ImageButton) findViewById(R.id.carCounterBtn1);
         carCounterBtn2 = (ImageButton) findViewById(R.id.carCounterBtn2);
         carCounterBtn3 = (ImageButton) findViewById(R.id.carCounterBtn3);

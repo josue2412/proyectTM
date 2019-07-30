@@ -59,6 +59,26 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/lastBackUpTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Último respaldo: "
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="left"/>
+                <TextView
+                    android:id="@+id/lastBackUpValueTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="left"/>
+            </LinearLayout>
+
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="90dp"

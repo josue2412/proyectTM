@@ -141,6 +141,8 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private Button emergencyBtn;
     private boolean countingChanged;
 
+    private TextView lastBackUpValueTextView;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -206,6 +208,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
     private void bindViews() {
         View.OnLongClickListener onLongClickListener = longClickListener();
 
+        lastBackUpValueTextView = findViewById(R.id.lastBackUpValueTextView);
         carCounterBtn1 = (ImageButton) findViewById(R.id.carCounterBtn);
         carCounterBtn1.setOnLongClickListener(onLongClickListener);
         busCounterBtn1 = (ImageButton) findViewById(R.id.busCounterBtn);
@@ -386,7 +389,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
         if (movements.size() == 2) {
             mainMove.setBackgroundResource(deriveMoveSrc(movements.get(0)));
             secondaryMove.setBackgroundResource(deriveMoveSrc(movements.get(1)));
-            movementsTextView.setText(movements.get(1).getMovement_name() + "/" + movements.get(0).getMovement_name());
+            movementsTextView.setText(movements.get(0).getMovement_name() + "/" + movements.get(1).getMovement_name());
         } else if (movements.size() == 1) {
             mainMove.setBackgroundResource(deriveMoveSrc(movements.get(0)));
             movementsTextView.setText(movements.get(0).getMovement_name());
@@ -516,6 +519,7 @@ public class VehicularCapacityActivity extends AppCompatActivity {
             apiClient.postVehicularCapRecord(records, vehicularCapacityRecordRepository);
             resetCounters();
             countingChanged = false;
+            lastBackUpValueTextView.setText(DATE_FORMAT.format(endTimeInterval));
         } else {
             Log.d(TAG, String.format("There were no changes, transmission delay to %s",
                     DATE_FORMAT.format(endTimeInterval)));
