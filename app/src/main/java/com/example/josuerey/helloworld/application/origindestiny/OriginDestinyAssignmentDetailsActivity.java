@@ -126,9 +126,9 @@ public class OriginDestinyAssignmentDetailsActivity extends BaseActivity
     public void createNewPoll(View view) {
 
         Intent startPollIntent =
-                new Intent(this.getApplicationContext(), OriginDestinyPollActivity.class);
+                new Intent(this, OriginDestinyPollActivity.class);
         startPollIntent.putExtra("originDestinyAssignment", gson.toJson(assignment));
         Log.d(TAG, "Handling OriginDestinyAssignment: " + assignment.getId());
-        getApplicationContext().startActivity(startPollIntent);
+        this.startActivity(startPollIntent);
     }
 }
