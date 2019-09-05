@@ -1,5 +1,7 @@
 package com.example.josuerey.helloworld.network;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -51,6 +53,8 @@ public class AssignmentResponse {
         private int id;
         private int customer_id;
         private String name;
+        @SerializedName("intersection_image_url")
+        private String intersection_image_url;
         private String begin_at;
         private String end_at;
         private int enabled;

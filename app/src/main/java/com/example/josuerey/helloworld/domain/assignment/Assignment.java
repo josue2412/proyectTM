@@ -41,6 +41,9 @@ public class Assignment {
     @ColumnInfo(name = "status")
     private String status;
 
+    @ColumnInfo(name = "intersectionImageURL")
+    private String intersectionImageURL;
+
     @ColumnInfo(name = "timeOfStudy")
     private String timeOfStudy;
 

@@ -34,15 +34,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -170,7 +167,7 @@ public class AssignmentsActivity extends AppCompatActivity {
         if (dataModel.getMovements().size() > 2) {
             myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityExtendedActivity.class);
         } else {
-            myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityActivity.class);
+            myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityGenActivity.class);
         }
 
         myIntent.putExtra("assignmentId", String.valueOf(dataModel.getServerId()));
@@ -178,6 +175,7 @@ public class AssignmentsActivity extends AppCompatActivity {
         myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));
         myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
         myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDurationInHours()));
+        myIntent.putExtra("intersectionImageURL", dataModel.getIntersectionImageURL());
         AssignmentsActivity.this.startActivity(myIntent);
     }
 
@@ -188,6 +186,7 @@ public class AssignmentsActivity extends AppCompatActivity {
                 .serverId(assignmentResponse.getId())
                 .capturistId(assignmentResponse.getCapturist_id())
                 .projectId(assignmentResponse.getProject_id())
+                .intersectionImageURL(assignmentResponse.getProject().getIntersection_image_url())
                 .status("En proceso")
                 .movements(assignmentResponse.getMovements())
                 .timeOfStudy("0" + String.valueOf(assignmentResponse.getDuration_in_hours()) + ":00:00")

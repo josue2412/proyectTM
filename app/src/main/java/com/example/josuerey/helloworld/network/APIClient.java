@@ -42,6 +42,7 @@ import lombok.Setter;
 @Builder
 public class APIClient {
 
+    public static final String SERVER_HOST = "http://u856955919.hostingerapp.com";
     private final Application app;
     private final String TAG = this.getClass().getSimpleName();
     private ProgressDialog progressDialog;
