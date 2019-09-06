@@ -47,8 +47,17 @@ public class VehicularCapacityRecord {
     @ColumnInfo(name = "numberOfBikes")
     private int numberOfBikes;
 
+    @ColumnInfo(name = "numberOfBikesFemale")
+    private int numberOfBikesFemale;
+
     @ColumnInfo(name = "numberOfTrucks")
     private int numberOfTrucks;
+
+    @ColumnInfo(name = "numberOfPedestrians")
+    private int numberOfPedestrians;
+
+    @ColumnInfo(name = "numberOfPedestriansFemale")
+    private int numberOfPedestriansFemale;
 
     @ColumnInfo(name = "beginTimeInterval")
     private String beginTimeInterval;

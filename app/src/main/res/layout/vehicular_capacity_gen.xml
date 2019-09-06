@@ -54,22 +54,6 @@
                     android:gravity="left"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/movementsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:text="Movimientos:"/>
-
-            <LinearLayout
-                android:id="@+id/movementsLabelsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-            </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/movementsButtonsLayout"
                 android:layout_width="match_parent"
