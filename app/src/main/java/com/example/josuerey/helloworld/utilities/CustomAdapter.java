@@ -15,6 +15,9 @@ import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.network.AssignmentResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnClickListener{
@@ -58,6 +61,8 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // Get the data item for this position
         Assignment dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -87,8 +92,15 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
         result.startAnimation(animation);
         lastPosition = position;
 
+        try {
+            Date date = format.parse(dataModel.getBeginAt());
+            viewHolder.begin_date.setText(USER_DATE_FORMAT.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            viewHolder.begin_date.setText(dataModel.getBeginAt());
+        }
+
         viewHolder.crosses.setText(movementsSerialize(dataModel.getMovements()));
-        viewHolder.begin_date.setText(dataModel.getBeginAt());
         viewHolder.numberOfMovements.setText(String.valueOf(dataModel.getMovements().size()));
         viewHolder.remainingTime.setText(String.valueOf(dataModel.getTimeOfStudy()));
         // Return the completed view to render on screen
@@ -98,9 +110,9 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
     private String movementsSerialize(List<AssignmentResponse.Movement> movements) {
         StringBuilder movementsSerialized = new StringBuilder();
         for(AssignmentResponse.Movement movement: movements) {
-            movementsSerialized.append(String.format("%s %s -> %s %s\n",
-                    movement.getStreet_from(), movement.getStreet_from_direction(),
-                    movement.getStreet_to(), movement.getStreet_to_direction()));
+            movementsSerialized.append(String.format("%s: %d (%s -> %s)\n",
+                    movement.getMovement_name(), movement.getMovement_code(),
+                    movement.getStreet_from(), movement.getStreet_to()));
         }
         return movementsSerialized.toString();
     }

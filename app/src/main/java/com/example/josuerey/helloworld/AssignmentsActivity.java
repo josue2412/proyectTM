@@ -163,13 +163,7 @@ public class AssignmentsActivity extends AppCompatActivity {
     }
 
     private void beginStudy(Assignment dataModel) {
-        Intent myIntent;
-        if (dataModel.getMovements().size() > 2) {
-            myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityExtendedActivity.class);
-        } else {
-            myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityGenActivity.class);
-        }
-
+        Intent myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityGenActivity.class);
         myIntent.putExtra("assignmentId", String.valueOf(dataModel.getServerId()));
         myIntent.putExtra("movements", new MovementConverter().fromMovementList(dataModel.getMovements()));
         myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));

@@ -54,14 +54,18 @@
                     android:gravity="left"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/movementsButtonsLayout"
+            <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-            </LinearLayout>
+                android:fillViewport="true">
+                <LinearLayout
+                    android:id="@+id/movementsButtonsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:id="@+id/movementsInfoLayout"
