@@ -65,7 +65,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VehicularCapacityGenActivity"
+            android:name=".application.vehicularstudy.VehicularCapacityGenActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|screenSize"/>
     </application>

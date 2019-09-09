@@ -49,7 +49,7 @@ import java.util.concurrent.Executors;
         VehicularCapacity.class,
         VehicularCapacityRecord.class,
         Assignment.class},
-        version = 1, exportSchema = false)
+        version = 2, exportSchema = false)
 @TypeConverters({MovementConverter.class})
 public abstract class uRoomDatabase extends RoomDatabase {
 

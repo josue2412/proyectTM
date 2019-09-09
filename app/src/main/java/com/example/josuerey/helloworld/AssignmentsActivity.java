@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.josuerey.helloworld.application.vehicularstudy.VehicularCapacityGenActivity;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;

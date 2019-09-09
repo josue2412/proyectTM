@@ -1,5 +1,7 @@
 package com.example.josuerey.helloworld;
 
+import com.example.josuerey.helloworld.application.vehicularstudy.StudyType;
+
 public enum UnderStudyVehicles {
 
     CAR(StudyType.VEHICULAR), BUS(StudyType.VEHICULAR), TRUCK(StudyType.VEHICULAR),

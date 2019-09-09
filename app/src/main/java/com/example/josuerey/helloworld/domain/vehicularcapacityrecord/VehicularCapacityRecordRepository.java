@@ -2,7 +2,7 @@ package com.example.josuerey.helloworld.domain.vehicularcapacityrecord;
 
 import android.app.Application;
 
-import com.example.josuerey.helloworld.CounterStats;
+import com.example.josuerey.helloworld.application.vehicularstudy.CounterStats;
 import com.example.josuerey.helloworld.UnderStudyVehicles;
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
 import com.example.josuerey.helloworld.utilities.ExportData;

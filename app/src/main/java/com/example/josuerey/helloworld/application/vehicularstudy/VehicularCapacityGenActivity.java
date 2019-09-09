@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.vehicularstudy;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.josuerey.helloworld.EmergencyNotificationActivity;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.UnderStudyVehicles;
 import com.example.josuerey.helloworld.application.shared.TrackableBaseActivity;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
