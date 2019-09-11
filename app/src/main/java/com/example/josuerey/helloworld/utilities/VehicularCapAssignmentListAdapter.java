@@ -15,6 +15,9 @@ import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.movement.Movement;
 import com.example.josuerey.helloworld.infrastructure.network.VehicularCapAssignmentResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class VehicularCapAssignmentListAdapter extends ArrayAdapter<VehicularCapAssignmentResponse>
@@ -36,7 +39,7 @@ public class VehicularCapAssignmentListAdapter extends ArrayAdapter<VehicularCap
                                              Context context) {
         super(context, R.layout.assginment_view, data);
         this.dataSet = data;
-        this.mContext=context;
+        this.mContext = context;
 
     }
 
@@ -60,6 +63,8 @@ public class VehicularCapAssignmentListAdapter extends ArrayAdapter<VehicularCap
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // Get the data item for this position
         VehicularCapAssignmentResponse dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -90,8 +95,15 @@ public class VehicularCapAssignmentListAdapter extends ArrayAdapter<VehicularCap
         result.startAnimation(animation);
         lastPosition = position;
 
+        try {
+            Date date = format.parse(dataModel.getBeginAtDate());
+            viewHolder.begin_date.setText(USER_DATE_FORMAT.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            viewHolder.begin_date.setText(dataModel.getBeginAtDate());
+        }
+
         viewHolder.crosses.setText(movementsSerialize(dataModel.getMovements()));
-        viewHolder.begin_date.setText(dataModel.getBeginAtDate());
         viewHolder.numberOfMovements.setText(String.valueOf(dataModel.getMovements().size()));
         viewHolder.remainingTime.setText(String.valueOf(dataModel.getDurationInHours()));
         // Return the completed view to render on screen
@@ -101,9 +113,9 @@ public class VehicularCapAssignmentListAdapter extends ArrayAdapter<VehicularCap
     private String movementsSerialize(List<Movement> movements) {
         StringBuilder movementsSerialized = new StringBuilder();
         for(Movement movement: movements) {
-            movementsSerialized.append(String.format("%s %s -> %s %s\n",
-                    movement.getStreet_from(), movement.getStreet_from_direction(),
-                    movement.getStreet_to(), movement.getStreet_to_direction()));
+            movementsSerialized.append(String.format("%s: %d (%s -> %s)\n",
+                    movement.getMovement_name(), movement.getMovement_code(),
+                    movement.getStreet_from(), movement.getStreet_to()));
         }
         return movementsSerialized.toString();
     }

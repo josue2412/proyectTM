@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.application.LoginActivity;
 import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 
 import java.text.SimpleDateFormat;
@@ -90,7 +91,7 @@ public class EmergencyNotificationActivity extends AppCompatActivity {
     }
 
     public void postEmergencyMessage(final String msg) {
-        String requestUrl = "http://u856955919.hostingerapp.com/api/persist/capturistNotification";
+        String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/capturistNotification");
         final ProgressDialog pdLoading = new ProgressDialog(this);
         pdLoading.setMessage("\tEnviando...");
         pdLoading.show();

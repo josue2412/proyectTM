@@ -73,7 +73,7 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
         requestUrl = String.format("%s%s%s", this.serverIp,
-                "api/capturistAscDescAssignments?capturist_id=",
+                "/app/api/capturistAscDescAssignments?capturist_id=",
                 SaveSharedPreference.getUserNameKey(getApplicationContext()));
 
         context = getApplicationContext();

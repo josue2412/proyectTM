@@ -43,7 +43,7 @@ public class OriginDestinyAssignmentDetailsActivity extends BaseActivity
         pollsRecordsLinearLayout = findViewById(R.id.polls_sent_layout);
         repository = new OriginDestinyPollRepository(getApplication());
         appContext = getApplication();
-        endpointUrl = "api/persist/pollAnswers";
+        endpointUrl = "/app/api/persist/pollAnswers";
         postParamName = "pollAnswersData";
 
         Bundle extras = getIntent().getExtras();

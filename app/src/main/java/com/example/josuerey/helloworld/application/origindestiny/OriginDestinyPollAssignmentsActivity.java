@@ -39,7 +39,7 @@ public class OriginDestinyPollAssignmentsActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
         requestUrl = String.format("%s%s%s", this.serverIp,
-                "api/capturistOriginDestinyAssignments?capturist_id=",
+                "/app/api/capturistOriginDestinyAssignments?capturist_id=",
                 SaveSharedPreference.getUserNameKey(getApplicationContext()));
 
         context = getApplicationContext();

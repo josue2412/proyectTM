@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.josuerey.helloworld.application.LoginActivity;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
+import com.example.josuerey.helloworld.application.shared.BaseActivity;
 import com.example.josuerey.helloworld.infrastructure.network.VehicularCapAssignmentResponse;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.VehicularCapAssignmentListAdapter;
@@ -30,7 +31,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class VehicularCapAssignmentsActivity extends AppCompatActivity
+public class VehicularCapAssignmentsActivity extends BaseActivity
     implements AssignmentsDisplay<VehicularCapAssignmentResponse> {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -44,39 +45,12 @@ public class VehicularCapAssignmentsActivity extends AppCompatActivity
     private ProgressBar downloadAssignmentsPB;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tracker_activity_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.finishRoute:
-                finish();
-                return true;
-            case R.id.changeUser:
-                SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
-                Intent myIntent = new Intent(VehicularCapAssignmentsActivity.this, LoginActivity.class);
-                VehicularCapAssignmentsActivity.this.startActivity(myIntent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
 
         requestUrl = String.format("%s%s%s", this.serverIp,
-                "api/capturistVehicularCapacityAssignments?capturist_id=",
+                "/app/api/capturistVehicularCapacityAssignments?capturist_id=",
                 SaveSharedPreference.getUserNameKey(getApplicationContext()));
 
         context = getApplicationContext();
@@ -121,7 +95,7 @@ public class VehicularCapAssignmentsActivity extends AppCompatActivity
     @Override
     public void handleClickedAssignment(VehicularCapAssignmentResponse assignmentResponse) {
         Intent fillFormIntent = new Intent(VehicularCapAssignmentsActivity.this,
-                VehicularCapacityForm.class);
+                VehicularCapacityGenActivity.class);
         fillFormIntent.putExtra("vehicCapAssignment", gson.toJson(assignmentResponse));
         Log.d(TAG, "Handling VehicularCapacityAssignment: " + assignmentResponse.getId());
         VehicularCapAssignmentsActivity.this.startActivity(fillFormIntent);

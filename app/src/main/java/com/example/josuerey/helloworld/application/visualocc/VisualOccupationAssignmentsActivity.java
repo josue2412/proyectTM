@@ -72,7 +72,7 @@ public class VisualOccupationAssignmentsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
         requestUrl = String.format("%s%s%s", this.serverIp,
-                "api/capturistVisualOccupationAssignments?capturist_id=",
+                "/app/api/capturistVisualOccupationAssignments?capturist_id=",
                 SaveSharedPreference.getUserNameKey(getApplicationContext()));
 
         context = getApplicationContext();

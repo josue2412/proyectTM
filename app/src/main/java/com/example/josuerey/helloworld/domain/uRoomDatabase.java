@@ -55,7 +55,7 @@ import java.util.concurrent.Executors;
         Assignment.class,
         OriginDestinyPollAnswer.class,
         OriginDestinyPoll.class},
-        version = 1, exportSchema = false)
+        version = 2, exportSchema = false)
 @TypeConverters({MovementConverter.class})
 public abstract class uRoomDatabase extends RoomDatabase {
 

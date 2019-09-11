@@ -111,11 +111,11 @@ public class VehicularCapacityForm extends AppCompatActivity {
             Log.d(TAG, "There are no metadata pending to backup");
         }
 
-        VehicularCapacityRecord[] vehicularRecordsPendingToBackup =
-                vehicularCapacityRecordRepository.findRecordsPendingToBackup();
-        if (vehicularRecordsPendingToBackup.length > 0) {
-            Log.d(TAG, "Retrying to backup " + vehicularRecordsPendingToBackup.length + " records");
-            apiClient.postVehicularCapRecord(Arrays.asList(vehicularRecordsPendingToBackup), vehicularCapacityRecordRepository);
+        List<VehicularCapacityRecord> vehicularRecordsPendingToBackup =
+                vehicularCapacityRecordRepository.findRecordsPendingToBackUp();
+        if (!vehicularRecordsPendingToBackup.isEmpty()) {
+            Log.d(TAG, "Retrying to backup " + vehicularRecordsPendingToBackup.size() + " records");
+            apiClient.postVehicularCapRecord(vehicularRecordsPendingToBackup, vehicularCapacityRecordRepository);
         } else {
             Log.d(TAG, "There are no records pending to backup");
         }

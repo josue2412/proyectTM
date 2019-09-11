@@ -54,7 +54,7 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
         setContentView(R.layout.origin_destiny_poll_questionary);
         questionaryParentLinearLayout = findViewById(R.id.parent_questions_layout);
         appContext = getApplication();
-        endpointUrl = "api/persist/pollAnswers";
+        endpointUrl = "/app/api/persist/pollAnswers";
         postParamName = "pollAnswersData";
         answerRepository = new OriginDestinyPollAnswerRepository(getApplication());
         repository = new OriginDestinyPollRepository(getApplication());

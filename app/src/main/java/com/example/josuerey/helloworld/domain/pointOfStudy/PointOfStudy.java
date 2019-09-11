@@ -25,6 +25,9 @@ public class PointOfStudy {
     @SerializedName("description")
     private String description;
 
+    @SerializedName("intersection_image_url")
+    private String intersectionImageURL;
+
     @SerializedName("capturist_responsible_id")
     private int capturistResponsibleId;
 
