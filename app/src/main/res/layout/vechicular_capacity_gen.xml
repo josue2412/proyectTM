@@ -71,13 +71,12 @@
                 android:id="@+id/movementsInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="25dp"
                 android:orientation="vertical">
 
-                <ImageView
+                <com.example.josuerey.helloworld.utilities.TouchImageView
                     android:id="@+id/intersectionImageView"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="fitCenter"/>
             </LinearLayout>
