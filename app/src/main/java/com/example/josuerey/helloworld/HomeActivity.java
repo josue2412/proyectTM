@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
+import com.example.josuerey.helloworld.network.APIClient;
 import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
 
 import org.json.JSONException;
@@ -87,7 +88,7 @@ public class HomeActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
         String userToken= "1234";
-        String url ="http://u856955919.hostingerapp.com/app/api/user?api_token="+userToken;
+        String url = String.format("%s%s%s", APIClient.SERVER_HOST, "/app/api/user?api_token=", userToken);
         final ProgressDialog pdLoading = new ProgressDialog(this);
         pdLoading.setMessage("\tLoading...");
         pdLoading.show();
