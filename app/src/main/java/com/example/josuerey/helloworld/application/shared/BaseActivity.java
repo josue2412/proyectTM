@@ -1,6 +1,8 @@
 package com.example.josuerey.helloworld.application.shared;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +19,13 @@ import lombok.Getter;
 public class BaseActivity extends AppCompatActivity {
 
     protected final String TAG = this.getClass().getSimpleName();
+    protected String deviceId;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

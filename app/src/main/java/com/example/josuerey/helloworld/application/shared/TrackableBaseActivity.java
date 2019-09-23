@@ -22,7 +22,6 @@ public abstract class TrackableBaseActivity extends BaseActivity implements Loca
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     protected int updatesLocationDistance = 100;
     protected GPSLocation currentLocation;
-    protected String deviceId;
     private LocationManager mlocManager;
 
     @Override
@@ -66,7 +65,6 @@ public abstract class TrackableBaseActivity extends BaseActivity implements Loca
 
     protected void locationStart() {
         Log.d(TAG, "Starting location updates");
-        deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!gpsEnabled) {
