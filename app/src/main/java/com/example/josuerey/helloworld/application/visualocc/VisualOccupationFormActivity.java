@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.visualocc;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,13 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudy;
 import com.example.josuerey.helloworld.domain.viaofstudy.ViaOfStudyRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadataRepository;
-import com.example.josuerey.helloworld.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 

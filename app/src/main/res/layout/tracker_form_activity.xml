@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/background_color"
-    tools:context=".TrackerFormActivity">
+    tools:context=".application.ascdesc.TrackerFormActivity">
 
     <EditText
         android:id="@+id/editTextRuta"

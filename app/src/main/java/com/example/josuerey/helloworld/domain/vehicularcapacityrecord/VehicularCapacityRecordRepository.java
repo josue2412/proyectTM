@@ -2,13 +2,10 @@ package com.example.josuerey.helloworld.domain.vehicularcapacityrecord;
 
 import android.app.Application;
 
-import com.example.josuerey.helloworld.application.vehicularstudy.CounterStats;
-import com.example.josuerey.helloworld.UnderStudyVehicles;
-import com.example.josuerey.helloworld.application.vehicularstudy.MovementCounter;
+import com.example.josuerey.helloworld.application.vehicularcap.UnderStudyVehicles;
+import com.example.josuerey.helloworld.application.vehicularcap.MovementCounter;
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
 import com.example.josuerey.helloworld.utilities.ExportData;
-
-import java.util.Map;
 
 public class VehicularCapacityRecordRepository {
     private VehicularCapacityRecordDao vehicularCapacityRecordDao;

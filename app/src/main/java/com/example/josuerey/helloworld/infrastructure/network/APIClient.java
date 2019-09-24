@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.network;
+package com.example.josuerey.helloworld.infrastructure.network;
 
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -28,16 +28,11 @@ import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationM
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Builder
 public class APIClient {

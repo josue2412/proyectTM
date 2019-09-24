@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -23,9 +23,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.josuerey.helloworld.domain.metadata.Metadata;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.ascdesc.TrackerFormActivity;
+import com.example.josuerey.helloworld.application.vehicularcap.VehicularCapacityForm;
+import com.example.josuerey.helloworld.application.visualocc.VisualOccupationFormActivity;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;

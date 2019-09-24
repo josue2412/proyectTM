@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.vehicularcap;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,14 +21,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.josuerey.helloworld.application.vehicularstudy.VehicularCapacityGenActivity;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.LoginActivity;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.network.AssignmentResponse;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.AssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.CustomAdapter;
 import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +45,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AssignmentsActivity extends AppCompatActivity {
+public class VehicularCapAssignmentsActivity extends AppCompatActivity {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final String TAG = this.getClass().getSimpleName();
@@ -76,8 +77,8 @@ public class AssignmentsActivity extends AppCompatActivity {
                 return true;
             case R.id.changeUser:
                 SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
-                Intent myIntent = new Intent(AssignmentsActivity.this, LoginActivity.class);
-                AssignmentsActivity.this.startActivity(myIntent);
+                Intent myIntent = new Intent(VehicularCapAssignmentsActivity.this, LoginActivity.class);
+                VehicularCapAssignmentsActivity.this.startActivity(myIntent);
                 finish();
                 return true;
             default:
@@ -164,14 +165,14 @@ public class AssignmentsActivity extends AppCompatActivity {
     }
 
     private void beginStudy(Assignment dataModel) {
-        Intent myIntent = new Intent(AssignmentsActivity.this, VehicularCapacityGenActivity.class);
+        Intent myIntent = new Intent(VehicularCapAssignmentsActivity.this, VehicularCapacityGenActivity.class);
         myIntent.putExtra("assignmentId", String.valueOf(dataModel.getServerId()));
         myIntent.putExtra("movements", new MovementConverter().fromMovementList(dataModel.getMovements()));
         myIntent.putExtra("serverId", String.valueOf(dataModel.getServerId()));
         myIntent.putExtra("remainingTime", dataModel.getTimeOfStudy());
         myIntent.putExtra("studyDuration", String.valueOf(dataModel.getDurationInHours()));
         myIntent.putExtra("intersectionImageURL", dataModel.getIntersectionImageURL());
-        AssignmentsActivity.this.startActivity(myIntent);
+        VehicularCapAssignmentsActivity.this.startActivity(myIntent);
     }
 
 

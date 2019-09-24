@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application;
 
 import android.Manifest;
 import android.content.Intent;
@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.application.vehicularcap.VehicularCapAssignmentsActivity;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -35,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if UserResponse is Already Logged In
         if(SaveSharedPreference.getLoggedStatus(getApplicationContext())) {
-            Intent intent = new Intent(getApplicationContext(), AssignmentsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), VehicularCapAssignmentsActivity.class);
             startActivity(intent);
             finish();
         } else {
@@ -59,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         SaveSharedPreference.setUserNameKey(getApplicationContext(), usernameKey);
 
         Log.d(TAG, String.format("User logged as %s and key %s", username, usernameKey));
-        Intent intent = new Intent(getApplicationContext(), AssignmentsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), VehicularCapAssignmentsActivity.class);
         startActivity(intent);
         finish();
     }

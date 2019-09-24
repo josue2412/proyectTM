@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".application.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,49 +23,49 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TrackerActivity"
+            android:name=".application.ascdesc.TrackerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".TrackerFormActivity"
+            android:name=".application.ascdesc.TrackerFormActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VisualOccupationFormActivity"
+            android:name=".application.visualocc.VisualOccupationFormActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VisualOccupationActivity"
+            android:name=".application.visualocc.VisualOccupationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".HomeActivity"
+            android:name=".application.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".VehicularCapacityActivity"
+            android:name=".application.vehicularcap.VehicularCapacityActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|screenSize"/>
         <activity
-            android:name=".VehicularCapacityForm"
+            android:name=".application.vehicularcap.VehicularCapacityForm"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".AssignmentsActivity"
+            android:name=".application.vehicularcap.VehicularCapAssignmentsActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|screenSize"/>
 
         <activity
-            android:name=".VehicularCapacityExtendedActivity"
+            android:name=".application.vehicularcap.VehicularCapacityExtendedActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"/>
 
         <activity
-            android:name=".EmergencyNotificationActivity"
+            android:name=".application.vehicularcap.EmergencyNotificationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".application.vehicularstudy.VehicularCapacityGenActivity"
+            android:name=".application.vehicularcap.VehicularCapacityGenActivity"
             android:label="@string/app_name"
             android:configChanges="orientation|screenSize"/>
     </application>

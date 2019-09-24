@@ -1,7 +1,6 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.vehicularcap;
 
 import android.app.ProgressDialog;
-import android.arch.persistence.room.util.StringUtil;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,8 +20,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.josuerey.helloworld.network.APIClient;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.LoginActivity;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -56,7 +57,7 @@ public class EmergencyNotificationActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
-                Intent myIntent = new Intent(EmergencyNotificationActivity.this, AssignmentsActivity.class);
+                Intent myIntent = new Intent(EmergencyNotificationActivity.this, VehicularCapAssignmentsActivity.class);
                 EmergencyNotificationActivity.this.startActivity(myIntent);
                 finish();
                 return true;

@@ -1,6 +1,4 @@
-package com.example.josuerey.helloworld;
-
-import com.example.josuerey.helloworld.application.vehicularstudy.StudyType;
+package com.example.josuerey.helloworld.application.vehicularcap;
 
 public enum UnderStudyVehicles {
 

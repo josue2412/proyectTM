@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld;
+package com.example.josuerey.helloworld.application.ascdesc;
 
 import android.Manifest;
 import android.arch.lifecycle.Observer;
@@ -30,13 +30,15 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.HomeActivity;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
 import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
 import com.example.josuerey.helloworld.domain.busstop.BusStopViewModel;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
-import com.example.josuerey.helloworld.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.APIClient;
 import com.example.josuerey.helloworld.utilities.ExportData;
 import com.google.common.collect.Lists;
 import com.travijuu.numberpicker.library.NumberPicker;

@@ -2,7 +2,7 @@ package com.example.josuerey.helloworld.utilities;
 
 import android.arch.persistence.room.TypeConverter;
 
-import com.example.josuerey.helloworld.network.AssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.AssignmentResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

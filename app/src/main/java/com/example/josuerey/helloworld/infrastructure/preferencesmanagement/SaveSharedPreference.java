@@ -1,11 +1,11 @@
-package com.example.josuerey.helloworld.sessionmangementsharedpref.utils;
+package com.example.josuerey.helloworld.infrastructure.preferencesmanagement;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 
-import static com.example.josuerey.helloworld.sessionmangementsharedpref.utils.PreferencesUtility.*;
+import static com.example.josuerey.helloworld.infrastructure.preferencesmanagement.PreferencesUtility.*;
 
 public class SaveSharedPreference {
     static SharedPreferences getPreferences(Context context) {

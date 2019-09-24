@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.application.vehicularstudy;
+package com.example.josuerey.helloworld.application.vehicularcap;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -4,7 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
-import com.example.josuerey.helloworld.sessionmangementsharedpref.utils.SaveSharedPreference;
+import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.google.common.base.Optional;
 
 public class AssignmentRepository {

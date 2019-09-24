@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.assignment.Assignment;
-import com.example.josuerey.helloworld.network.AssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.AssignmentResponse;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

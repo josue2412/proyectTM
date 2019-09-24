@@ -1,4 +1,4 @@
-package com.example.josuerey.helloworld.network;
+package com.example.josuerey.helloworld.infrastructure.network;
 
 import com.google.gson.annotations.SerializedName;
 
