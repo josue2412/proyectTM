@@ -1,5 +1,6 @@
 package com.example.josuerey.helloworld.application.vehicularcap;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,11 +22,13 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.TrackableBaseActivity;
+import com.example.josuerey.helloworld.domain.movement.Movement;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.infrastructure.network.APIClient;
-import com.example.josuerey.helloworld.infrastructure.network.AssignmentResponse;
-import com.example.josuerey.helloworld.utilities.MovementConverter;
+import com.example.josuerey.helloworld.infrastructure.network.VehicularCapAssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.RemoteStorage;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,15 +40,20 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class VehicularCapacityGenActivity extends TrackableBaseActivity {
+import lombok.Getter;
+
+@Getter
+public class VehicularCapacityGenActivity extends TrackableBaseActivity implements
+        RemoteStorage<VehicularCapacityRecord, VehicularCapacityRecordRepository> {
+
+    private Application appContext;
+    private String endpointUrl;
+    private String postParamName;
 
     private static final SimpleDateFormat STD_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("h:mm a");
     private final static int INTERVAL_TIME = 60000;
-    private int assignmentId;
-    private String intersectionImageURL;
-    private List<AssignmentResponse.Movement> movements;
-    private Map<Integer, AssignmentResponse.Movement> movementsMap;
+    private Map<Integer, Movement> movementsMap;
 
     private LinearLayout movementsButtonsLayout;
 
@@ -62,8 +70,8 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
     private final Handler handler = new Handler();
     private Date endTimeInterval;
 
-    private APIClient apiClient;
-    private VehicularCapacityRecordRepository vehicularCapacityRecordRepository;
+    private VehicularCapacityRecordRepository repository;
+    private VehicularCapAssignmentResponse assignment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +81,16 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
         setContentView(R.layout.vehicular_capacity_gen);
         movementsMap = new HashMap<>();
         movementsCounters = new HashMap<>();
+        appContext = getApplication();
+        endpointUrl = "/app/api/persist/vehicCapRecord";
+        postParamName = "vehicCapData";
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            assignmentId = Integer.valueOf(extras.getString("assignmentId"));
-            movements = new MovementConverter().toMovementList(extras.getString("movements"));
-            for (AssignmentResponse.Movement mov : movements) { movementsMap.put(mov.getId(), mov); }
-            intersectionImageURL = extras.getString("intersectionImageURL");
+            assignment = new Gson().fromJson(
+                    extras.getString("vehicCapAssignment"), VehicularCapAssignmentResponse.class);
+
+            for (Movement mov : assignment.getMovements()) { movementsMap.put(mov.getId(), mov); }
             bindViews();
             processMovements();
             requestImage();
@@ -88,8 +99,8 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
 
         beginningTimeTextView.setText(USER_DATE_FORMAT.format(Calendar.getInstance().getTime()));
         lastBackupTimeTextView.setText(beginningTimeTextView.getText().toString());
-        apiClient = APIClient.builder().app(getApplication()).build();
-        vehicularCapacityRecordRepository = new VehicularCapacityRecordRepository(getApplication());
+        repository = new VehicularCapacityRecordRepository(getApplication());
+        checkForRecordsPendingToBackup();
     }
 
 
@@ -97,7 +108,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
      * Dynamically creates the buttons counters for each movement given.
      */
     private void processMovements() {
-        for (AssignmentResponse.Movement movement : movements) {
+        for (Movement movement : assignment.getMovements()) {
             movementsCounters.put(movement.getId(), inflateMovements(movement));
         }
     }
@@ -121,11 +132,14 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
+                        endTimeInterval = Calendar.getInstance().getTime();
                         if (countersChanged) {
                             generateCountersBackupRecord();
                         } else {
                             Log.d(TAG, "There were no changes, skipping counters backup");
                         }
+                        beginTimeInterval = endTimeInterval;
                     }
                 });
             }
@@ -138,7 +152,6 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
     private void generateCountersBackupRecord() {
 
         List<VehicularCapacityRecord> records = new LinkedList<>();
-        endTimeInterval = Calendar.getInstance().getTime();
 
         for (Integer movementId : movementsCounters.keySet()) {
             MovementCounter movementCounter = movementsCounters.get(movementId);
@@ -147,10 +160,10 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
             if (movementsMap.get(movementId).getMovement_name()
                     .equals(StudyType.VEHICULAR.name())) {
                 recordBuilder =
-                        vehicularCapacityRecordRepository.createVehicularRecord(movementCounter);
+                        repository.createVehicularRecord(movementCounter);
             } else {
                 recordBuilder =
-                        vehicularCapacityRecordRepository.createPedestrianRecord(movementCounter);
+                        repository.createPedestrianRecord(movementCounter);
             }
 
             recordBuilder.movementId(movementId).deviceId(deviceId)
@@ -162,9 +175,10 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
             VehicularCapacityRecord vehicularCapacityRecord = recordBuilder.build();
 
             records.add(vehicularCapacityRecord);
-            vehicularCapacityRecordRepository.save(vehicularCapacityRecord);
+            repository.save(vehicularCapacityRecord);
         }
-        apiClient.postVehicularCapRecord(records, vehicularCapacityRecordRepository);
+
+        postItemsInBatch(records);
         lastBackupTimeTextView.setText(USER_DATE_FORMAT.format(endTimeInterval));
         countersChanged = false;
     }
@@ -188,7 +202,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
      * @param movement
      * @return Map with key vehicle.name - movementId and value {@linkplain CounterStats}
      */
-    private MovementCounter inflateMovements(AssignmentResponse.Movement movement) {
+    private MovementCounter inflateMovements(Movement movement) {
         MovementCounter movementCounter = MovementCounter.builder().build();
 
         LayoutInflater viewInflater = (
@@ -235,7 +249,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
         View currentVehicleButtonCounter =
                 viewInflater.inflate(R.layout.vehicle_button_counter, null);
 
-        CounterTag cTag = CounterTag.builder()
+        CounterViewTag cTag = CounterViewTag.builder()
                 .movementId(movementId).vehicleType(vehicle.name()).build();
         currentVehicleButtonCounter.setId(cTag.hashCode());
         ImageButton buttonImageView =
@@ -251,13 +265,13 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
      * Call when a counter button is pressed.
      */
     public void onCounterClickListener(View buttonView) {
-        CounterTag counterTag = (CounterTag) buttonView.getTag();
+        CounterViewTag counterViewTag = (CounterViewTag) buttonView.getTag();
 
-        updateCounterBadgeView(counterTag, movementsCounters
-                .get(counterTag.getMovementId())
+        updateCounterBadgeView(counterViewTag, movementsCounters
+                .get(counterViewTag.getMovementId())
                 .getCounterStatusPerVehicle()
-                .get(counterTag.getVehicleType()).increment(),
-                movementsCounters.get(counterTag.getMovementId()).getTotal());
+                .get(counterViewTag.getVehicleType()).increment(),
+                movementsCounters.get(counterViewTag.getMovementId()).getTotal());
         countersChanged = true;
     }
 
@@ -269,13 +283,13 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
         return new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View buttonView) {
-                CounterTag counterTag = (CounterTag) buttonView.getTag();
+                CounterViewTag counterViewTag = (CounterViewTag) buttonView.getTag();
 
-                updateCounterBadgeView(counterTag, movementsCounters
-                        .get(counterTag.getMovementId())
+                updateCounterBadgeView(counterViewTag, movementsCounters
+                        .get(counterViewTag.getMovementId())
                         .getCounterStatusPerVehicle()
-                        .get(counterTag.getVehicleType()).decrement(),
-                        movementsCounters.get(counterTag.getMovementId()).getTotal());
+                        .get(counterViewTag.getVehicleType()).decrement(),
+                        movementsCounters.get(counterViewTag.getMovementId()).getTotal());
                 return true;
             }
         };
@@ -284,16 +298,16 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
     /**
      * Updates the counter badge that is shown in the display
      *
-     * @param counterTag identifier of the {@linkplain View} that contains the badge
+     * @param counterViewTag identifier of the {@linkplain View} that contains the badge
      * @param currentValue to set in the badge
      */
     private void updateCounterBadgeView(
-            CounterTag counterTag, int currentValue, final int totalValue) {
+            CounterViewTag counterViewTag, int currentValue, final int totalValue) {
 
-        View counterToIncrement = findViewById(counterTag.hashCode());
+        View counterToIncrement = findViewById(counterViewTag.hashCode());
         TextView counterBadge = counterToIncrement.findViewById(R.id.counterBadge);
         counterBadge.setText(String.valueOf(currentValue));
-        View movementLayout = findViewById(counterTag.getMovementId());
+        View movementLayout = findViewById(counterViewTag.getMovementId());
         TextView counterTotalTextView =
                 movementLayout.findViewById(R.id.movement_counter_text_view);
         counterTotalTextView.setText(String.valueOf(totalValue));
@@ -355,7 +369,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
 
         Intent myIntent = new Intent(VehicularCapacityGenActivity.this,
                 EmergencyNotificationActivity.class);
-        myIntent.putExtra("assignmentId", String.valueOf(assignmentId));
+        myIntent.putExtra("assignmentId", String.valueOf(assignment.getId()));
         VehicularCapacityGenActivity.this.startActivity(myIntent);
         finish();
     }
@@ -365,7 +379,8 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
      */
     public void requestImage() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        String mImageURLString = String.format("%s%s", APIClient.SERVER_HOST, intersectionImageURL);
+        String mImageURLString = String.format("%s%s", APIClient.SERVER_HOST,
+                assignment.getProject().getIntersection_image_url());
 
         ImageRequest imageRequest = new ImageRequest(
                 mImageURLString,
@@ -388,6 +403,18 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity {
         );
 
         requestQueue.add(imageRequest);
+    }
+
+    private void checkForRecordsPendingToBackup() {
+
+        List<VehicularCapacityRecord> vehicularRecordsPendingToBackup =
+                repository.findRecordsPendingToBackUp();
+        if (!vehicularRecordsPendingToBackup.isEmpty()) {
+            Log.d(TAG, "Retrying to backup " + vehicularRecordsPendingToBackup.size() + " records");
+            postItemsInBatch(vehicularRecordsPendingToBackup);
+        } else {
+            Log.d(TAG, "There are no VehicularCapacityRecords pending to backup");
+        }
     }
 
     @Override

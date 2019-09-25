@@ -6,6 +6,8 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 @Dao
 public interface VehicularCapacityRecordDao {
 
@@ -15,7 +17,7 @@ public interface VehicularCapacityRecordDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateInBatch(VehicularCapacityRecord... objects);
 
-    @Query("SELECT * FROM VehicularCapacityRecord WHERE backedUpRemotely = :value")
-    VehicularCapacityRecord[] findRecordsPendingToBackup(int value);
+    @Query("SELECT * FROM VehicularCapacityRecord WHERE backedUpRemotely = 0")
+    List<VehicularCapacityRecord> findRecordsPendingToBackup();
 
 }

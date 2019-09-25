@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.example.josuerey.helloworld.infrastructure.network.AssignmentResponse;
+import com.example.josuerey.helloworld.domain.movement.Movement;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class Assignment {
     private int durationInHours;
 
     @ColumnInfo(name = "movements")
-    private List<AssignmentResponse.Movement> movements;
+    private List<Movement> movements;
 
     @ColumnInfo(name = "enabled")
     private int enabled;

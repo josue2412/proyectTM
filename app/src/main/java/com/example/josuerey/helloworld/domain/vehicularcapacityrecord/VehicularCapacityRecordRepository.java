@@ -1,14 +1,20 @@
 package com.example.josuerey.helloworld.domain.vehicularcapacityrecord;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.josuerey.helloworld.application.vehicularcap.UnderStudyVehicles;
 import com.example.josuerey.helloworld.application.vehicularcap.MovementCounter;
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
+import com.example.josuerey.helloworld.infrastructure.persistence.RemotelyStore;
 import com.example.josuerey.helloworld.utilities.ExportData;
 
-public class VehicularCapacityRecordRepository {
+import java.util.List;
+
+public class VehicularCapacityRecordRepository implements RemotelyStore<VehicularCapacityRecord>{
     private VehicularCapacityRecordDao vehicularCapacityRecordDao;
+
+    private static final String TAG = VehicularCapacityRecordRepository.class.getName();
 
     public VehicularCapacityRecordRepository(Application application) {
 
@@ -32,9 +38,17 @@ public class VehicularCapacityRecordRepository {
         vehicularCapacityRecordDao.updateInBatch(vehicularCapacityRecords);
     }
 
-    public VehicularCapacityRecord[] findRecordsPendingToBackup() {
+    @Override
+    public void backedUpRemotely(List<VehicularCapacityRecord> records) {
+        Log.i(TAG, String.format(" %d records backed up remotely", records.size()));
 
-        return vehicularCapacityRecordDao.findRecordsPendingToBackup(0);
+        this.updateInBatch(records.toArray(new VehicularCapacityRecord[records.size()]));
+    }
+
+    @Override
+    public List<VehicularCapacityRecord> findRecordsPendingToBackUp() {
+
+        return vehicularCapacityRecordDao.findRecordsPendingToBackup();
     }
 
     public VehicularCapacityRecord.VehicularCapacityRecordBuilder createVehicularRecord (

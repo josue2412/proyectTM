@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CounterTag {
+public class CounterViewTag {
 
     private int movementId;
     private String vehicleType;

@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.josuerey.helloworld.R;
-import com.example.josuerey.helloworld.domain.assignment.Assignment;
 import com.example.josuerey.helloworld.domain.movement.Movement;
 import com.example.josuerey.helloworld.infrastructure.network.VehicularCapAssignmentResponse;
 
@@ -21,9 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnClickListener{
+public class VehicularCapAssignmentListAdapter extends ArrayAdapter<VehicularCapAssignmentResponse>
+        implements View.OnClickListener{
 
-    private List<Assignment> dataSet;
+    private List<VehicularCapAssignmentResponse> dataSet;
     private final String TAG = this.getClass().getSimpleName();
     Context mContext;
 
@@ -35,10 +35,11 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
         TextView remainingTime;
     }
 
-    public CustomAdapter(List<Assignment> data, Context context) {
+    public VehicularCapAssignmentListAdapter(List<VehicularCapAssignmentResponse> data,
+                                             Context context) {
         super(context, R.layout.assginment_view, data);
         this.dataSet = data;
-        this.mContext=context;
+        this.mContext = context;
 
     }
 
@@ -47,7 +48,7 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        Assignment dataModel = (Assignment)object;
+        VehicularCapAssignmentResponse dataModel = (VehicularCapAssignmentResponse)object;
 
         switch (v.getId())
         {
@@ -65,7 +66,7 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
         SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("h:mm a");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // Get the data item for this position
-        Assignment dataModel = getItem(position);
+        VehicularCapAssignmentResponse dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -89,21 +90,22 @@ public class CustomAdapter extends ArrayAdapter<Assignment> implements View.OnCl
             result=convertView;
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
+        Animation animation = AnimationUtils.loadAnimation(mContext,
+                (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
         lastPosition = position;
 
         try {
-            Date date = format.parse(dataModel.getBeginAt());
+            Date date = format.parse(dataModel.getBegin_at());
             viewHolder.begin_date.setText(USER_DATE_FORMAT.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
-            viewHolder.begin_date.setText(dataModel.getBeginAt());
+            viewHolder.begin_date.setText(dataModel.getBegin_at());
         }
 
         viewHolder.crosses.setText(movementsSerialize(dataModel.getMovements()));
         viewHolder.numberOfMovements.setText(String.valueOf(dataModel.getMovements().size()));
-        viewHolder.remainingTime.setText(String.valueOf(dataModel.getTimeOfStudy()));
+        viewHolder.remainingTime.setText(String.valueOf(dataModel.getDuration_in_hours()));
         // Return the completed view to render on screen
         return convertView;
     }

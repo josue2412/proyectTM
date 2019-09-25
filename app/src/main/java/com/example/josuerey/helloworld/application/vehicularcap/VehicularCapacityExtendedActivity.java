@@ -29,10 +29,11 @@ import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.LoginActivity;
 import com.example.josuerey.helloworld.domain.assignment.AssignmentRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
+import com.example.josuerey.helloworld.domain.movement.Movement;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecord;
 import com.example.josuerey.helloworld.domain.vehicularcapacityrecord.VehicularCapacityRecordRepository;
 import com.example.josuerey.helloworld.infrastructure.network.APIClient;
-import com.example.josuerey.helloworld.infrastructure.network.AssignmentResponse;
+import com.example.josuerey.helloworld.infrastructure.network.VehicularCapAssignmentResponse;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.MovementConverter;
 import com.example.josuerey.helloworld.utilities.StudyDuration;
@@ -129,7 +130,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
     private Date beginningOfTheStudy;
     private String remainingTime;
     private String spentTime;
-    private List<AssignmentResponse.Movement> movements;
+    private List<Movement> movements;
     private int assignmentId;
     private int serverId;
     private int numberOfMovements;
@@ -361,7 +362,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
      *
      * @param movements
      */
-    private void setMovementsImages(List<AssignmentResponse.Movement> movements) {
+    private void setMovementsImages(List<Movement> movements) {
 
         String movementsFormatted = String.format("%s %s %s", movements.get(2).getMovement_name(),
                 movements.get(1).getMovement_name(), movements.get(0).getMovement_name());
@@ -872,7 +873,7 @@ public class VehicularCapacityExtendedActivity extends AppCompatActivity {
         truckCounterBtn4.setBackgroundResource(R.color.colorBackground);
     }
 
-    private int deriveMoveSrc(@Nonnull AssignmentResponse.Movement movement) {
+    private int deriveMoveSrc(@Nonnull Movement movement) {
         String move = movement.getMovement_name().toLowerCase();
         switch (move) {
             case "derecho":
