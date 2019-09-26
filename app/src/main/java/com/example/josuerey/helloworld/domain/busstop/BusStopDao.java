@@ -11,6 +11,9 @@ import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 
 import java.util.List;
 
+/**
+ * Data Access Layer for {@link BusStop} object.
+ */
 @Dao
 public interface BusStopDao {
 
@@ -23,12 +26,12 @@ public interface BusStopDao {
     @Query("SELECT * from BusStop where assignmentId = :assignmentId")
     LiveData<List<BusStop>> findBusStopsByMetadataId(int assignmentId);
 
-    @Query("UPDATE BusStop SET backedUpRemotely = 1 where id = :id")
-    void updateBusStopBackupRemotelyById(int id);
-
     @Query("SELECT * FROM BusStop where backedUpRemotely = :value")
     BusStop[] findBusStopsByBackedUpRemotely(int value);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateBusStop(BusStop ... busStops);
+
+    @Query("SELECT * FROM BusStop where backedUpRemotely = 0")
+    List<BusStop> findRecordsPendingToBackup();
 }

@@ -106,6 +106,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
         beginningTimeTextView.setText(USER_DATE_FORMAT.format(Calendar.getInstance().getTime()));
         lastBackupTimeTextView.setText(beginningTimeTextView.getText().toString());
         repository = new VehicularCapacityRecordRepository(getApplication());
+        retryPostItemsInBatch();
     }
 
 

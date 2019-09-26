@@ -146,7 +146,6 @@ public class APIClient {
 
                         gpsLocationRepository.updateGPSLocationBackupRemotelyById(
                                 route.toArray(new GPSLocation[route.size()]));
-                        Log.d(TAG, "Location points updated successfully");
                     }
                 }, new Response.ErrorListener() {
                     @Override

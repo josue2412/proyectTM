@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.util.Log;
 
+import com.example.josuerey.helloworld.domain.shared.Storable;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity(tableName = "BusStop")
-public class BusStop {
+public class BusStop implements Storable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -65,6 +67,7 @@ public class BusStop {
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;
-        Log.d("BusStop", this.id + " Successfully backed up in remote server.");
+        Log.d("BusStop", String.format(
+                "Record with id: %d was successfully backed up in remote server.", this.id));
     }
 }

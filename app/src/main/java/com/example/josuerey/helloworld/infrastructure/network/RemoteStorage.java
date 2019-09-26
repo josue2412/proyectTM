@@ -33,6 +33,11 @@ public interface RemoteStorage<T extends Storable, R extends RemotelyStore<T>> {
     String getPostParamName();
     R getRepository();
 
+    /**
+     * Tries to post the input items by hitting the endpoint exposed in getEndpointUrl.
+     *
+     * @param itemsToStorage items to post
+     */
     default void postItemsInBatch(final List<T> itemsToStorage) {
 
         final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, getEndpointUrl());
@@ -60,7 +65,7 @@ public interface RemoteStorage<T extends Storable, R extends RemotelyStore<T>> {
                         Map<String, String> postMap = new HashMap<>();
                         String list2JsonArray = new Gson().toJson(itemsToStorage);
                         postMap.put(getPostParamName(), list2JsonArray);
-                        Log.i(REMOTE_STORAGE_TAG, String.format("%s: %s", getPostParamName(),list2JsonArray));
+                        Log.d(REMOTE_STORAGE_TAG, String.format("%s: %s", getPostParamName(),list2JsonArray));
 
                         return postMap;
                     }
@@ -71,5 +76,19 @@ public interface RemoteStorage<T extends Storable, R extends RemotelyStore<T>> {
                 0,
                 -1,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
+    /**
+     * Query the records stored internally that are not yet backed up remotely and tries to
+     * submit them again.
+     */
+    default void retryPostItemsInBatch(){
+        List<T> recordsPendingToBackup = getRepository().findRecordsPendingToBackUp();
+
+        if (!recordsPendingToBackup.isEmpty()) {
+            Log.d(REMOTE_STORAGE_TAG, String.format("Retrying to backup %d records",
+                    recordsPendingToBackup.size()));
+            postItemsInBatch(recordsPendingToBackup);
+        }
     }
 }

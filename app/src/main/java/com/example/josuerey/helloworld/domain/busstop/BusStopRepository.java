@@ -2,14 +2,16 @@ package com.example.josuerey.helloworld.domain.busstop;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
+import com.example.josuerey.helloworld.infrastructure.persistence.RemotelyStore;
 
 import java.util.List;
 
-public class BusStopRepository {
+public class BusStopRepository implements RemotelyStore<BusStop> {
 
+    private static final String TAG = BusStopRepository.class.getName();
     private BusStopDao busStopDao;
     private LiveData<List<BusStop>> allBusStops;
 
@@ -29,14 +31,22 @@ public class BusStopRepository {
         return busStopDao.insert(busStop);
     }
 
-    public void updateBusStopBackedUpSuccessById(int busStopId) {
-
-        busStopDao.updateBusStopBackupRemotelyById(busStopId);
-    }
 
     public BusStop[] findBusStopByBackedUpRemotely(int value) {
 
         return busStopDao.findBusStopsByBackedUpRemotely(value);
+    }
+
+    @Override
+    public void backedUpRemotely(List<BusStop> records) {
+
+        this.updateBusStopInBatch(records.toArray(new BusStop[records.size()]));
+    }
+
+    @Override
+    public List<BusStop> findRecordsPendingToBackUp() {
+
+        return busStopDao.findRecordsPendingToBackup();
     }
 
     public void updateBusStopInBatch(BusStop[] busStops) {

@@ -65,6 +65,7 @@ public class VisualOccupationMetadata {
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;
-        Log.d("VisualOccMetadata", "Successfully backed up in remote server.");
+        Log.d("VisualOccMetadata", String.format(
+                "Record with id: %d was successfully backed up in remote server.", this.id));
     }
 }

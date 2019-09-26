@@ -56,6 +56,7 @@ public class VehicularCapacity {
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;
-        Log.d("VehicularCapacity", this.id + " Successfully backed up in remote server.");
+        Log.d("VehicularCapacity", String.format(
+                "Record with id: %d was successfully backed up in remote server.", this.id));
     }
 }

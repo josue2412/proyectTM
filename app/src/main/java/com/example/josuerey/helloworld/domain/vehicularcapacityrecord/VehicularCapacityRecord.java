@@ -82,7 +82,8 @@ public class VehicularCapacityRecord implements Storable {
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;
-        Log.d("VehicularCapacityRecord", this.id + " Successfully backed up in remote server.");
+        Log.d("VehicularCapacityRecord", String.format(
+                "Record with id: %d was successfully backed up in remote server.", this.id));
     }
 
     @Override

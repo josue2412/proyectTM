@@ -65,7 +65,8 @@ public class Metadata {
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;
-        Log.d("Metadata", this.id + " Successfully backed up in remote server.");
+        Log.d("Metadata", String.format(
+                "Record with id: %d was successfully backed up in remote server.", this.id));
     }
 
 }

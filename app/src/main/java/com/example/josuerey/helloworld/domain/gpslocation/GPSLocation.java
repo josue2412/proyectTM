@@ -50,6 +50,7 @@ public class GPSLocation {
     public void remotelyBackedUpSuccessfully() {
 
         this.backedUpRemotely = 1;
-        Log.d("GPSLocation", this.id + " Successfully backed up in remote server.");
+        Log.d("GPSLocation", String.format(
+                "Record with id: %d was successfully backed up in remote server.", this.id));
     }
 }

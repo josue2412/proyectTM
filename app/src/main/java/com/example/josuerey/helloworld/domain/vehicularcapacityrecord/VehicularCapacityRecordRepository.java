@@ -34,7 +34,6 @@ public class VehicularCapacityRecordRepository implements RemotelyStore<Vehicula
 
     @Override
     public void backedUpRemotely(List<VehicularCapacityRecord> records) {
-        Log.i(TAG, String.format(" %d records backed up remotely", records.size()));
 
         this.updateInBatch(records.toArray(new VehicularCapacityRecord[records.size()]));
     }

@@ -1,25 +1,14 @@
 package com.example.josuerey.helloworld.application.ascdesc;
 
-import android.Manifest;
+import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Bundle;
-import android.content.pm.PackageManager;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,28 +20,37 @@ import android.widget.Toast;
 
 import com.example.josuerey.helloworld.application.HomeActivity;
 import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.shared.TrackableBaseActivity;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
 import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
-import com.example.josuerey.helloworld.domain.busstop.BusStopViewModel;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocationViewModel;
 import com.example.josuerey.helloworld.domain.metadata.Metadata;
 import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.RemoteStorage;
 import com.example.josuerey.helloworld.utilities.ExportData;
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
 
-public class TrackerActivity extends AppCompatActivity {
+import lombok.Getter;
+
+@Getter
+public class TrackerActivity extends TrackableBaseActivity
+        implements RemoteStorage<BusStop, BusStopRepository> {
+
+    private Application appContext;
+    private String endpointUrl;
+    private String postParamName;
 
     private String TAG = this.getClass().getSimpleName();
     private TextView latLongTextView;
@@ -64,28 +62,15 @@ public class TrackerActivity extends AppCompatActivity {
     private RadioButton rbStopType;
     private NumberPicker numberPickerUp;
     private NumberPicker numberPickerDown;
-    private LocationManager mlocManager;
-    private MyLocationListener mlocListener;
-    private BusStopViewModel busStopViewModel;
     private GPSLocationViewModel gpsLocationViewModel;
-    private List<BusStop> busStopsList;
     private List<GPSLocation> gpsLocationList;
     private Date beginStopInstant;
-    private GPSLocation currentLocation;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private GPSLocationRepository gpsLocationRepository;
-    private BusStopRepository busStopRepository;
+    private BusStopRepository repository;
     private APIClient apiClient;
-    private String android_device_id;
     private Metadata currentMetadata;
     private int totalNumberOfPassengers;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tracker_activity_menu, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -94,7 +79,6 @@ public class TrackerActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
-                mlocManager.removeUpdates(mlocListener);
                 apiClient.postGpsLocationInBatch(gpsLocationList, gpsLocationRepository);
                 Intent myIntent = new Intent(TrackerActivity.this, HomeActivity.class);
                 TrackerActivity.this.startActivity(myIntent);
@@ -112,6 +96,9 @@ public class TrackerActivity extends AppCompatActivity {
 
         apiClient = APIClient.builder().app(getApplication()).build();
         Bundle extras = getIntent().getExtras();
+        appContext = getApplication();
+        endpointUrl = "/app/api/persist/routeBusStop";
+        postParamName = "busStopData";
 
         if (extras != null) {
             currentMetadata = new Gson().fromJson(
@@ -119,12 +106,9 @@ public class TrackerActivity extends AppCompatActivity {
             totalNumberOfPassengers = currentMetadata.getInitialPassengers();
         }
 
-        android_device_id = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-
         // Initialize repositories
         gpsLocationRepository = new GPSLocationRepository(getApplication());
-        busStopRepository = new BusStopRepository(getApplication());
+        repository = new BusStopRepository(getApplication());
 
         //Bind layout components
         latLongTextView = findViewById(R.id.latLong);
@@ -134,30 +118,15 @@ public class TrackerActivity extends AppCompatActivity {
         beginStopButton = findViewById(R.id.btnStopBegin);
         rgStopType = findViewById(R.id.rgStopType);
         rbStopType = findViewById(rgStopType.getCheckedRadioButtonId());
-        rgStopType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                rbStopType = findViewById(rgStopType.getCheckedRadioButtonId());
-            }
-        });
+        rgStopType.setOnCheckedChangeListener((RadioGroup group, int checkedId) ->
+            rbStopType = findViewById(rgStopType.getCheckedRadioButtonId()));
 
         totalPassengersTextView.setText(" Total pasajeros: " + totalNumberOfPassengers + " ");
 
         numberPickerUp = findViewById(R.id.number_pickerUP);
         numberPickerDown = findViewById(R.id.number_pickerDown);
 
-        busStopViewModel = ViewModelProviders.of(this).get(BusStopViewModel.class);
         gpsLocationViewModel = ViewModelProviders.of(this).get(GPSLocationViewModel.class);
-
-        busStopsList = new LinkedList<>();
-        busStopViewModel.findBusStopsByMetadata(
-                currentMetadata.getAssignmentId()).observe(this, new Observer<List<BusStop>>() {
-            @Override
-            public void onChanged(@Nullable List<BusStop> busStops) {
-                busStopsList = busStops;
-                Log.d(TAG, "Number of bus stops: " + String.valueOf(busStopsList.size()));
-            }
-        });
 
         gpsLocationList = new LinkedList<>();
         gpsLocationViewModel.findGPSLocationsByMetadataId(
@@ -188,15 +157,6 @@ public class TrackerActivity extends AppCompatActivity {
             }
         });
 
-        currentLocation = GPSLocation.builder()
-                .assignmentId(currentMetadata.getAssignmentId())
-                .lat(0.0)
-                .lon(0.0)
-                .timeStamp(DATE_FORMAT.format(new Date()))
-                .deviceId(android_device_id)
-                .backedUpRemotely(0)
-                .build();
-
         disableControls();
         requestPermissions();
     }
@@ -223,59 +183,8 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
-    // Location services methods
-    private boolean requestPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
-            return false;
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
-            return false;
-        }
-        return true;
-    }
-
-    private void locationStop() {
-        if (mlocManager != null) {
-            mlocManager.removeUpdates(mlocListener);
-            Log.d(TAG, String.format("Stopping location updates %s", mlocManager.toString()));
-            mlocManager = null;
-        }
-    }
-
-    private void locationStart() {
-
-        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mlocListener = new MyLocationListener();
-        mlocListener.setMainActivity(this);
-        final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (!gpsEnabled) {
-            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(settingsIntent);
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
-                    1000);
-            Log.d(TAG,"Going back, no permission :(");
-            return;
-        }
-
-        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
-                mlocListener);
-        latLongTextView.setText("Localizacion agregada");
-        directionsTextView.setText("");
-    }
-
     public void updateLocationOnView(Location loc) {
-        //Obtener la direccion de la calle a partir de la latitud y la longitud
+
         if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
             try {
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -290,64 +199,21 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
-    public class MyLocationListener implements LocationListener {
-        TrackerActivity mainActivity;
-        public TrackerActivity getMainActivity() {
-            return mainActivity;
-        }
-        public void setMainActivity(TrackerActivity mainActivity) {
-            this.mainActivity = mainActivity;
-        }
-        @Override
-        public void onLocationChanged(Location loc) {
-            // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
-            // debido a la deteccion de un cambio de ubicacion
+    @Override
+    public void onLocationChanged(Location location){
+        super.onLocationChanged(location);
 
-            currentLocation = GPSLocation.builder()
-                    .assignmentId(currentMetadata.getAssignmentId())
-                    .lat(loc.getLatitude())
-                    .lon(loc.getLongitude())
-                    .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
-                    .deviceId(android_device_id)
-                    .backedUpRemotely(0)
-                    .build();
+        String Text = String.format("Lat = %1$,.10f \n Long = %1$,.10f",
+                currentLocation.getLat(), currentLocation.getLon());
+        latLongTextView.setText(Text);
+        updateLocationOnView(location);
 
-            String Text = "Lat = "+ currentLocation.getLat() + "\n Long = " + currentLocation.getLon();
-
-            latLongTextView.setText(Text);
-            this.mainActivity.updateLocationOnView(loc);
-
-            persistGPSFix();
-        }
-        @Override
-        public void onProviderDisabled(String provider) {
-            // Este metodo se ejecuta cuando el GPS es desactivado
-            latLongTextView.setText("GPS Desactivado");
-        }
-        @Override
-        public void onProviderEnabled(String provider) {
-            // Este metodo se ejecuta cuando el GPS es activado
-            latLongTextView.setText("GPS Activado");
-        }
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            switch (status) {
-                case LocationProvider.AVAILABLE:
-                    Log.d(TAG, "LocationProvider.AVAILABLE");
-                    break;
-                case LocationProvider.OUT_OF_SERVICE:
-                    Log.d(TAG, "LocationProvider.OUT_OF_SERVICE");
-                    break;
-                case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                    Log.d(TAG, "LocationProvider.TEMPORARILY_UNAVAILABLE");
-                    break;
-            }
-        }
+        persistGPSFix();
     }
 
     private void persistGPSFix(){
 
-        Log.d(TAG, "New location stored:" + currentLocation.toString() );
+        currentLocation.setAssignmentId(currentMetadata.getAssignmentId());
         long gpsLocationId = gpsLocationRepository.insert(currentLocation);
         currentLocation.setId((int)gpsLocationId);
 
@@ -366,10 +232,10 @@ public class TrackerActivity extends AppCompatActivity {
         BusStop newBusStop = BusStop.builder()
                 .stopType(stopType)
                 .assignmentId(currentMetadata.getAssignmentId())
-                .deviceId(android_device_id)
+                .deviceId(deviceId)
                 .isOfficial(isOfficial)
-                .lat(currentLocation.getLat())
-                .lon(currentLocation.getLon())
+                .lat(currentLocation != null ? currentLocation.getLat() : 0.0)
+                .lon(currentLocation != null ? currentLocation.getLon(): 0.0)
                 .passengersDown(numberPickerDown.getValue())
                 .passengersUp(numberPickerUp.getValue())
                 .totalPassengers(totalNumberOfPassengers)
@@ -378,9 +244,9 @@ public class TrackerActivity extends AppCompatActivity {
                 .backedUpRemotely(0)
                 .build();
 
-        int id = (int)busStopRepository.insert(newBusStop);
+        int id = (int)repository.insert(newBusStop);
         newBusStop.setId(id);
-        apiClient.postBusStopInBatch(Lists.newArrayList(newBusStop), busStopRepository);
+        postItemsInBatch(Collections.singletonList(newBusStop));
 
         // Create BusStop file
         ExportData.createFile(String.format("%s-%s-Paradas-%d.txt",currentMetadata.getRoute(),
@@ -389,7 +255,6 @@ public class TrackerActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), "Guardado",Toast.LENGTH_SHORT).show();
         clearAfterSave();
-        Log.d(TAG, "New busStop stored: " + newBusStop.toString() );
     }
 
     private void clearAfterSave() {
@@ -401,18 +266,16 @@ public class TrackerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onPause(){
+    protected void onPause() {
         super.onPause();
-        if (requestPermissions()) {
+        if (requestPermissions())
             locationStop();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (requestPermissions()) {
+        if (requestPermissions())
             locationStart();
-        }
     }
 }
