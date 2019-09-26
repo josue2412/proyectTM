@@ -23,7 +23,6 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,7 +58,6 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
     private static final SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("h:mm a");
     private final static int INTERVAL_TIME = 60000;
     private Map<Integer, Movement> movementsMap;
-    private String android_device_id;
 
     private LinearLayout movementsButtonsLayout;
 
@@ -67,7 +65,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
     private TextView lastBackupTimeTextView;
     private ImageView intersectionImageView;
 
-    private Map<Integer, Map<String, CounterStats>> counterStatusMap;
+    private Map<Integer, MovementCounter> movementsCounters;
     private boolean countersChanged;
 
     private Timer backupCountersTimer;
@@ -84,14 +82,13 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        setContentView(R.layout.vechicular_capacity_gen);
-        android_device_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        setContentView(R.layout.vehicular_capacity_gen);
 
         appContext = getApplication();
         endpointUrl = "/app/api/persist/vehicCapRecord";
         postParamName = "vehicCapData";
 
-        counterStatusMap = new HashMap<>();
+        movementsCounters = new HashMap<>();
         movementsMap = new HashMap<>();
 
         Bundle extras = getIntent().getExtras();
@@ -117,8 +114,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
      */
     private void processMovements() {
         for (Movement movement : assignment.getMovements()) {
-            counterStatusMap.put(movement.getId(),
-                    inflateMovementLayoutView(movement.getMovement_name(), movement.getId(), movement.getMovement_code()));
+            movementsCounters.put(movement.getId(), inflateMovements(movement));
         }
     }
 
@@ -140,11 +136,14 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
+                        endTimeInterval = Calendar.getInstance().getTime();
                         if (countersChanged) {
                             generateCountersBackupRecord();
                         } else {
                             Log.d(TAG, "There were no changes, skipping counters backup");
                         }
+                        beginTimeInterval = endTimeInterval;
                     }
                 });
             }
@@ -157,19 +156,18 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
     private void generateCountersBackupRecord() {
 
         List<VehicularCapacityRecord> records = new LinkedList<>();
-        endTimeInterval = Calendar.getInstance().getTime();
 
-        for (Integer movementId : counterStatusMap.keySet()) {
-            Map<String, CounterStats> vehicles = counterStatusMap.get(movementId);
+        for (Integer movementId : movementsCounters.keySet()) {
+            MovementCounter movementCounter = movementsCounters.get(movementId);
             VehicularCapacityRecord.VehicularCapacityRecordBuilder recordBuilder;
 
             if (movementsMap.get(movementId).getMovement_name().equals(StudyType.VEHICULAR.name())) {
-                recordBuilder = repository.createVehicularRecord(vehicles);
+                recordBuilder = repository.createVehicularRecord(movementCounter);
             } else {
-                recordBuilder = repository.createPedestrianRecord(vehicles);
+                recordBuilder = repository.createPedestrianRecord(movementCounter);
             }
 
-            recordBuilder.movementId(movementId).deviceId(android_device_id)
+            recordBuilder.movementId(movementId).deviceId(deviceId)
                     .assignmentId(this.assignment.getId())
                     .beginTimeInterval(STD_DATE_FORMAT.format(beginTimeInterval))
                     .endTimeInterval(STD_DATE_FORMAT.format(endTimeInterval))
@@ -202,94 +200,80 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
     }
 
     /**
-     * TODO : optimize
-     * @param movementCode
-     */
-    private LinearLayout inflateMovementLabelView(String movementCode) {
-
-        LinearLayout movementLinearLayout = new LinearLayout(getApplicationContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        params.gravity = Gravity.CENTER;
-        movementLinearLayout.setLayoutParams(params);
-        movementLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        WindowManager.LayoutParams viewParams = new WindowManager.LayoutParams();
-
-        TextView movementLabel = new TextView(getApplicationContext());
-        movementLabel.setLayoutParams(viewParams);
-        movementLabel.setText(movementCode);
-        movementLabel.setGravity(Gravity.CENTER);
-        movementLabel.setTextSize(24);
-        movementLabel.setTypeface(null, Typeface.BOLD_ITALIC);
-        movementLinearLayout.addView(movementLabel, movementLinearLayout.getChildCount());
-        return movementLinearLayout;
-    }
-
-
-    /**
      * Creates button counters dynamically based on the typeOfMovement.
-     *
-     * @param typeOfMovement of the type {@linkplain StudyType}
-     * @param movementId movement unique id
-     * @param movementCode
-     *
+     * @param movement
      * @return Map with key vehicle.name - movementId and value {@linkplain CounterStats}
      */
-    private Map<String, CounterStats> inflateMovementLayoutView(
-            String typeOfMovement, int movementId, int movementCode) {
+    private MovementCounter inflateMovements(Movement movement) {
 
-        Map<String, CounterStats> counterStatusPerMov = new HashMap<>();
-        LayoutInflater counterVehicleInflater = (
+        MovementCounter movementCounter = MovementCounter.builder().build();
+        LayoutInflater viewInflater = (
                 LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View vehicularMovementLayout =
+                viewInflater.inflate(R.layout.vehicular_movement_layout, null);
+        vehicularMovementLayout.setId(movement.getId());
 
-        // Linear layout creation
-        LinearLayout movementLinearLayout = new LinearLayout(getApplicationContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.CENTER;
-        movementLinearLayout.setLayoutParams(params);
-        movementLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        // Set movement id
+        TextView movementIdTextView =
+                vehicularMovementLayout.findViewById(R.id.movement_id_text_view);
+        movementIdTextView.setText(String.valueOf(movement.getMovement_code()));
 
-        movementLinearLayout.addView(inflateMovementLabelView(String.valueOf(movementCode)),
-                movementLinearLayout.getChildCount());
-
-        StudyType currentStudyType = StudyType.valueOf(typeOfMovement);
+        // Put movements counters depending of the type of the study
+        LinearLayout movementsCountersLayout =
+                vehicularMovementLayout.findViewById(R.id.vehicular_counter_buttons_layout);
+        StudyType currentStudyType = StudyType.valueOf(movement.getMovement_name());
 
         for (UnderStudyVehicles vehicle : UnderStudyVehicles.values()) {
-
             if (vehicle.getTypeOfStudy().equals(currentStudyType)) {
-                View currentVehicleButtonCounter =
-                        counterVehicleInflater.inflate(R.layout.vehicular_capacity_button_counter, null);
-
-                CounterViewTag cTag = CounterViewTag.builder()
-                        .movementId(movementId).vehicleType(vehicle.name()).build();
-                currentVehicleButtonCounter.setId(cTag.toString().hashCode());
-                ImageButton buttonImageView =
-                        currentVehicleButtonCounter.findViewById(R.id.counterImageButton);
-                buttonImageView.setTag(cTag);
-                buttonImageView.setImageResource(findVehicleImage(vehicle));
-                buttonImageView.setOnLongClickListener(onCounterLongClickListener());
-                counterStatusPerMov.put(vehicle.name(), CounterStats.builder()
-                        .partialCount(new AtomicInteger()).totalCount(new AtomicInteger()).build());
-
-                movementLinearLayout.addView(
-                        currentVehicleButtonCounter, movementLinearLayout.getChildCount());
+                movementCounter.getCounterStatusPerVehicle().put(vehicle.name(),
+                        CounterStats.builder().build());
+                movementsCountersLayout.addView(createCounterView(movement.getId(), vehicle),
+                        movementsCountersLayout.getChildCount());
             }
         }
 
-        movementsButtonsLayout.addView(movementLinearLayout, movementsButtonsLayout.getChildCount());
-        return counterStatusPerMov;
+        movementsButtonsLayout.addView(
+                vehicularMovementLayout, movementsButtonsLayout.getChildCount());
+        return movementCounter;
+    }
+
+    /**
+     * A counterView is composed by the information of the movement id and the type of vehicle that
+     * is going to be under study.
+     * @param movementId identifier of the current movement.
+     * @param vehicle {@linkplain UnderStudyVehicles}
+     * @return
+     */
+    private View createCounterView(final int movementId, UnderStudyVehicles vehicle) {
+        LayoutInflater viewInflater =
+                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View currentVehicleButtonCounter =
+                viewInflater.inflate(R.layout.vehicle_button_counter, null);
+
+        CounterViewTag cTag = CounterViewTag.builder()
+                .movementId(movementId).vehicleType(vehicle.name()).build();
+        currentVehicleButtonCounter.setId(cTag.hashCode());
+        ImageButton buttonImageView =
+                currentVehicleButtonCounter.findViewById(R.id.counterImageButton);
+        buttonImageView.setTag(cTag);
+        buttonImageView.setImageResource(findVehicleImage(vehicle));
+        buttonImageView.setOnLongClickListener(onCounterLongClickListener());
+
+        return currentVehicleButtonCounter;
     }
 
     /**
      * Call when a counter button is pressed.
      */
     public void onCounterClickListener(View buttonView) {
-        CounterViewTag counterTag = (CounterViewTag) buttonView.getTag();
+        CounterViewTag counterViewTag = (CounterViewTag) buttonView.getTag();
 
-        updateCounterBadgeView(counterTag.toString(), counterStatusMap
-                .get(counterTag.getMovementId())
-                .get(counterTag.getVehicleType()).increment());
+        updateCounterBadgeView(counterViewTag, movementsCounters
+                        .get(counterViewTag.getMovementId())
+                        .getCounterStatusPerVehicle()
+                        .get(counterViewTag.getVehicleType()).increment(),
+                movementsCounters.get(counterViewTag.getMovementId()).getTotal());
         countersChanged = true;
     }
 
@@ -301,11 +285,13 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
         return new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View buttonView) {
-                CounterViewTag counterTag = (CounterViewTag) buttonView.getTag();
+                CounterViewTag counterViewTag = (CounterViewTag) buttonView.getTag();
 
-                updateCounterBadgeView(counterTag.toString(), counterStatusMap
-                        .get(counterTag.getMovementId())
-                        .get(counterTag.getVehicleType()).decrement());
+                updateCounterBadgeView(counterViewTag, movementsCounters
+                                .get(counterViewTag.getMovementId())
+                                .getCounterStatusPerVehicle()
+                                .get(counterViewTag.getVehicleType()).decrement(),
+                        movementsCounters.get(counterViewTag.getMovementId()).getTotal());
                 return true;
             }
         };
@@ -314,13 +300,19 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
     /**
      * Updates the counter badge that is shown in the display
      *
-     * @param counterTag identifier of the {@linkplain View} that contains the badge
-     * @param value to set in the badge
+     * @param counterViewTag identifier of the {@linkplain View} that contains the badge
+     * @param currentValue to set in the badge
      */
-    private void updateCounterBadgeView(String counterTag, int value) {
-        View counterToIncrement = findViewById(counterTag.hashCode());
+    private void updateCounterBadgeView(
+            CounterViewTag counterViewTag, int currentValue, final int totalValue) {
+
+        View counterToIncrement = findViewById(counterViewTag.hashCode());
         TextView counterBadge = counterToIncrement.findViewById(R.id.counterBadge);
-        counterBadge.setText(String.valueOf(value));
+        counterBadge.setText(String.valueOf(currentValue));
+        View movementLayout = findViewById(counterViewTag.getMovementId());
+        TextView counterTotalTextView =
+                movementLayout.findViewById(R.id.movement_counter_text_view);
+        counterTotalTextView.setText(String.valueOf(totalValue));
     }
 
     /**

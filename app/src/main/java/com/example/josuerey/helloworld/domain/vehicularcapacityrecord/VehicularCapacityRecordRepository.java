@@ -3,14 +3,13 @@ package com.example.josuerey.helloworld.domain.vehicularcapacityrecord;
 import android.app.Application;
 import android.util.Log;
 
-import com.example.josuerey.helloworld.application.vehicularcap.CounterStats;
+import com.example.josuerey.helloworld.application.vehicularcap.MovementCounter;
 import com.example.josuerey.helloworld.application.vehicularcap.UnderStudyVehicles;
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
 import com.example.josuerey.helloworld.infrastructure.persistence.RemotelyStore;
 import com.example.josuerey.helloworld.utilities.ExportData;
 
 import java.util.List;
-import java.util.Map;
 
 public class VehicularCapacityRecordRepository implements RemotelyStore<VehicularCapacityRecord> {
     private VehicularCapacityRecordDao vehicularCapacityRecordDao;
@@ -52,20 +51,28 @@ public class VehicularCapacityRecordRepository implements RemotelyStore<Vehicula
     }
 
     public VehicularCapacityRecord.VehicularCapacityRecordBuilder createVehicularRecord (
-            Map<String, CounterStats> vehicles) {
+            MovementCounter movementCounter) {
         return VehicularCapacityRecord.builder()
-                .numberOfBusses(vehicles.get(UnderStudyVehicles.BUS.name()).flushPartialCount())
-                .numberOfCars(vehicles.get(UnderStudyVehicles.CAR.name()).flushPartialCount())
-                .numberOfTrucks(vehicles.get(UnderStudyVehicles.TRUCK.name()).flushPartialCount())
-                .numberOfMotorcycles(vehicles.get(UnderStudyVehicles.MOTORCYCLE.name()).flushPartialCount());
+                .numberOfBusses(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.BUS.name()).flushPartialCount())
+                .numberOfCars(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.CAR.name()).flushPartialCount())
+                .numberOfTrucks(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.TRUCK.name()).flushPartialCount())
+                .numberOfMotorcycles(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.MOTORCYCLE.name()).flushPartialCount());
     }
 
     public VehicularCapacityRecord.VehicularCapacityRecordBuilder createPedestrianRecord(
-            Map<String, CounterStats> vehicles) {
+            MovementCounter movementCounter) {
         return VehicularCapacityRecord.builder()
-                .numberOfBikes(vehicles.get(UnderStudyVehicles.BIKE.name()).flushPartialCount())
-                .numberOfBikesFemale(vehicles.get(UnderStudyVehicles.BIKE_FEMALE.name()).flushPartialCount())
-                .numberOfPedestrians(vehicles.get(UnderStudyVehicles.PEDESTRIAN.name()).flushPartialCount())
-                .numberOfPedestriansFemale(vehicles.get(UnderStudyVehicles.PEDESTRIAN_FEMALE.name()).flushPartialCount());
+                .numberOfBikes(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.BIKE.name()).flushPartialCount())
+                .numberOfBikesFemale(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.BIKE_FEMALE.name()).flushPartialCount())
+                .numberOfPedestrians(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.PEDESTRIAN.name()).flushPartialCount())
+                .numberOfPedestriansFemale(movementCounter.getCounterStatusPerVehicle()
+                        .get(UnderStudyVehicles.PEDESTRIAN_FEMALE.name()).flushPartialCount());
     }
 }

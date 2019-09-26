@@ -8,8 +8,10 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CounterStats {
-    private AtomicInteger totalCount;
-    private AtomicInteger partialCount;
+    @Builder.Default
+    private final AtomicInteger totalCount = new AtomicInteger();
+    @Builder.Default
+    private final AtomicInteger partialCount = new AtomicInteger();
     private static final int MINIMUM_VALUE = 0;
 
     public int increment() {
