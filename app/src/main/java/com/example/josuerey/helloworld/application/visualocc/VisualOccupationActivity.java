@@ -1,21 +1,8 @@
 package com.example.josuerey.helloworld.application.visualocc;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
+import android.app.Application;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -23,27 +10,33 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.josuerey.helloworld.application.HomeActivity;
 import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.shared.TrackableBaseActivity;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.busroute.RouteBusPayload;
-import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
-import com.example.josuerey.helloworld.infrastructure.network.APIClient;
+import com.example.josuerey.helloworld.infrastructure.network.RemoteStorage;
 import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAssignmentResponse;
 import com.example.josuerey.helloworld.utilities.ExportData;
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VisualOccupationActivity extends AppCompatActivity {
+import lombok.Getter;
+
+@Getter
+public class VisualOccupationActivity extends TrackableBaseActivity
+        implements RemoteStorage<BusOccupation, BusOccupationRepository> {
+
+    private Application appContext;
+    private String endpointUrl;
+    private String postParamName;
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final String TAG = this.getClass().getSimpleName();
@@ -68,38 +61,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
     private EditText econNumEditText2;
     private EditText econNumEditText3;
 
-    private BusOccupationRepository busOccupationRepository;
-    private APIClient apiClient;
-    private GPSLocation currentLocation;
-    private MyLocationListener mlocListener;
-    private LocationManager mlocManager;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tracker_activity_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.finishRoute:
-
-                if (mlocManager != null && mlocListener != null ) {
-                    mlocManager.removeUpdates(mlocListener);
-                }
-                Intent myIntent = new Intent(VisualOccupationActivity.this, HomeActivity.class);
-                VisualOccupationActivity.this.startActivity(myIntent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+    private BusOccupationRepository repository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,8 +77,10 @@ public class VisualOccupationActivity extends AppCompatActivity {
                     extras.getString("visualOccAssignment"), VisualOccupationAssignmentResponse.class);
         }
 
-        busOccupationRepository = new BusOccupationRepository(getApplication());
-        apiClient = APIClient.builder().app(getApplication()).build();
+        appContext = getApplication();
+        endpointUrl = "/app/api/persist/busOccRecord";
+        postParamName = "busOccData";
+        repository = new BusOccupationRepository(getApplication());
 
         busRoutes = new LinkedList<>();
         busRoutesMap = new HashMap<>();
@@ -222,11 +186,8 @@ public class VisualOccupationActivity extends AppCompatActivity {
                     .backedUpRemotely(0)
                     .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()));
 
-            if (currentLocation != null){
-                busOccupationBuilder.lat(currentLocation.getLat());
-                busOccupationBuilder.lon(currentLocation.getLon());
-            }
-
+            busOccupationBuilder.lat(currentLocation != null ? currentLocation.getLat() : 0.0);
+            busOccupationBuilder.lon(currentLocation != null ? currentLocation.getLon(): 0.0);
             BusOccupation busOccupation = busOccupationBuilder.build();
             backUpRecord(busOccupation);
             cleanForm(formNumberSaved);
@@ -234,7 +195,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
     }
 
     private void backUpRecord(BusOccupation busOccupationRecord) {
-        long busOccupationId = busOccupationRepository.save(busOccupationRecord);
+        long busOccupationId = repository.save(busOccupationRecord);
         busOccupationRecord.setId((int) busOccupationId);
 
         Log.d(TAG, "Saving new busOccupation with id: " + busOccupationId);
@@ -244,7 +205,7 @@ public class VisualOccupationActivity extends AppCompatActivity {
                 visualOccupationMetadata.getAssignmentId()),
                 busOccupationRecord.toString());
 
-        apiClient.postBusOccupation(Lists.newArrayList(busOccupationRecord), busOccupationRepository);
+        postItemsInBatch(Collections.singletonList(busOccupationRecord));
     }
 
     private void cleanForm(int formPosition) {
@@ -271,71 +232,6 @@ public class VisualOccupationActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Registro guardado",Toast.LENGTH_SHORT).show();
     }
 
-    public class MyLocationListener implements LocationListener {
-        VisualOccupationActivity mainActivity;
-        public void setMainActivity(VisualOccupationActivity mainActivity) {
-            this.mainActivity = mainActivity;
-        }
-        @Override
-        public void onLocationChanged(Location loc) {
-            currentLocation = GPSLocation.builder()
-                    .lat(loc.getLatitude())
-                    .lon(loc.getLongitude())
-                    .timeStamp(DATE_FORMAT.format(new Date(loc.getTime())))
-                    .build();
-
-            String Text = "Lat = "+ currentLocation.getLat() + "\n Long = " + currentLocation.getLon();
-            Log.d(TAG, "Location change: " + Text);
-
-        }
-        @Override
-        public void onProviderDisabled(String provider) {
-            // Este metodo se ejecuta cuando el GPS es desactivado
-            Log.d(TAG,"GPS Desactivado");
-        }
-        @Override
-        public void onProviderEnabled(String provider) {
-            // Este metodo se ejecuta cuando el GPS es activado
-            Log.d(TAG,"GPS Activado");
-        }
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            switch (status) {
-                case LocationProvider.AVAILABLE:
-                    Log.d(TAG, "LocationProvider.AVAILABLE");
-                    break;
-                case LocationProvider.OUT_OF_SERVICE:
-                    Log.d(TAG, "LocationProvider.OUT_OF_SERVICE");
-                    break;
-                case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                    Log.d(TAG, "LocationProvider.TEMPORARILY_UNAVAILABLE");
-                    break;
-            }
-        }
-    }
-
-    private void locationStart() {
-        Log.d(TAG, "Starting location updates");
-        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mlocListener = new MyLocationListener();
-        final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (!gpsEnabled) {
-            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(settingsIntent);
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
-                    1000);
-            Log.d(TAG, "Going back, no permission :(");
-            return;
-        }
-
-        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 20,
-                (LocationListener) mlocListener);
-    }
 
     @Override
     protected void onPause() {
@@ -349,30 +245,6 @@ public class VisualOccupationActivity extends AppCompatActivity {
         super.onResume();
         if (requestPermissions())
             locationStart();
-    }
-
-    private void locationStop() {
-        if (mlocManager != null) {
-            mlocManager.removeUpdates(mlocListener);
-            Log.d(TAG, String.format("Stopping location updates %s", mlocManager.toString()));
-            mlocManager = null;
-        }
-    }
-
-    private boolean requestPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
-            return false;
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
-            return false;
-        }
-        return true;
     }
 
 }

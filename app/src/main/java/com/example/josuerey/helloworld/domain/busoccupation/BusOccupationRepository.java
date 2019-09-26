@@ -3,8 +3,11 @@ package com.example.josuerey.helloworld.domain.busoccupation;
 import android.app.Application;
 
 import com.example.josuerey.helloworld.domain.uRoomDatabase;
+import com.example.josuerey.helloworld.infrastructure.persistence.RemotelyStore;
 
-public class BusOccupationRepository {
+import java.util.List;
+
+public class BusOccupationRepository implements RemotelyStore<BusOccupation> {
 
     private BusOccupationDao busOccupationDao;
 
@@ -24,8 +27,15 @@ public class BusOccupationRepository {
         busOccupationDao.updateBusOccupation(busOccupations);
     }
 
-    public BusOccupation[] findPendingToBackup(){
+    @Override
+    public void backedUpRemotely(List<BusOccupation> records) {
 
-        return busOccupationDao.findPendingToBackup(0);
+        this.updateBusOccRecordsBackedUp(records.toArray(new BusOccupation[records.size()]));
+    }
+
+    @Override
+    public List<BusOccupation> findRecordsPendingToBackUp(){
+
+        return busOccupationDao.findPendingToBackup();
     }
 }

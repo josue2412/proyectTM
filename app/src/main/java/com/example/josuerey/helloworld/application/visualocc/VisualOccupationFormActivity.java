@@ -20,8 +20,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 public class VisualOccupationFormActivity extends AppCompatActivity {
 
@@ -73,12 +73,12 @@ public class VisualOccupationFormActivity extends AppCompatActivity {
 
     private void checkForRecordsPendingToBackup() {
 
-        BusOccupation[] recordsPendingToBackup = busOccupationRepository.findPendingToBackup();
-        if (recordsPendingToBackup.length > 0) {
+        List<BusOccupation> recordsPendingToBackup = busOccupationRepository.findRecordsPendingToBackUp();
+        if (!recordsPendingToBackup.isEmpty()) {
 
             Log.d(TAG, String.format("Retrying to backup %d busOccupationMetadata records",
-                    recordsPendingToBackup.length));
-            apiClient.postBusOccupation(Arrays.asList(recordsPendingToBackup), busOccupationRepository);
+                    recordsPendingToBackup.size()));
+            apiClient.postBusOccupation(recordsPendingToBackup, busOccupationRepository);
         } else {
 
             Log.d(TAG, "There are no busOccupation records to update");

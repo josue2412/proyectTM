@@ -6,6 +6,11 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
+/**
+ * Data Access Layer for {@link BusOccupation} object.
+ */
 @Dao
 public interface BusOccupationDao {
 
@@ -15,6 +20,6 @@ public interface BusOccupationDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateBusOccupation(BusOccupation ... busOccupations);
 
-    @Query("SELECT * FROM BusOccupation where backedUpRemotely = :value")
-    BusOccupation[] findPendingToBackup(int value);
+    @Query("SELECT * FROM BusOccupation where backedUpRemotely = 0")
+    List<BusOccupation> findPendingToBackup();
 }

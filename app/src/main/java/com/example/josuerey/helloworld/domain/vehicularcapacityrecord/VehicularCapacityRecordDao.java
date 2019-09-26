@@ -8,6 +8,9 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+/**
+ * Data Access Layer for {@link VehicularCapacityRecord} object.
+ */
 @Dao
 public interface VehicularCapacityRecordDao {
 

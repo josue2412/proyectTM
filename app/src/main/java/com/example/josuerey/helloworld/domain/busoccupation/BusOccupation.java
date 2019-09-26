@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.util.Log;
 
+import com.example.josuerey.helloworld.domain.shared.Storable;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity(tableName = "BusOccupation")
-public class BusOccupation {
+public class BusOccupation implements Storable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

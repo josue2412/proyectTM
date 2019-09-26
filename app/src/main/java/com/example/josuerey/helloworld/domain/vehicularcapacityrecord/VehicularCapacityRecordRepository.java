@@ -1,7 +1,6 @@
 package com.example.josuerey.helloworld.domain.vehicularcapacityrecord;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.josuerey.helloworld.application.vehicularcap.MovementCounter;
 import com.example.josuerey.helloworld.application.vehicularcap.UnderStudyVehicles;
@@ -13,7 +12,6 @@ import java.util.List;
 
 public class VehicularCapacityRecordRepository implements RemotelyStore<VehicularCapacityRecord> {
     private VehicularCapacityRecordDao vehicularCapacityRecordDao;
-    private static final String TAG = VehicularCapacityRecordRepository.class.getName();
 
     public VehicularCapacityRecordRepository(Application application) {
 
