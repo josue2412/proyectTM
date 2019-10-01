@@ -23,15 +23,27 @@ public class SaveSharedPreference {
         editor.apply();
     }
 
-    public static void setUserName(Context context, String userName) {
+    public static void setUserEmail(Context context, String userMail) {
         SharedPreferences.Editor editor = getPreferences(context).edit();
-        editor.putString(LOGGED_IN_USERNAME, userName);
+        editor.putString(LOGGED_IN_USER_EMAIL, userMail);
         editor.apply();
     }
 
-    public static void setUserNameKey(Context context, String userNameKey) {
+    public static void setUserPassword(Context context, String userPass) {
         SharedPreferences.Editor editor = getPreferences(context).edit();
-        editor.putString(LOGGED_IN_USERNAME_KEY, userNameKey);
+        editor.putString(LOGGED_IN_USER_PASSWORD, userPass);
+        editor.apply();
+    }
+
+    public static void setUserName(Context context, String userName) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putString(LOGGED_IN_USER_NAME, userName);
+        editor.apply();
+    }
+
+    public static void setUserId(Context context, int userId) {
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putInt(LOGGED_IN_USER_ID, userId);
         editor.apply();
     }
 
@@ -44,11 +56,19 @@ public class SaveSharedPreference {
         return getPreferences(context).getBoolean(LOGGED_IN_PREF, false);
     }
 
-    public static String getUserName(Context context) {
-        return getPreferences(context).getString(LOGGED_IN_USERNAME, null);
+    public static String getUserMail(Context context) {
+        return getPreferences(context).getString(LOGGED_IN_USER_EMAIL, null);
     }
 
-    public static String getUserNameKey(Context context) {
-        return getPreferences(context).getString(LOGGED_IN_USERNAME_KEY, null);
+    public static String getUserPassword(Context context) {
+        return getPreferences(context).getString(LOGGED_IN_USER_PASSWORD, null);
+    }
+
+    public static String getUserName(Context context) {
+        return getPreferences(context).getString(LOGGED_IN_USER_NAME, null);
+    }
+
+    public static int getUserId(Context context) {
+        return getPreferences(context).getInt(LOGGED_IN_USER_ID, 0);
     }
 }

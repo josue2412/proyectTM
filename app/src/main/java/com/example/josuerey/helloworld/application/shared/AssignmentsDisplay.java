@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -56,22 +55,17 @@ public interface AssignmentsDisplay<T> {
     }
 
     default void addOnclickListenerToRetryRetrieveAssignments() {
-        getRetryRetrieveAssignments().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        getRetryRetrieveAssignments().setOnClickListener((View v) -> {
                 Log.d(getTAG(), "Retry retrieving assignments...");
                 callRetrieveAssignments();
-            }
-        });
+            });
     }
 
     default void retrieveAssignments(final AssignmentRetrievedCallback callback){
         Log.d(getTAG(), "Retrieving assignments...");
         getDownloadAssignmentsPB().setVisibility(ProgressBar.VISIBLE);
         StringRequest stringRequest =
-                new StringRequest(Request.Method.GET, getRequestUrl(), new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                new StringRequest(Request.Method.GET, getRequestUrl(), (String response) -> {
                         List<T> assignmentResponse =
                                 gson.fromJson(response, new TypeToken<List<T>>() {}.getType());
 
@@ -84,16 +78,12 @@ public interface AssignmentsDisplay<T> {
                         Log.d(getTAG(), String.format("Number of assignments retrieved: %d", assignmentResponse.size()));
                         getDownloadAssignmentsPB().setVisibility(ProgressBar.INVISIBLE);
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                , (VolleyError error) -> {
                         Log.e(getTAG(), "Volley error response");
                         error.printStackTrace();
                         setStatusMsg("Falló la conexión a Internet", false);
                         getDownloadAssignmentsPB().setVisibility(ProgressBar.INVISIBLE);
-                    }
-                }){
-                };
+                    }){};
         //make the request to your server as indicated in your request url
         Volley.newRequestQueue(getContext()).add(stringRequest);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(

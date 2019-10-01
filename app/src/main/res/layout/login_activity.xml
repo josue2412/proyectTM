@@ -6,6 +6,17 @@
     android:id="@+id/loginForm"
     >
 
+    <ProgressBar
+        android:layout_alignParentBottom="true"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="450dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:id="@+id/validate_user_progress_bar">
+    </ProgressBar>
+
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
@@ -29,7 +40,7 @@
         android:textStyle="italic"
         android:layout_toEndOf="@+id/usernameTextView"
         android:layout_toRightOf="@+id/usernameTextView"
-        android:inputType="textNoSuggestions"
+        android:inputType="textEmailAddress"
         android:background="@null"
         android:ems="10"
         android:hint="nombre de usuario" />
@@ -56,10 +67,10 @@
         android:layout_toEndOf="@+id/user_key"
         android:textStyle="italic"
         android:layout_toRightOf="@+id/user_key"
-        android:inputType="number"
+        android:inputType="textPassword"
         android:background="@null"
         android:ems="10"
-        android:hint="clave de usuario" />
+        android:hint="contraseña" />
 
     <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/submit"
@@ -70,5 +81,16 @@
         android:layout_marginTop="80dp"
         android:text="Iniciar sesión"
         android:textAllCaps="false" />
+    <TextView
+        android:id="@+id/login_status"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/submit"
+        android:textSize="12dp"
+        android:textStyle="bold|italic"
+        android:textColor="@android:color/holo_red_light" />
 
 </RelativeLayout>

@@ -29,4 +29,8 @@
         <item>PO</item>
         <item>OP</item>
     </string-array>
+
+    <string name="login_failed_unknown_reason">algo salio mal durante la autenticación, intenta de nuevo</string>
+    <string name="login_failed_user_unknown">el usuario no existe, contacta a los administradores</string>
+    <string name="login_failed_wrong_password">contrasena incorrecta, contacta a los administradores</string>
 </resources>

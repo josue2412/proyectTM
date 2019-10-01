@@ -11,13 +11,13 @@ public class AssignmentRepository {
 
     private final String TAG = this.getClass().getSimpleName();
     private AssignmentDao assignmentDao;
-    private String userKey;
+    private int userKey;
 
     public AssignmentRepository(Application application) {
 
         uRoomDatabase db = uRoomDatabase.getDatabase(application);
         assignmentDao = db.assignmentDao();
-        userKey = SaveSharedPreference.getUserNameKey(application);
+        userKey = SaveSharedPreference.getUserId(application);
     }
 
     public long save(Assignment assignments) {
@@ -27,7 +27,7 @@ public class AssignmentRepository {
 
     public Assignment[] findAssignmentsByCapturistId(){
 
-        return assignmentDao.findAssignmentsByCapturistId(Integer.valueOf(userKey));
+        return assignmentDao.findAssignmentsByCapturistId(userKey);
     }
 
     public Optional<Assignment> findByServerId(int serverId) {

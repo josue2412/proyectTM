@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +23,6 @@ import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.Save
 public class HomeActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
-    private Button passengersAscDes;
-    private Button visualOcStudy;
     private TextView capturistLogged;
 
     @Override
@@ -62,10 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.home_activity);
         requestPermissions();
 
-        passengersAscDes = findViewById(R.id.btnAscDescPassengers);
-        visualOcStudy = findViewById(R.id.btnVisualOccupation);
         capturistLogged = findViewById(R.id.logged_capturist);
-
         capturistLogged.setText("Usuario: " + SaveSharedPreference.getUserName(getApplicationContext()));
     }
 

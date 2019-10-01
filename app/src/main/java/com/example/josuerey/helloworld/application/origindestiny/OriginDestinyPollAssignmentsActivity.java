@@ -38,9 +38,9 @@ public class OriginDestinyPollAssignmentsActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
-        requestUrl = String.format("%s%s%s", this.serverIp,
+        requestUrl = String.format("%s%s%d", this.serverIp,
                 "/app/api/capturistOriginDestinyAssignments?capturist_id=",
-                SaveSharedPreference.getUserNameKey(getApplicationContext()));
+                SaveSharedPreference.getUserId(getApplicationContext()));
 
         context = getApplicationContext();
         assignmentsListView = findViewById(R.id.listOfAssignments);
@@ -62,19 +62,18 @@ public class OriginDestinyPollAssignmentsActivity extends BaseActivity
     public void callRetrieveAssignments() {
         retrieveAssignments((List assignments) -> {
             List<OriginDestinyAssignmentResponse> castedAssignments =
-                    gson.fromJson(gson.toJson(assignments), new TypeToken<List<OriginDestinyAssignmentResponse>>() {}.getType());
+                    gson.fromJson(gson.toJson(assignments),
+                            new TypeToken<List<OriginDestinyAssignmentResponse>>() {}.getType());
             setAssignmentsAdapter(new OriginDestinyAssignmentListAdapter(castedAssignments, this.getContext()));
         });
     }
 
     private void setAssignmentsAdapter(OriginDestinyAssignmentListAdapter customAdapter) {
         getAssignmentsListView().setAdapter(customAdapter);
-        getAssignmentsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                handleClickedAssignment((OriginDestinyAssignmentResponse)parent.getAdapter().getItem(position));
-            }
-        });
+        getAssignmentsListView().setOnItemClickListener(
+                (AdapterView<?> parent, View view, int position, long id) ->
+                handleClickedAssignment((OriginDestinyAssignmentResponse)parent.getAdapter().getItem(position))
+        );
     }
 
     @Override

@@ -72,9 +72,9 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
-        requestUrl = String.format("%s%s%s", this.serverIp,
+        requestUrl = String.format("%s%s%d", this.serverIp,
                 "/app/api/capturistAscDescAssignments?capturist_id=",
-                SaveSharedPreference.getUserNameKey(getApplicationContext()));
+                SaveSharedPreference.getUserId(getApplicationContext()));
 
         context = getApplicationContext();
         assignmentsListView = findViewById(R.id.listOfAssignments);
@@ -96,7 +96,8 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
     public void callRetrieveAssignments() {
         retrieveAssignments((List assignments) -> {
             List<AscDescAssignmentResponse> castedAssignments =
-                    gson.fromJson(gson.toJson(assignments), new TypeToken<List<AscDescAssignmentResponse>>() {}.getType());
+                    gson.fromJson(gson.toJson(assignments),
+                            new TypeToken<List<AscDescAssignmentResponse>>() {}.getType());
 
             setAssignmentsAdapter(new AssignmentListAdapter(castedAssignments, this.getContext()));
         });
@@ -105,12 +106,10 @@ public class AscDescAssignmentsActivity extends AppCompatActivity
 
     public void setAssignmentsAdapter(AssignmentListAdapter customAdapter) {
         getAssignmentsListView().setAdapter(customAdapter);
-        getAssignmentsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                handleClickedAssignment((AscDescAssignmentResponse)parent.getAdapter().getItem(position));
-            }
-        });
+        getAssignmentsListView().setOnItemClickListener(
+                (AdapterView<?> parent, View view, int position, long id) ->
+                handleClickedAssignment((AscDescAssignmentResponse)parent.getAdapter().getItem(position))
+            );
     }
 
     @Override

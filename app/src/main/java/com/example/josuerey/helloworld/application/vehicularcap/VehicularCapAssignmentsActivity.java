@@ -3,20 +3,14 @@ package com.example.josuerey.helloworld.application.vehicularcap;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.josuerey.helloworld.application.LoginActivity;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
 import com.example.josuerey.helloworld.application.shared.BaseActivity;
@@ -49,9 +43,9 @@ public class VehicularCapAssignmentsActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
 
-        requestUrl = String.format("%s%s%s", this.serverIp,
+        requestUrl = String.format("%s%s%d", this.serverIp,
                 "/app/api/capturistVehicularCapacityAssignments?capturist_id=",
-                SaveSharedPreference.getUserNameKey(getApplicationContext()));
+                SaveSharedPreference.getUserId(getApplicationContext()));
 
         context = getApplicationContext();
         assignmentsListView = findViewById(R.id.listOfAssignments);
@@ -83,13 +77,10 @@ public class VehicularCapAssignmentsActivity extends BaseActivity
 
     public void setAssignmentsAdapter(VehicularCapAssignmentListAdapter customAdapter) {
         getAssignmentsListView().setAdapter(customAdapter);
-        getAssignmentsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                handleClickedAssignment(
-                        (VehicularCapAssignmentResponse)parent.getAdapter().getItem(position));
-            }
-        });
+        getAssignmentsListView().setOnItemClickListener(
+                (AdapterView<?> parent, View view, int position, long id) ->
+                        handleClickedAssignment(
+                                (VehicularCapAssignmentResponse)parent.getAdapter().getItem(position)));
     }
 
     @Override

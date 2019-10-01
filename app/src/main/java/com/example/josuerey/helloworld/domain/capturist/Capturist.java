@@ -16,6 +16,8 @@ public final class Capturist {
     private int id;
     private int employer_id;
     private String name;
+    private String email;
+    private String password;
     private String telephone_number;
     private String birthday;
     private int enabled;

@@ -71,9 +71,9 @@ public class VisualOccupationAssignmentsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
-        requestUrl = String.format("%s%s%s", this.serverIp,
+        requestUrl = String.format("%s%s%d", this.serverIp,
                 "/app/api/capturistVisualOccupationAssignments?capturist_id=",
-                SaveSharedPreference.getUserNameKey(getApplicationContext()));
+                SaveSharedPreference.getUserId(getApplicationContext()));
 
         context = getApplicationContext();
         assignmentsListView = findViewById(R.id.listOfAssignments);
@@ -95,7 +95,8 @@ public class VisualOccupationAssignmentsActivity extends AppCompatActivity
     public void callRetrieveAssignments() {
         retrieveAssignments((List assignments) -> {
             List<VisualOccupationAssignmentResponse> castedAssignments =
-                    gson.fromJson(gson.toJson(assignments), new TypeToken<List<VisualOccupationAssignmentResponse>>() {}.getType());
+                    gson.fromJson(gson.toJson(assignments),
+                            new TypeToken<List<VisualOccupationAssignmentResponse>>() {}.getType());
 
             setAssignmentsAdapter(new VisualOccAssignmentListAdapter(castedAssignments, this.getContext()));
         });
@@ -103,12 +104,11 @@ public class VisualOccupationAssignmentsActivity extends AppCompatActivity
 
     public void setAssignmentsAdapter(VisualOccAssignmentListAdapter customAdapter) {
         getAssignmentsListView().setAdapter(customAdapter);
-        getAssignmentsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                handleClickedAssignment((VisualOccupationAssignmentResponse)parent.getAdapter().getItem(position));
-            }
-        });
+        getAssignmentsListView().setOnItemClickListener(
+                (AdapterView<?> parent, View view, int position, long id) ->
+                    handleClickedAssignment(
+                            (VisualOccupationAssignmentResponse)parent.getAdapter().getItem(position))
+        );
     }
 
     @Override
