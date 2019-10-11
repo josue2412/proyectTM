@@ -3,12 +3,12 @@ package com.example.josuerey.helloworld.application.visualocc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.shared.BaseActivity;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupation;
 import com.example.josuerey.helloworld.domain.busoccupation.BusOccupationRepository;
 import com.example.josuerey.helloworld.domain.visualoccupation.VisualOccupationMetadata;
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public class VisualOccupationFormActivity extends AppCompatActivity {
+public class VisualOccupationFormActivity extends BaseActivity {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private EditText editTextStudyVia;

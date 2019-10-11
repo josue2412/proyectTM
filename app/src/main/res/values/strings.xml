@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SG Cities</string>
     <string name="buttonStart">Comenzar</string>
-    <string name="menuItemAboutUs">Ayuda</string>
+    <string name="menuItemAboutUs">App info</string>
     <string name="menuItemEnd">Finalizar</string>
     <string name="send_poll">Enviar encuesta</string>
     <string-array name="occupation_level">

@@ -3,21 +3,16 @@ package com.example.josuerey.helloworld.application.visualocc;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.josuerey.helloworld.application.LoginActivity;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.shared.AssignmentsDisplay;
+import com.example.josuerey.helloworld.application.shared.BaseActivity;
 import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAssignmentResponse;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 import com.example.josuerey.helloworld.utilities.VisualOccAssignmentListAdapter;
@@ -28,7 +23,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class VisualOccupationAssignmentsActivity extends AppCompatActivity
+public class VisualOccupationAssignmentsActivity extends BaseActivity
         implements AssignmentsDisplay<VisualOccupationAssignmentResponse> {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -39,33 +34,6 @@ public class VisualOccupationAssignmentsActivity extends AppCompatActivity
     private ListView assignmentsListView;
     private TextView capturistTextView;
     private ProgressBar downloadAssignmentsPB;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tracker_activity_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.finishRoute:
-                finish();
-                return true;
-            case R.id.changeUser:
-                SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
-                Intent myIntent = new Intent(VisualOccupationAssignmentsActivity.this, LoginActivity.class);
-                VisualOccupationAssignmentsActivity.this.startActivity(myIntent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

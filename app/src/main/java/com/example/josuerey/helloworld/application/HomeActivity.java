@@ -5,52 +5,21 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.ascdesc.AscDescAssignmentsActivity;
 import com.example.josuerey.helloworld.application.origindestiny.OriginDestinyPollAssignmentsActivity;
+import com.example.josuerey.helloworld.application.shared.BaseActivity;
 import com.example.josuerey.helloworld.application.vehicularcap.VehicularCapAssignmentsActivity;
 import com.example.josuerey.helloworld.application.visualocc.VisualOccupationAssignmentsActivity;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     private TextView capturistLogged;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tracker_activity_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.finishRoute:
-                finish();
-                return true;
-            case R.id.changeUser:
-                SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
-                Intent myIntent = new Intent(HomeActivity.this, LoginActivity.class);
-                HomeActivity.this.startActivity(myIntent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +37,16 @@ public class HomeActivity extends AppCompatActivity {
         Intent studyIntent = null;
         switch (view.getId()) {
             case R.id.btnAscDescPassengers:
-                studyIntent = new Intent(HomeActivity.this, AscDescAssignmentsActivity.class);
+                studyIntent = new Intent(this, AscDescAssignmentsActivity.class);
                 break;
             case R.id.btnVisualOccupation:
-                studyIntent = new Intent(HomeActivity.this, VisualOccupationAssignmentsActivity.class);
+                studyIntent = new Intent(this, VisualOccupationAssignmentsActivity.class);
                 break;
             case R.id.btnVehicularCap:
-                studyIntent = new Intent(HomeActivity.this, VehicularCapAssignmentsActivity.class);
+                studyIntent = new Intent(this, VehicularCapAssignmentsActivity.class);
                 break;
             case R.id.btnOriginDestinyStudy:
-                studyIntent = new Intent(HomeActivity.this, OriginDestinyPollAssignmentsActivity.class);
+                studyIntent = new Intent(this, OriginDestinyPollAssignmentsActivity.class);
                 break;
         }
 

@@ -1,5 +1,14 @@
 apply plugin: 'com.android.application'
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -8,6 +17,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     compileOptions {

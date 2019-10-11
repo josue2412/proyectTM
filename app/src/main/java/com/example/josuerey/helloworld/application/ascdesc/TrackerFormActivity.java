@@ -2,7 +2,6 @@ package com.example.josuerey.helloworld.application.ascdesc;
 
 import android.content.Intent;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.josuerey.helloworld.R;
+import com.example.josuerey.helloworld.application.shared.BaseActivity;
 import com.example.josuerey.helloworld.domain.busstop.BusStop;
 import com.example.josuerey.helloworld.domain.busstop.BusStopRepository;
 import com.example.josuerey.helloworld.domain.gpslocation.GPSLocation;
@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 
 import java.util.Arrays;
 
-public class TrackerFormActivity extends AppCompatActivity {
+public class TrackerFormActivity extends BaseActivity {
 
     public final static String METADATA_PROPERTY = "metadata";
     private EditText routeEditText;

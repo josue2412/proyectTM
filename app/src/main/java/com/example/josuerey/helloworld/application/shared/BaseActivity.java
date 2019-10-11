@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.josuerey.helloworld.BuildConfig;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.application.LoginActivity;
 import com.example.josuerey.helloworld.infrastructure.preferencesmanagement.SaveSharedPreference;
@@ -36,9 +37,11 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String appBuildInfo = String.format("App version: %s \nGit commit: %s",
+                BuildConfig.VERSION_NAME, BuildConfig.GitHash);
         switch (item.getItemId()) {
             case R.id.help:
-                Toast.makeText(getApplicationContext(), "No disponible",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), appBuildInfo,Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.finishRoute:
                 finish();
