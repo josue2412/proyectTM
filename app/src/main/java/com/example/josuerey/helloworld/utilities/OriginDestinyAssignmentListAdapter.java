@@ -13,6 +13,9 @@ import android.widget.TextView;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.domain.origindestiny.OriginDestinyAssignmentResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class OriginDestinyAssignmentListAdapter extends ArrayAdapter<OriginDestinyAssignmentResponse>
@@ -47,6 +50,8 @@ public class OriginDestinyAssignmentListAdapter extends ArrayAdapter<OriginDesti
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy, h:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         OriginDestinyAssignmentResponse dataModel = getItem(position);
 
         ViewHolder viewHolder; // view lookup cache stored in tag
@@ -74,7 +79,13 @@ public class OriginDestinyAssignmentListAdapter extends ArrayAdapter<OriginDesti
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
+        try {
+            Date date = format.parse(dataModel.getBeginAtDate());
+            viewHolder.beginAtDate.setText(USER_DATE_FORMAT.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
+        }
         viewHolder.beginAtPlace.setText(dataModel.getBeginAtPlace());
         viewHolder.questionaryType.setText(dataModel.getOriginDestinyQuestionary().getName());
         viewHolder.numberOfPolls.setText(String.valueOf(dataModel.getNumberOfPolls()));

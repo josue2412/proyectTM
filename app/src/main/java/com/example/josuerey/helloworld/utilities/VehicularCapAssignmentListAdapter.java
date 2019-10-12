@@ -63,7 +63,7 @@ public class VehicularCapAssignmentListAdapter extends ArrayAdapter<VehicularCap
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy, h:mm a");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // Get the data item for this position
         VehicularCapAssignmentResponse dataModel = getItem(position);

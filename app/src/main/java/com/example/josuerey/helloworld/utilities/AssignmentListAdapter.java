@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.infrastructure.network.AscDescAssignmentResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentResponse>
@@ -57,6 +60,8 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy, h:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // Get the data item for this position
         AscDescAssignmentResponse dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -71,8 +76,8 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
             convertView = inflater.inflate(R.layout.asc_desc_assignment_view, parent, false);
             viewHolder.route = convertView.findViewById(R.id.route_value);
             viewHolder.via = convertView.findViewById(R.id.via_value);
-            viewHolder.beginAtDate = convertView.findViewById(R.id.begin_at_date_value);
             viewHolder.beginAtPlace = convertView.findViewById(R.id.begin_at_place_value);
+            viewHolder.beginAtDate = convertView.findViewById(R.id.begin_at_date_value);
 
             result=convertView;
 
@@ -88,7 +93,15 @@ public class AssignmentListAdapter extends ArrayAdapter<AscDescAssignmentRespons
 
         viewHolder.route.setText(dataModel.getRoute());
         viewHolder.via.setText(dataModel.getVia());
-        viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
+
+        try {
+            Date date = format.parse(dataModel.getBeginAtDate());
+            viewHolder.beginAtDate.setText(USER_DATE_FORMAT.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
+        }
+
         viewHolder.beginAtPlace.setText(dataModel.getBeginAtPlace());
         // Return the completed view to render on screen
         return convertView;

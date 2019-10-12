@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.example.josuerey.helloworld.R;
 import com.example.josuerey.helloworld.infrastructure.network.VisualOccupationAssignmentResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class VisualOccAssignmentListAdapter extends ArrayAdapter<VisualOccupationAssignmentResponse>
@@ -57,6 +60,8 @@ public class VisualOccAssignmentListAdapter extends ArrayAdapter<VisualOccupatio
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SimpleDateFormat USER_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy, h:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // Get the data item for this position
         VisualOccupationAssignmentResponse dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -89,7 +94,13 @@ public class VisualOccAssignmentListAdapter extends ArrayAdapter<VisualOccupatio
 
         viewHolder.viaOfStudy.setText(dataModel.getViaOfStudy());
         viewHolder.directionLane.setText(dataModel.getDirectionLane());
-        viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
+        try {
+            Date date = format.parse(dataModel.getBeginAtDate());
+            viewHolder.beginAtDate.setText(USER_DATE_FORMAT.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            viewHolder.beginAtDate.setText(dataModel.getBeginAtDate());
+        }
         viewHolder.crossroadUnderStudy.setText(dataModel.getBeginAtPlace());
         return convertView;
     }
