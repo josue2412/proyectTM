@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.example.josuerey.helloworld.utilities.TouchImageView
+                <com.sgcities.tdc.optimizer.utilities.TouchImageView
                     android:id="@+id/intersectionImageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

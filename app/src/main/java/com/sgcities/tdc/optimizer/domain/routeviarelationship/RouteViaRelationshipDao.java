@@ -1,0 +1,23 @@
+package com.sgcities.tdc.optimizer.domain.routeviarelationship;
+
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+
+import com.sgcities.tdc.optimizer.domain.busroute.BusRoute;
+
+@Dao
+public interface RouteViaRelationshipDao {
+
+    @Query("SELECT * FROM BusRoute INNER JOIN RouteViaRelationship ON " +
+            "BusRoute.id = RouteViaRelationship.routeId " +
+            "where RouteViaRelationship.viaOfStudyId = :viaOfStudy")
+    BusRoute[] findRoutesForViaOfStudy(final int viaOfStudy);
+
+    @Query("Select * from RouteViaRelationship")
+    RouteViaRelationship[] findAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(RouteViaRelationship... dataEntities);
+}
