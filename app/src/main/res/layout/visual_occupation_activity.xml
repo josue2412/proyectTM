@@ -2,212 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parent_linear_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:orientation="vertical" >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:id="@+id/visual_occupation_layout_holder"
+        android:layout_height="wrap_content"
         android:showDividers="middle"
         android:divider="@drawable/border_gray"
         android:layout_marginBottom="25dp"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
 
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/routeSpinner"
-                android:layout_width="0dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:hint="Ruta"
-                android:inputType="textVisiblePassword" />
-
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/occupation_level_spinner"
-                android:layout_width="0dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:entries="@array/occupation_level"
-                android:gravity="right" />
-
-            <Button
-                android:id="@+id/save_button"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@android:drawable/ic_menu_save"
-                android:onClick="onSave" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/econNum_edit_text"
-                android:layout_width="50dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="5"
-                android:hint="No Economico"
-                android:inputType="number" />
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/vehicleTypeSpinner"
-                android:layout_width="50dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="5"
-                android:hint="Vehiculo"
-                android:entries="@array/bus_types"
-                android:inputType="textAutoComplete" />
-        </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@color/colorAccent" />
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:showDividers="middle"
-        android:layout_marginBottom="25dp"
-        android:divider="@drawable/border_gray"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/routeSpinner2"
-                android:layout_width="0dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:hint="Ruta"
-                android:inputType="textVisiblePassword" />
-
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/occupation_level_spinner2"
-                android:layout_width="0dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:entries="@array/occupation_level"
-                android:gravity="right" />
-
-            <Button
-                android:id="@+id/save_button2"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@android:drawable/ic_menu_save"
-                android:onClick="onSave" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/econNum_edit_text2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="5"
-                android:background="@drawable/spinner_style"
-                android:hint="No Economico"
-                android:inputType="number" />
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/vehicleTypeSpinner2"
-                android:layout_width="50dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="5"
-                android:hint="Vehiculo"
-                android:entries="@array/bus_types"
-                android:inputType="textAutoComplete" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@color/colorAccent" />
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:showDividers="middle"
-        android:layout_marginTop="10dp"
-        android:divider="@drawable/border_gray"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/routeSpinner3"
-                android:layout_width="0dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:hint="Ruta"
-                android:inputType="textVisiblePassword" />
-
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/occupation_level_spinner3"
-                android:layout_width="0dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:entries="@array/occupation_level"
-                android:gravity="right" />
-
-            <Button
-                android:id="@+id/save_button3"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@android:drawable/ic_menu_save"
-                android:onClick="onSave" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/econNum_edit_text3"
-                android:background="@drawable/spinner_style"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="5"
-                android:hint="No Economico"
-                android:inputType="number" />
-            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:id="@+id/vehicleTypeSpinner3"
-                android:layout_width="50dp"
-                android:background="@drawable/spinner_style"
-                android:layout_height="50dp"
-                android:layout_weight="5"
-                android:hint="Vehiculo"
-                android:entries="@array/bus_types"
-                android:inputType="textAutoComplete" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@color/colorAccent" />
+    <Button style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addNewForm"
+        android:layout_alignParentBottom="true"
+        android:text="Agregar formulario"/>
 
 </LinearLayout>

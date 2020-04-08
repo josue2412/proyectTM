@@ -60,7 +60,7 @@ public class TrackerFormActivity extends BaseActivity {
 
         routeEditText = findViewById(R.id.route_edit_text);
         viaEditText = findViewById(R.id.via_edit_text);
-        ecoNumberEditText = findViewById(R.id.econNum_edit_text);
+        ecoNumberEditText = findViewById(R.id.econ_num_edit_text);
         beginAtDateEditText = findViewById(R.id.begin_at_date_edit_text);
         beginAtPlaceEditText = findViewById(R.id.begin_at_place_edit_text);
         durationEditText = findViewById(R.id.duration_edit_text);

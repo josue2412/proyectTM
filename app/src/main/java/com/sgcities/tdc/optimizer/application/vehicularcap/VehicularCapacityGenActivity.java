@@ -280,9 +280,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
      * @return true if
      */
     private View.OnLongClickListener onCounterLongClickListener() {
-        return new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View buttonView) {
+        return (View buttonView) -> {
                 CounterViewTag counterViewTag = (CounterViewTag) buttonView.getTag();
 
                 updateCounterBadgeView(counterViewTag, movementsCounters
@@ -291,8 +289,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
                                 .get(counterViewTag.getVehicleType()).decrement(),
                         movementsCounters.get(counterViewTag.getMovementId()).getTotal());
                 return true;
-            }
-        };
+            };
     }
 
     /**

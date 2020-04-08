@@ -1,12 +1,16 @@
 package com.sgcities.tdc.optimizer.application.visualocc;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
 
@@ -40,34 +45,21 @@ public class VisualOccupationActivity extends TrackableBaseActivity
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final String TAG = this.getClass().getSimpleName();
-    private List<String> busRoutes;
-    private HashMap<String, Integer> busRoutesMap;
     private VisualOccupationMetadata visualOccupationMetadata;
     private VisualOccupationAssignmentResponse assignment;
 
-    private Spinner spinnerRoute;
-    private Spinner spinnerRoute2;
-    private Spinner spinnerRoute3;
-
-    private Spinner spinnerOccupationLevel;
-    private Spinner spinnerOccupationLevel2;
-    private Spinner spinnerOccupationLevel3;
-
-    private Spinner spinnerVehicleType;
-    private Spinner spinnerVehicleType2;
-    private Spinner spinnerVehicleType3;
-
-    private EditText econNumEditText;
-    private EditText econNumEditText2;
-    private EditText econNumEditText3;
-
     private BusOccupationRepository repository;
+    private LinearLayout visualOccupationFormLayout;
+    private AtomicInteger formIncrementallyId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.visual_occupation_activity);
+
+        visualOccupationFormLayout = findViewById(R.id.visual_occupation_layout_holder);
+        formIncrementallyId = new AtomicInteger();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -82,41 +74,42 @@ public class VisualOccupationActivity extends TrackableBaseActivity
         postParamName = "busOccData";
         repository = new BusOccupationRepository(getApplication());
 
-        busRoutes = new LinkedList<>();
-        busRoutesMap = new HashMap<>();
-        busRoutes.add("Ruta");
+        inflateForm();
+    }
 
-        for (RouteBusPayload availableBusRoute : assignment.getRoutes()) {
-            String routeName = String.format("%s %s", availableBusRoute.getRoute(), availableBusRoute.getVia());
-            busRoutes.add(routeName);
-            busRoutesMap.put(routeName, availableBusRoute.getId());
-        }
-        Log.d(TAG, assignment.getRoutes().toString());
+    /**
+     * Builds and configure a new instance of visual_occupation_form_layout and add it to
+     * visualOccupationFormLayout.
+     */
+    private void inflateForm() {
+        LayoutInflater viewInflater = (
+                LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // Populate route spinner with routes associated to point of study
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, busRoutes.toArray(new String[busRoutes.size()]));
-        spinnerRoute = findViewById(R.id.routeSpinner);
-        spinnerRoute2 = findViewById(R.id.routeSpinner2);
-        spinnerRoute3 = findViewById(R.id.routeSpinner3);
+        View visualOccFormLayout =
+                viewInflater.inflate(R.layout.visual_occupation_form_layout, null);
 
-        spinnerRoute.setAdapter(adapter);
-        spinnerRoute2.setAdapter(adapter);
-        spinnerRoute3.setAdapter(adapter);
+        final int currentId = formIncrementallyId.incrementAndGet();
+        visualOccFormLayout.setId(currentId);
+        Spinner routeSpinner = visualOccFormLayout.findViewById(R.id.route_spinner);
+        ArrayAdapter routeArrayAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item);
+        routeArrayAdapter.add("Ruta");
+        routeArrayAdapter.addAll( assignment.getRoutes());
+        routeSpinner.setAdapter(routeArrayAdapter);
+        Button currentSaveButton = visualOccFormLayout.findViewById(R.id.save_button);
+        currentSaveButton.setTag(currentId);
 
-        spinnerOccupationLevel = findViewById(R.id.occupation_level_spinner);
-        spinnerOccupationLevel2 = findViewById(R.id.occupation_level_spinner2);
-        spinnerOccupationLevel3 = findViewById(R.id.occupation_level_spinner3);
+        visualOccupationFormLayout.addView(visualOccFormLayout, visualOccupationFormLayout.getChildCount());
+    }
 
-        spinnerVehicleType = findViewById(R.id.vehicleTypeSpinner);
-        spinnerVehicleType2 = findViewById(R.id.vehicleTypeSpinner2);
-        spinnerVehicleType3 = findViewById(R.id.vehicleTypeSpinner3);
-
-        econNumEditText = findViewById(R.id.econNum_edit_text);
-        econNumEditText2 = findViewById(R.id.econNum_edit_text2);
-        econNumEditText3 = findViewById(R.id.econNum_edit_text3);
-
-        requestPermissions();
+    /**
+     * By clicking this button a new form is inflated and added to the current vissual occupation
+     * linear layout.
+     *
+     * @param view
+     */
+    public void addNewForm(View view) {
+        inflateForm();
     }
 
     private boolean validateSpinners(int positionSpinnerRoute,
@@ -137,51 +130,33 @@ public class VisualOccupationActivity extends TrackableBaseActivity
         return true;
     }
 
+    /**
+     * Builds a {@linkplain BusOccupation} based on current form information. Once the validation of
+     * the spinner is success.
+     * @param v
+     */
     public void onSave(View v) {
-        BusOccupation.BusOccupationBuilder busOccupationBuilder = BusOccupation.builder();
-        int formNumberSaved = 0;
 
-        switch (v.getId()) {
-            case R.id.save_button:
-                if (validateSpinners(spinnerRoute.getSelectedItemPosition(),
-                        spinnerOccupationLevel.getSelectedItemPosition(),
-                        spinnerVehicleType.getSelectedItemPosition())) {
+        int viewTag = (int) v.getTag();
+        View visualOccFormView  = findViewById(viewTag);
 
-                    busOccupationBuilder.routeId(busRoutesMap.get(spinnerRoute.getSelectedItem().toString()))
-                            .visOccAssignmentId(assignment.getId())
-                            .occupationLevel(spinnerOccupationLevel.getSelectedItem().toString())
-                            .economicNumber(econNumEditText.getText().toString())
-                            .busType(spinnerVehicleType.getSelectedItem().toString());
-                    formNumberSaved = 1;
-                }
-                break;
-            case R.id.save_button2:
-                if (validateSpinners(spinnerRoute2.getSelectedItemPosition(),
-                        spinnerOccupationLevel2.getSelectedItemPosition(),
-                        spinnerVehicleType2.getSelectedItemPosition())) {
-                    busOccupationBuilder.routeId(busRoutesMap.get(spinnerRoute2.getSelectedItem().toString()))
-                            .occupationLevel(spinnerOccupationLevel2.getSelectedItem().toString())
-                            .visOccAssignmentId(assignment.getId())
-                            .economicNumber(econNumEditText2.getText().toString())
-                            .busType(spinnerVehicleType2.getSelectedItem().toString());
-                    formNumberSaved = 2;
-                }
-                break;
-            case R.id.save_button3:
-                if (validateSpinners(spinnerRoute3.getSelectedItemPosition(),
-                        spinnerOccupationLevel3.getSelectedItemPosition(),
-                        spinnerVehicleType3.getSelectedItemPosition())) {
-                    busOccupationBuilder.routeId(busRoutesMap.get(spinnerRoute3.getSelectedItem().toString()))
-                            .occupationLevel(spinnerOccupationLevel3.getSelectedItem().toString())
-                            .visOccAssignmentId(assignment.getId())
-                            .economicNumber(econNumEditText3.getText().toString())
-                            .busType(spinnerVehicleType3.getSelectedItem().toString());
-                    formNumberSaved = 3;
-                }
-                break;
-        }
+        Log.d(TAG, String.format("Processing visual occupation form id: %d ...", viewTag));
+        Spinner route = visualOccFormView.findViewById(R.id.route_spinner);
+        Spinner occLevel = visualOccFormView.findViewById(R.id.occupation_level_spinner);
+        Spinner vehicleType = visualOccFormView.findViewById(R.id.vehicle_type_spinner);
+        EditText economicNumber = visualOccFormView.findViewById(R.id.econ_num_edit_text);
 
-        if (formNumberSaved > 0) {
+        if (validateSpinners(route.getSelectedItemPosition(), occLevel.getSelectedItemPosition(),
+                vehicleType.getSelectedItemPosition())) {
+
+            RouteBusPayload selectedRoute = (RouteBusPayload) route.getSelectedItem();
+            BusOccupation.BusOccupationBuilder busOccupationBuilder = BusOccupation.builder();
+            busOccupationBuilder.visOccAssignmentId(this.assignment.getId())
+                    .routeId(selectedRoute.getId())
+                    .economicNumber(economicNumber.getText().toString())
+                    .occupationLevel(occLevel.getSelectedItem().toString())
+                    .busType(vehicleType.getSelectedItem().toString());
+
             busOccupationBuilder
                     .backedUpRemotely(0)
                     .timeStamp(DATE_FORMAT.format(Calendar.getInstance().getTime()));
@@ -190,15 +165,21 @@ public class VisualOccupationActivity extends TrackableBaseActivity
             busOccupationBuilder.lon(currentLocation != null ? currentLocation.getLon(): 0.0);
             BusOccupation busOccupation = busOccupationBuilder.build();
             backUpRecord(busOccupation);
-            cleanForm(formNumberSaved);
+            cleanForm(viewTag);
         }
     }
 
+
+    /**
+     *
+     * @param busOccupationRecord {@linkplain BusOccupation}
+     */
     private void backUpRecord(BusOccupation busOccupationRecord) {
         long busOccupationId = repository.save(busOccupationRecord);
         busOccupationRecord.setId((int) busOccupationId);
 
-        Log.d(TAG, "Saving new busOccupation with id: " + busOccupationId);
+        Log.d(TAG, "BusOccupation internally saved with id: " + busOccupationId);
+        Toast.makeText(getApplicationContext(), "Registro guardado",Toast.LENGTH_SHORT).show();
 
         ExportData.createFile(String.format("Ocupacion-visual-%s-%d.txt",
                 visualOccupationMetadata.getViaOfStudy(),
@@ -208,28 +189,21 @@ public class VisualOccupationActivity extends TrackableBaseActivity
         postItemsInBatch(Collections.singletonList(busOccupationRecord));
     }
 
-    private void cleanForm(int formPosition) {
-        switch (formPosition) {
-            case 1:
-                econNumEditText.setText("");
-                spinnerRoute.setSelection(0);
-                spinnerOccupationLevel.setSelection(0);
-                spinnerVehicleType.setSelection(0);
-                break;
-            case 2:
-                econNumEditText2.setText("");
-                spinnerRoute2.setSelection(0);
-                spinnerOccupationLevel2.setSelection(0);
-                spinnerVehicleType2.setSelection(0);
-                break;
-            case 3:
-                econNumEditText3.setText("");
-                spinnerRoute3.setSelection(0);
-                spinnerOccupationLevel3.setSelection(0);
-                spinnerVehicleType3.setSelection(0);
-                break;
-        }
-        Toast.makeText(getApplicationContext(), "Registro guardado",Toast.LENGTH_SHORT).show();
+    /**
+     * Reset form values to default values
+     * @param viewTag
+     */
+    private void cleanForm(int viewTag) {
+
+        View visualOccFormView  = findViewById(viewTag);
+        Spinner route = visualOccFormView.findViewById(R.id.route_spinner);
+        route.setSelection(0);
+        Spinner occLevel = visualOccFormView.findViewById(R.id.occupation_level_spinner);
+        occLevel.setSelection(0);
+        Spinner vehicleType = visualOccFormView.findViewById(R.id.vehicle_type_spinner);
+        vehicleType.setSelection(0);
+        EditText economicNumber = visualOccFormView.findViewById(R.id.econ_num_edit_text);
+        economicNumber.setText("");
     }
 
 

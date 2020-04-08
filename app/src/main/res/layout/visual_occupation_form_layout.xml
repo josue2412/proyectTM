@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:orientation="vertical" >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:showDividers="middle"
+        android:divider="@drawable/border_gray"
+        android:layout_marginBottom="25dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:id="@+id/route_spinner"
+                android:layout_width="0dp"
+                android:background="@drawable/spinner_style"
+                android:layout_height="50dp"
+                android:layout_weight="4"
+                android:hint="Ruta" />
+
+            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:id="@+id/occupation_level_spinner"
+                android:layout_width="0dp"
+                android:background="@drawable/spinner_style"
+                android:layout_height="50dp"
+                android:layout_weight="4"
+                android:entries="@array/occupation_level"
+                android:gravity="right" />
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@android:drawable/ic_menu_save"
+                android:onClick="onSave" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/econ_num_edit_text"
+                android:layout_width="wrap_content"
+                android:background="@drawable/spinner_style"
+                android:layout_height="50dp"
+                android:paddingLeft="10dp"
+                android:layout_weight="5"
+                android:hint="Num. económico"
+                android:inputType="textVisiblePassword" />
+            <Spinner style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:id="@+id/vehicle_type_spinner"
+                android:layout_width="wrap_content"
+                android:background="@drawable/spinner_style"
+                android:layout_height="50dp"
+                android:layout_weight="5"
+                android:hint="Vehiculo"
+                android:entries="@array/bus_types"
+                android:inputType="textAutoComplete" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

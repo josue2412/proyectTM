@@ -40,7 +40,7 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/econNum_edit_text"
+            android:id="@+id/econ_num_edit_text"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="5"

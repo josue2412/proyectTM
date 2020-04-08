@@ -143,19 +143,11 @@ public class OriginDestinyPollActivity extends TrackableBaseActivity
         askForNewPollDialog.setTitle("Encuesta enviada");
         askForNewPollDialog.setMessage("¿Desea hacer una nueva encuesta?")
                 .setCancelable(false)
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                .setPositiveButton("Sí", (DialogInterface dialog, int which) -> {
                         cleanAnswers();
                         dialog.cancel();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
+                    })
+                .setNegativeButton("No", (DialogInterface dialog, int which) -> finish());
         AlertDialog myDialog = askForNewPollDialog.create();
         myDialog.show();
     }

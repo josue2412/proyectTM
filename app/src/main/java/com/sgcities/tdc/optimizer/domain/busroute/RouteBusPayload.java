@@ -36,6 +36,12 @@ public class RouteBusPayload {
     @SerializedName("pivot")
     private Pivot pivot;
 
+
+    @Override
+    public String toString() {
+        return String.format("%s - %s", this.getRoute(), this.getVia());
+    }
+
     @Getter
     @Setter
     @Builder
