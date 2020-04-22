@@ -45,7 +45,7 @@ public class APIClient {
 
     public void postBusStopInBatch(final List<BusStop> busStop,
                                   final BusStopRepository busStopRepository) {
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/routeBusStop");
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/routeBusStop");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -88,7 +88,7 @@ public class APIClient {
 
     public void postMetadataInBatch (final List<Metadata> metadata,
                                     final MetadataRepository repository) {
-        String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/updateAscDescAssignment");
+        String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/updateAscDescAssignment");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -131,7 +131,7 @@ public class APIClient {
 
     public void postGpsLocationInBatch(final List<GPSLocation> route,
                                        final GPSLocationRepository gpsLocationRepository) {
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/route");
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/route");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -175,7 +175,7 @@ public class APIClient {
 
     public void postBusOccupationMeta(final List<VisualOccupationMetadata> visOccMeta,
                                       final VisualOccupationMetadataRepository visualOccMetaRepo) {
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/updateBusOccAssignment");
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/updateBusOccAssignment");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -217,7 +217,7 @@ public class APIClient {
 
     public void postBusOccupation(final List<BusOccupation> busOcc,
                                   final BusOccupationRepository busOccupationRepository) {
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/busOccRecord");
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/busOccRecord");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -260,7 +260,7 @@ public class APIClient {
 
     public void postVehicularCapMeta(final List<VehicularCapacity> VehicularCap,
                                      final VehicularCapacityRepository vehicularCapRepo) {
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/updateVehicCapAssignment");
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/updateVehicCapAssignment");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override
@@ -302,7 +302,7 @@ public class APIClient {
 
     public void postVehicularCapRecord(final List<VehicularCapacityRecord> VehicularCap,
                                        final VehicularCapacityRecordRepository vehicularCapRepo) {
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/vehicCapRecord");
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/vehicCapRecord");
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override

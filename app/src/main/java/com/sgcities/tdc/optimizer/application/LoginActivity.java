@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         loginStatus.setVisibility(View.INVISIBLE);
         StringRequest stringRequest =
                 new StringRequest(Request.Method.GET, String.format("%s%s",
-                        AssignmentsDisplay.serverIp,
+                        AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE,
                         String.format(LOGIN_REQUEST_URL, user, password)), (String response) -> {
                     Capturist capturistFetched = gson.fromJson(response, Capturist.class);
 

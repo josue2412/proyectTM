@@ -33,4 +33,22 @@
     <string name="login_failed_unknown_reason">algo salio mal durante la autenticación, intenta de nuevo</string>
     <string name="login_failed_user_unknown">el usuario no existe, contacta a los administradores</string>
     <string name="login_failed_wrong_password">contrasena incorrecta, contacta a los administradores</string>
+
+    <!-- API URLs -->
+    <string name="asc_desc_assignment_api_url">/app/api/capturistAscDescAssignments?capturist_id=</string>
+    <string name="vehicular_cap_assignment_api_url">/app/api/capturistVehicularCapacityAssignments?capturist_id=</string>
+    <string name="visual_occupation_assignment_api_url">/app/api/capturistVisualOccupationAssignments?capturist_id=</string>
+    <string name="orig_dest_assignment_api_url">/app/api/capturistOriginDestinyAssignments?capturist_id=</string>
+
+    <!-- Assignments request messages -->
+    <string name="volley_request_no_internet_connection">Falló la conexión a Internet"</string>
+    <string name="volley_request_no_assignments_found">No se encontraron tareas para tu usuario</string>
+
+    <!-- Login activity -->
+    <string name="login_btn_text">Iniciar sesión</string>
+    <string name="login_password_hint">contraseña</string>
+    <string name="login_password_text">Clave:</string>
+    <string name="login_user_name_hint">nombre de usuario</string>
+    <string name="login_user_text">Usuario:</string>
+
 </resources>

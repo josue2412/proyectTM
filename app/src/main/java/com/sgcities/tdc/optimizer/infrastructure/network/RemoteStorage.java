@@ -40,7 +40,7 @@ public interface RemoteStorage<T extends Storable, R extends RemotelyStore<T>> {
      */
     default void postItemsInBatch(final List<T> itemsToStorage) {
 
-        final String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, getEndpointUrl());
+        final String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, getEndpointUrl());
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, requestUrl, new Response.Listener<String>() {
                     @Override

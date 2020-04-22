@@ -7,10 +7,9 @@
     >
 
     <ProgressBar
-        android:layout_alignParentBottom="true"
         android:indeterminate="true"
         android:layout_centerHorizontal="true"
-        android:paddingBottom="450dip"
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
@@ -28,7 +27,7 @@
         android:layout_marginLeft="35dp"
         android:layout_marginStart="35dp"
         android:layout_marginTop="71dp"
-        android:text="Usuario" />
+        android:text="@string/login_user_text" />
 
     <EditText
         android:id="@+id/usernameText"
@@ -43,7 +42,7 @@
         android:inputType="textEmailAddress"
         android:background="@null"
         android:ems="10"
-        android:hint="nombre de usuario" />
+        android:hint="@string/login_user_name_hint" />
 
     <TextView
         android:id="@+id/user_key"
@@ -55,7 +54,7 @@
         android:textColor="@android:color/black"
         android:layout_marginLeft="35dp"
         android:layout_marginStart="35dp"
-        android:text="Clave: " />
+        android:text="@string/login_password_text" />
 
     <EditText
         android:id="@+id/user_key_value"
@@ -63,14 +62,14 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/user_key"
         android:layout_marginLeft="41dp"
-        android:layout_marginStart="46dp"
+        android:layout_marginStart="53dp"
         android:layout_toEndOf="@+id/user_key"
         android:textStyle="italic"
         android:layout_toRightOf="@+id/user_key"
         android:inputType="textPassword"
         android:background="@null"
         android:ems="10"
-        android:hint="contraseña" />
+        android:hint="@string/login_password_hint" />
 
     <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/submit"
@@ -79,7 +78,7 @@
         android:layout_below="@+id/usernameText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:text="Iniciar sesión"
+        android:text="@string/login_btn_text"
         android:textAllCaps="false" />
     <TextView
         android:id="@+id/login_status"

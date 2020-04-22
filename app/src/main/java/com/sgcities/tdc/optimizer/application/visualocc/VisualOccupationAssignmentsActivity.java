@@ -39,8 +39,8 @@ public class VisualOccupationAssignmentsActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
-        requestUrl = String.format("%s%s%d", this.serverIp,
-                "/app/api/capturistVisualOccupationAssignments?capturist_id=",
+        requestUrl = String.format("%s%s%d", this.HOST_ASSIGNMENTS_SOURCE,
+                this.getResources().getString(R.string.visual_occupation_assignment_api_url),
                 SaveSharedPreference.getUserId(getApplicationContext()));
 
         context = getApplicationContext();
@@ -51,11 +51,6 @@ public class VisualOccupationAssignmentsActivity extends BaseActivity
         downloadAssignmentsPB = findViewById(R.id.download_assignments_progress_bar);
 
         capturistTextView.setText(SaveSharedPreference.getUserName(getApplicationContext()));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         callRetrieveAssignments();
     }
 

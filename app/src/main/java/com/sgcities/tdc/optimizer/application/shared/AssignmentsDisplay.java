@@ -12,6 +12,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sgcities.tdc.optimizer.R;
 import com.sgcities.tdc.optimizer.infrastructure.network.AssignmentRetrievedCallback;
 
 import com.google.gson.Gson;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public interface AssignmentsDisplay<T> {
-    String serverIp = "https://sgcities.com";
+    String HOST_ASSIGNMENTS_SOURCE = "https://sgcities.com";
     Gson gson = new Gson();
     String getTAG();
     Context getContext();
@@ -42,7 +43,7 @@ public interface AssignmentsDisplay<T> {
      * @param msg indicating the reason why assignments were not retrieved.
      * @param succeed true if assignments were found
      */
-    default void setStatusMsg(String msg, boolean succeed) {
+    default void setStatusMsg(int msg, boolean succeed) {
         addOnclickListenerToRetryRetrieveAssignments();
         if (succeed) {
             getRetrieveAssignmentsStatus().setVisibility(View.INVISIBLE);
@@ -56,13 +57,14 @@ public interface AssignmentsDisplay<T> {
 
     default void addOnclickListenerToRetryRetrieveAssignments() {
         getRetryRetrieveAssignments().setOnClickListener((View v) -> {
-                Log.d(getTAG(), "Retry retrieving assignments...");
+                Log.d(getTAG(), String.format("Retry retrieving assignments from: %s",
+                        getRequestUrl()));
                 callRetrieveAssignments();
             });
     }
 
     default void retrieveAssignments(final AssignmentRetrievedCallback callback){
-        Log.d(getTAG(), "Retrieving assignments...");
+        Log.d(getTAG(), String.format("Retrieving assignments from: %s", getRequestUrl()));
         getDownloadAssignmentsPB().setVisibility(ProgressBar.VISIBLE);
         StringRequest stringRequest =
                 new StringRequest(Request.Method.GET, getRequestUrl(), (String response) -> {
@@ -70,18 +72,20 @@ public interface AssignmentsDisplay<T> {
                                 gson.fromJson(response, new TypeToken<List<T>>() {}.getType());
 
                         if (assignmentResponse.isEmpty()) {
-                            setStatusMsg("No se encontraron tareas para tu usuario", false);
+                            setStatusMsg(R.string.volley_request_no_assignments_found, false);
                         } else {
-                            setStatusMsg(null, true);
+                            setStatusMsg(0, true);
                         }
                         callback.onSuccess(assignmentResponse);
-                        Log.d(getTAG(), String.format("Number of assignments retrieved: %d", assignmentResponse.size()));
+                        Log.d(getTAG(), String.format("Number of assignments retrieved: %d",
+                                assignmentResponse.size()));
                         getDownloadAssignmentsPB().setVisibility(ProgressBar.INVISIBLE);
                     }
                 , (VolleyError error) -> {
-                        Log.e(getTAG(), "Volley error response");
+                        Log.e(getTAG(), String.format("Something went wrong with call to %s",
+                                getRequestUrl()));
                         error.printStackTrace();
-                        setStatusMsg("Falló la conexión a Internet", false);
+                        setStatusMsg(R.string.volley_request_no_internet_connection, false);
                         getDownloadAssignmentsPB().setVisibility(ProgressBar.INVISIBLE);
                     }){};
         //make the request to your server as indicated in your request url

@@ -38,8 +38,8 @@ public class OriginDestinyPollAssignmentsActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_of_assignments);
-        requestUrl = String.format("%s%s%d", this.serverIp,
-                "/app/api/capturistOriginDestinyAssignments?capturist_id=",
+        requestUrl = String.format("%s%s%d", this.HOST_ASSIGNMENTS_SOURCE,
+                this.getResources().getString(R.string.orig_dest_assignment_api_url),
                 SaveSharedPreference.getUserId(getApplicationContext()));
 
         context = getApplicationContext();
@@ -50,11 +50,6 @@ public class OriginDestinyPollAssignmentsActivity extends BaseActivity
         downloadAssignmentsPB = findViewById(R.id.download_assignments_progress_bar);
 
         capturistTextView.setText(SaveSharedPreference.getUserName(getApplicationContext()));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         callRetrieveAssignments();
     }
 

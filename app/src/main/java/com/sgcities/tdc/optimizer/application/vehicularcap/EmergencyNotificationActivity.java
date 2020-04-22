@@ -91,7 +91,7 @@ public class EmergencyNotificationActivity extends AppCompatActivity {
     }
 
     public void postEmergencyMessage(final String msg) {
-        String requestUrl = String.format("%s%s", AssignmentsDisplay.serverIp, "/app/api/persist/capturistNotification");
+        String requestUrl = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE, "/app/api/persist/capturistNotification");
         final ProgressDialog pdLoading = new ProgressDialog(this);
         pdLoading.setMessage("\tEnviando...");
         pdLoading.show();

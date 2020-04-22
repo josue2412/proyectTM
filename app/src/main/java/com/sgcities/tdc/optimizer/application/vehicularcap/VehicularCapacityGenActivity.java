@@ -376,7 +376,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
      */
     public void requestImage() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        String mImageURLString = String.format("%s%s", AssignmentsDisplay.serverIp,
+        String mImageURLString = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE,
                 assignment.getPointOfStudy().getIntersectionImageURL());
 
         ImageRequest imageRequest = new ImageRequest(
