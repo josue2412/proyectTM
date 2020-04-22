@@ -48,9 +48,10 @@ public class BaseActivity extends AppCompatActivity {
                 return true;
             case R.id.changeUser:
                 SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
-                Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                getApplicationContext().startActivity(myIntent);
-                finish();
+                Intent myIntent = new Intent(this, LoginActivity.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                this.startActivity(myIntent);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
