@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- ****************** Header ****************** -->
+    <RelativeLayout
+        android:id="@+id/study_details_layout"
+        android:layout_width="match_parent"
+        android:background="@color/whiteSmoke"
+        android:padding="3dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/beginningTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hora de inicio: "
+            android:textColor="@color/colorPrimary"
+            android:gravity="left"/>
+        <TextView
+            android:id="@+id/beginningTimeValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:layout_toRightOf="@id/beginningTimeTextView"
+            android:gravity="left"/>
+
+        <TextView
+            android:id="@+id/lastBackUpTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Último respaldo: "
+            android:textColor="@color/colorPrimary"
+            android:layout_below="@id/beginningTimeTextView"
+            android:gravity="left"/>
+        <TextView
+            android:id="@+id/lastBackUpValueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/beginningTimeTextView"
+            android:layout_toRightOf="@id/lastBackUpTextView"
+            android:textColor="@color/colorPrimary"
+            android:gravity="left"/>
+    </RelativeLayout>
+
+
+    <!-- ****************** Body ****************** -->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scrollview"
+        android:layout_below="@+id/study_details_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="65dp">
 
         <LinearLayout
             android:id="@+id/mainWrapperLayout"
@@ -14,45 +60,6 @@
             android:layout_height="match_parent"
             android:padding="10dp"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/headerTimeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
-                <TextView
-                    android:id="@+id/beginningTimeTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hora de inicio: "
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="left"/>
-                <TextView
-                    android:id="@+id/beginningTimeValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="left"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/headerLastBackupLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
-                <TextView
-                    android:id="@+id/lastBackUpTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Último respaldo: "
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="left"/>
-                <TextView
-                    android:id="@+id/lastBackUpValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="left"/>
-            </LinearLayout>
 
             <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -80,28 +87,30 @@
                     android:layout_gravity="center"
                     android:scaleType="fitCenter"/>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="25dp"
-                android:gravity="center">
-
-                <Button style="@style/Widget.AppCompat.Button.Colored"
-                    android:id="@+id/interruptStudyBtn"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="Interrumpir estudio"
-                    android:onClick="interruptStudy"/>
-                <Button style="@style/Widget.AppCompat.Button.Colored"
-                    android:id="@+id/emergencyBtn"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="Emergencia"
-                    android:onClick="emergencyNotification"/>
-
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
-</android.support.constraint.ConstraintLayout>
+
+
+    <!-- ****************** Foot bar ****************** -->
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/colorGrayBackground"
+        android:padding="5dp"
+        android:gravity="center">
+
+        <Button style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/interruptStudyBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Interrumpir estudio"
+            android:onClick="interruptStudy"/>
+        <Button style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/emergencyBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Emergencia"
+            android:onClick="emergencyNotification"/>
+    </LinearLayout>
+</RelativeLayout>

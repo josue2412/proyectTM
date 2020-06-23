@@ -131,9 +131,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
+                handler.post(() -> {
 
                         endTimeInterval = Calendar.getInstance().getTime();
                         if (countersChanged) {
@@ -143,7 +141,7 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
                         }
                         beginTimeInterval = endTimeInterval;
                     }
-                });
+                );
             }
         };
     }
@@ -377,26 +375,14 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
     public void requestImage() {
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         String mImageURLString = String.format("%s%s", AssignmentsDisplay.HOST_ASSIGNMENTS_SOURCE,
-                assignment.getPointOfStudy().getIntersectionImageURL());
+                assignment.getIntersectionImageURL());
 
         ImageRequest imageRequest = new ImageRequest(
-                mImageURLString,
-                new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        intersectionImageView.setImageBitmap(response);
-                    }
-                },
+                mImageURLString, (Bitmap response) -> intersectionImageView.setImageBitmap(response),
                 0,
                 0,
                 ImageView.ScaleType.CENTER_CROP,
-                Bitmap.Config.RGB_565,
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }
+                Bitmap.Config.RGB_565, (VolleyError error) -> error.printStackTrace()
         );
 
         requestQueue.add(imageRequest);

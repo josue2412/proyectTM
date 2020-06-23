@@ -35,6 +35,9 @@ public class VehicularCapAssignmentResponse implements ServerAssignmentResponse{
     @SerializedName("begin_at_place")
     private String beginAtPlace;
 
+    @SerializedName("intersection_image_url")
+    private String intersectionImageURL;
+
     @SerializedName("duration_in_hours")
     private String durationInHours;
 
