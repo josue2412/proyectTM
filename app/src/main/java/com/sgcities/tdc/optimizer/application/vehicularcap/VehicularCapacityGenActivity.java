@@ -1,7 +1,7 @@
 package com.sgcities.tdc.optimizer.application.vehicularcap;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import android.media.MediaPlayer;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
@@ -30,6 +30,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -61,6 +62,8 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
     private TextView beginningTimeTextView;
     private TextView lastBackupTimeTextView;
     private ImageView intersectionImageView;
+    private ImageView soundImageView;
+    private boolean isSoundActive;
 
     private Map<Integer, MovementCounter> movementsCounters;
     private boolean countersChanged;
@@ -73,6 +76,14 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
 
     private VehicularCapacityRecordRepository repository;
     private VehicularCapAssignmentResponse assignment;
+    public MediaPlayer pedestrianMediaPlayer;
+    public MediaPlayer pedestrianWomanMediaPlayer;
+    public MediaPlayer carMediaPlayer;
+    public MediaPlayer bikeMediaPlayer;
+    public MediaPlayer bikeWomanMediaPlayer;
+    public MediaPlayer busMediaPlayer;
+    public MediaPlayer truckMediaPlayer;
+    public MediaPlayer motorcycleMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +91,15 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.vehicular_capacity_gen);
+
+        pedestrianMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.step);
+        pedestrianWomanMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.wip);
+        carMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.car);
+        bikeMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.bike);
+        bikeWomanMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.bell);
+        busMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.touch);
+        truckMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.gout);
+        motorcycleMediaPlayer = MediaPlayer.create(VehicularCapacityGenActivity.this, R.raw.arrow);
 
         appContext = getApplication();
         endpointUrl = "/app/api/persist/vehicCapRecord";
@@ -271,6 +291,9 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
                         .get(counterViewTag.getVehicleType()).increment(),
                 movementsCounters.get(counterViewTag.getMovementId()).getTotal());
         countersChanged = true;
+        if (isSoundActive) {
+            playVehicleSound(UnderStudyVehicles.valueOf(counterViewTag.getVehicleType()));
+        }
     }
 
     /**
@@ -337,11 +360,54 @@ public class VehicularCapacityGenActivity extends TrackableBaseActivity implemen
         }
     }
 
+
+    private void playVehicleSound(UnderStudyVehicles vehicle) {
+        switch (vehicle) {
+            case BIKE:
+                bikeMediaPlayer.start();break;
+            case BUS:
+                busMediaPlayer.start(); break;
+            case CAR:
+                carMediaPlayer.start(); break;
+            case MOTORCYCLE:
+                motorcycleMediaPlayer.start(); break;
+            case TRUCK:
+                truckMediaPlayer.start(); break;
+            case PEDESTRIAN:
+                pedestrianMediaPlayer.start(); break;
+            case PEDESTRIAN_FEMALE:
+                pedestrianWomanMediaPlayer.start(); break;
+            case BIKE_FEMALE:
+                bikeWomanMediaPlayer.start(); break;
+            default:
+                carMediaPlayer.start();
+        }
+    }
+
     private void bindViews() {
+        soundImageView = findViewById(R.id.soundImageView);
         beginningTimeTextView = findViewById(R.id.beginningTimeValueTextView);
         lastBackupTimeTextView = findViewById(R.id.lastBackUpValueTextView);
         intersectionImageView = findViewById(R.id.intersectionImageView);
         movementsButtonsLayout = findViewById(R.id.movementsButtonsLayout);
+    }
+
+    /**
+     * Handles whether the sound after counter button click must be reproduced or not, as well
+     * as the background image.
+     * @param target
+     */
+    public void changeSoundStatus(View target) {
+
+        if (this.isSoundActive) {
+            this.isSoundActive = false;
+            this.soundImageView.setImageResource(R.drawable.ic_no_sound);
+            Toast.makeText(getApplicationContext(), R.string.sound_inactive,Toast.LENGTH_SHORT).show();
+        } else {
+            this.isSoundActive = true;
+            this.soundImageView.setImageResource(R.drawable.ic_sound);
+            Toast.makeText(getApplicationContext(), R.string.sound_active,Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**

@@ -116,15 +116,15 @@ public class VisualOccupationActivity extends TrackableBaseActivity
                                   int positionSpinnerOccLevel,
                                   int positionSpinnerVehiType){
         if (positionSpinnerRoute < 1) {
-            Toast.makeText(getApplicationContext(), "Ingresa una ruta",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.input_validation_route,Toast.LENGTH_SHORT).show();
             return false;
         }
         if (positionSpinnerOccLevel < 1) {
-            Toast.makeText(getApplicationContext(), "Ingresa un nivel de ocupación",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.input_validation_level,Toast.LENGTH_SHORT).show();
             return false;
         }
         if (positionSpinnerVehiType < 1) {
-            Toast.makeText(getApplicationContext(), "Ingresa un tipo de vehiculo",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.input_validation_type,Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -179,7 +179,7 @@ public class VisualOccupationActivity extends TrackableBaseActivity
         busOccupationRecord.setId((int) busOccupationId);
 
         Log.d(TAG, "BusOccupation internally saved with id: " + busOccupationId);
-        Toast.makeText(getApplicationContext(), "Registro guardado",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), R.string.record_saved,Toast.LENGTH_SHORT).show();
 
         ExportData.createFile(String.format("Ocupacion-visual-%s-%d.txt",
                 visualOccupationMetadata.getViaOfStudy(),

@@ -51,4 +51,14 @@
     <string name="login_user_name_hint">nombre de usuario</string>
     <string name="login_user_text">Usuario:</string>
 
+    <!-- Vehicular capacity activity -->
+    <string name="sound_active">Sonido activado</string>
+    <string name="sound_inactive">Sonido desactivado</string>
+
+    <!-- Visual occupation activity -->
+    <string name="input_validation_route">Ingresa una ruta</string>
+    <string name="input_validation_level">Ingresa un nivel de ocupación</string>
+    <string name="input_validation_type">Ingresa un tipo de vehiculo</string>
+    <string name="record_saved">"Registro guardado"</string>
+
 </resources>
